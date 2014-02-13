@@ -34,8 +34,14 @@ module.exports = function(grunt) {
 
       src: {
         src: [
-          '*.js',
-          './src/**/*.js'
+          'src/**/*.js'
+        ]
+      },
+
+      extras: {
+        src: [
+          'Gruntfile.js',
+          'specs/**/*.js'
         ]
       }
     },
@@ -56,10 +62,6 @@ module.exports = function(grunt) {
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
             requireConfig: {
-              // baseUrl: '.',
-              // paths: {
-              // 'shrike': 'shrike'
-              // },
               deps: ['shrike']
             }
           }
@@ -69,34 +71,41 @@ module.exports = function(grunt) {
 
     requirejs: {
       options: {
-        // optimize : 'uglify2',
         optimize: 'none',
         preserveLicenseComments: false,
 
         findNestedDependencies: true,
         optimizeAllPluginResources: true,
 
-        baseUrl: 'src/'
+        baseUrl: 'src/',
+
+        include: ['shrike'],
+        paths: {
+          'mjs': '../bower_components/mjs/mjs',
+          'underscore': '../bower_components/underscore/underscore'
+        },
+        wrap: {
+          start: '<%= meta.banner %>'
+        }
       },
 
-      normal: {
+      dev: {
         options: {
-          out: 'shrike.js',
-          include: ['shrike'],
-          paths: {
-            'mjs': '../bower_components/mjs/mjs',
-            'underscore': '../bower_components/underscore/underscore'
-          },
-          wrap: {
-            start: '<%= meta.banner %>'
-          }
+          out: 'shrike.js'
+        }
+      },
+
+      production: {
+        options: {
+          optimize: 'uglify2',
+          out: 'shrike.min.js'
         }
       }
     },
 
     exec: {
       fixjsstyle: {
-        command: 'fixjsstyle *.js && fixjsstyle -r src/'
+        command: 'fixjsstyle Gruntfile.js && fixjsstyle -r src/ && fixjsstyle -r spec/'
       }
     }
   });
@@ -107,7 +116,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'requirejs:normal'
+    'requirejs'
   ]);
 
   grunt.registerTask('test', [

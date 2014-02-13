@@ -1,5 +1,5 @@
-describe("utils", function() {
-  it("foo", function() {
+describe('utils', function() {
+  it('foo', function() {
     expect(true).toBe(true);
   });
 });
