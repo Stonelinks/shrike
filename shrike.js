@@ -3206,11 +3206,25 @@ define('utils',[
 ], function(_) {
   
 
+  var print = window.print || function(s) {
+      console.log(s);
+    };
+
   return function(shrike) {
 
-    shrike.isArray = function(A) {
-      return _.isArray(A) ? true : Object.prototype.toString.call(A).slice(-'Array]'.length) == 'Array]';
+    // set a property on the shrike object, warn if it conflicts
+    shrike.register = function(k, v) {
+      if (shrike.hasOwnProperty(k)) {
+        print('SHRIKE: error: shrike already has a ' + k);
+      }
+      else {
+        shrike[k] = v;
+      }
     };
+
+    shrike.register('isArray', function(A) {
+      return _.isArray(A) ? true : Object.prototype.toString.call(A).slice(-'Array]'.length) == 'Array]';
+    });
   }
 });
 
@@ -3218,7 +3232,7 @@ define('shrike',[
 
   'underscore',
   'mjs',
-  'utils'
+  './utils'
 
 ], function(_, mjs, utils) {
   
@@ -3226,6 +3240,11 @@ define('shrike',[
   var shrike = {};
 
   utils(shrike);
+
+  // borrow all of Math's functions and constants
+  Object.getOwnPropertyNames(Math).forEach(function(prop) {
+    shrike.register(prop, Math[prop]);
+  });
 
   return shrike;
 });
