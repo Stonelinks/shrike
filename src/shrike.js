@@ -1,20 +1,30 @@
 define([
 
   'underscore',
-  'mjs',
-  './utils'
+  './utils',
+  './iterators',
+  './base',
+  './converters',
+  './matrix',
+  './tween'
 
-], function(_, mjs, utils) {
+], function(_, utils, iterators, base, converters, matrix, tween) {
   'use strict';
 
   var shrike = {};
 
   utils(shrike);
-
-  // borrow all of Math's functions and constants
-  Object.getOwnPropertyNames(Math).forEach(function(prop) {
-    shrike.register(prop, Math[prop]);
-  });
+  iterators(shrike);
+  base(shrike);
+  converters(shrike);
+  matrix(shrike);
+  tween(shrike);
+  
+  // for debugging / console convenience
+  if (window.makeGlobal !== undefined) {
+    window.makeGlobal(shrike);
+    window.makeGlobal({shrike: shrike});
+  }
 
   return shrike;
 });
