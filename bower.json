@@ -1,0 +1,27 @@
+{
+  "name": "shrike",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Stonelinks/shrike",
+  "authors": [
+    "Lucas Doyle <lucas.p.doyle@gmail.com>"
+  ],
+  "description": "yet another javascript math library",
+  "main": "shrike.js",
+  "keywords": [
+    "math",
+    "vector",
+    "matrix"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "mjs": "~0.0.0",
+    "underscore": "~1.6.0"
+  }
+}
