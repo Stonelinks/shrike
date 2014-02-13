@@ -105,6 +105,24 @@ module.exports = function(grunt) {
       fixjsstyle: {
         command: 'fixjsstyle Gruntfile.js && fixjsstyle -r src/ && fixjsstyle -r spec/'
       }
+    },
+
+    watch: {
+
+      options: {
+        // spawn: true,
+        interval: 500,
+        debounceDelay: 1000
+        // forever: true,
+      },
+
+      src: {
+        files: [
+          'src/**/*.js',
+          'spec/**/*.js'
+        ],
+        tasks: ['lint', 'test']
+      }
     }
   });
 
