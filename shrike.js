@@ -1,6 +1,5 @@
-// shrike
-// ----------------------------------
-// v0.0.0
+// shrike - v0.0.0
+// yet another javascript math library
 //
 // Copyright (c)2014 Lucas Doyle <lucas.p.doyle@gmail.com>
 // Distributed under MIT license
