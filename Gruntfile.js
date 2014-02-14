@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
 
+  var WEBSERVER_PORT = 8000;
+  var LIVERELOAD_PORT = 12000;
+
   require('load-grunt-tasks')(grunt, {
     pattern: ['grunt-*', '!grunt-template-jasmine-requirejs']
   });
@@ -45,18 +48,28 @@ module.exports = function(grunt) {
     },
 
     connect: {
+      browserTest: {
+        port: WEBSERVER_PORT,
+        options: {
+          // keepalive: true,
+          hostname: '*',
+          livereload: LIVERELOAD_PORT,
+          open: 'http://localhost:' + WEBSERVER_PORT + '/_SpecRunner.html'
+        }
+      },
+
       test: {
-        port: 8000
+        port: WEBSERVER_PORT
       }
     },
 
     jasmine: {
-      all: {
+      shrike: {
         src: 'src/**/*.js',
         options: {
           specs: 'spec/*.spec.js',
           helpers: 'spec/helpers/*.js',
-          host: 'http://127.0.0.1:8000/',
+          host: 'http://localhost:' + WEBSERVER_PORT + '/',
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
             requireConfig: {
@@ -112,8 +125,9 @@ module.exports = function(grunt) {
       options: {
         // spawn: true,
         interval: 500,
-        debounceDelay: 1000
-        // forever: true,
+        forever: true,
+        debounceDelay: 1000,
+        livereload: LIVERELOAD_PORT
       },
 
       src: {
@@ -121,7 +135,7 @@ module.exports = function(grunt) {
           'src/**/*.js',
           'spec/**/*.js'
         ],
-        tasks: ['lint', 'test']
+        tasks: ['lint', 'browserTest']
       }
     }
   });
@@ -137,11 +151,18 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', [
     'build',
-    'connect',
-    'jasmine'
+    'connect:test',
+    'jasmine:shrike'
+  ]);
+
+  grunt.registerTask('browserTest', [
+    'build',
+    'jasmine:shrike:build'
   ]);
 
   grunt.registerTask('default', [
-    'test'
+    'connect:browserTest',
+    'browserTest',
+    'watch'
   ]);
 };

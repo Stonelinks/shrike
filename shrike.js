@@ -1358,104 +1358,143 @@ define('utils',[
 ], function(_) {
   
 
-  window.pass = function() {};
+  window.pass = window.pass || function() {};
 
   return function(shrike) {
+
+    shrike.throwError = function(msg) {
+      throw new Error('error: ' + msg);
+    };
 
     // set a property on the shrike object, warn if it conflicts
     shrike.register = function(k, v) {
       if (shrike.hasOwnProperty(k)) {
-        console.log('SHRIKE: error: shrike already has a ' + k);
+        shrike.throwError('shrike already has a ' + k);
       }
       else {
         shrike[k] = v;
       }
     };
 
-    shrike.register('isArray', function(A) {
-      return _.isArray(A) ? true : Object.prototype.toString.call(A).slice(-'Array]'.length) == 'Array]';
+    shrike.alias = function(newName, orig) {
+      if (!shrike.hasOwnProperty(orig)) {
+        shrike.throwError('shrike doesn\'t have a ' + orig + ' to alias');
+      }
+      shrike.register(newName, shrike[orig]);
+    };
+
+    // safe version of isArray
+    shrike.register('isArray', function(thing) {
+      if (_.isArray(thing)) {
+        return true;
+      }
+
+      try {
+        return Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
+      }
+      catch (e) {
+        return false;
+      }
+    });
+
+    shrike.register('is2DArray', function(thing) {
+      if (!shrike.isArray(thing)) {
+        return false;
+      }
+
+      if (thing.length === 0) {
+        return false;
+      }
+
+      return thing.map(shrike.isArray).indexOf(false) === -1;
+    });
+
+    shrike.register('isNumber', function(thing) {
+      return !isNaN(parseFloat(thing)) && isFinite(thing);
     });
 
     // for pretty printing a matrix
     shrike.register('prettyPrint', function(x) {
 
-      if (_.isArray(x)) {
+      console.log(function() {
+        if (_.isArray(x)) {
 
-        // not a 2d matrix
-        if (!_.isArray(x[0])) {
-          // prettyPrint([x]);
-          var ret = '[ ' + x.join(', ') + ' ]';
-          return ret;
+          // not a 2d matrix
+          if (!_.isArray(x[0])) {
+            // prettyPrint([x]);
+            var ret = '[ ' + x.join(', ') + ' ]';
+            return ret;
+          }
+          else {
+
+            // find out what the widest number will be
+            var precision = 6;
+            var widest = 0;
+            for (var i = 0; i < x.length; i++) {
+              for (var j = 0; j < x[i].length; j++) {
+                if (typeof(x[i][j]) == 'string') {
+                  throw new Error('WARNING: there is a string in this matrix, you should fix that');
+                }
+
+                if (shrike.round(x[i][j], precision).toString().length > widest) {
+                  widest = shrike.round(x[i][j], precision).toString().length;
+                }
+              }
+            }
+
+            // add spacing and create borders
+            var formatted = [];
+            var border = undefined;
+
+            for (var i = 0; i < x.length; i++) {
+              var row = [];
+              for (var j = 0; j < x[i].length; j++) {
+                var raw = shrike.round(x[i][j], precision).toString();
+                var extra_space = widest - raw.length;
+                var left = '';
+                var right = '';
+                for (var k = 0; k < extra_space; k++) {
+                  if (k >= extra_space / 2.0) {
+                    left += ' ';
+                  }
+                  else {
+                    right += ' ';
+                  }
+                }
+                row.push(left + raw + right);
+              }
+              formatted.push(row);
+
+              if (border === undefined) {
+                var spacers = [];
+                var spacer = '';
+                for (var k = 0; k < widest; k++) {
+                  spacer += '-';
+                }
+                for (var k = 0; k < row.length; k++) {
+                  spacers.push(spacer);
+                }
+                border = '+-' + spacers.join('-+-') + '-+';
+              }
+            }
+
+            // actually print everything
+            var ret = border + '\n';
+            for (var i = 0; i < x.length; i++) {
+              var row = formatted[i];
+              var line = '| ' + row.join(' | ') + ' |';
+              ret += line + '\n';
+              ret += border + '\n';
+            }
+            return ret;
+          }
         }
         else {
 
-          // find out what the widest number will be
-          var precision = 6;
-          var widest = 0;
-          for (var i = 0; i < x.length; i++) {
-            for (var j = 0; j < x[i].length; j++) {
-              if (typeof(x[i][j]) == 'string') {
-                throw new Error('WARNING: there is a string in this matrix, you should fix that');
-              }
-
-              if (shrike.round(x[i][j], precision).toString().length > widest) {
-                widest = shrike.round(x[i][j], precision).toString().length;
-              }
-            }
-          }
-
-          // add spacing and create borders
-          var formatted = [];
-          var border = undefined;
-
-          for (var i = 0; i < x.length; i++) {
-            var row = [];
-            for (var j = 0; j < x[i].length; j++) {
-              var raw = shrike.round(x[i][j], precision).toString();
-              var extra_space = widest - raw.length;
-              var left = '';
-              var right = '';
-              for (var k = 0; k < extra_space; k++) {
-                if (k >= extra_space / 2.0) {
-                  left += ' ';
-                }
-                else {
-                  right += ' ';
-                }
-              }
-              row.push(left + raw + right);
-            }
-            formatted.push(row);
-
-            if (border === undefined) {
-              var spacers = [];
-              var spacer = '';
-              for (var k = 0; k < widest; k++) {
-                spacer += '-';
-              }
-              for (var k = 0; k < row.length; k++) {
-                spacers.push(spacer);
-              }
-              border = '+-' + spacers.join('-+-') + '-+';
-            }
-          }
-
-          // actually print everything
-          var ret = border + '\n';
-          for (var i = 0; i < x.length; i++) {
-            var row = formatted[i];
-            var line = '| ' + row.join(' | ') + ' |';
-            ret += line + '\n';
-            ret += border + '\n';
-          }
-          return ret;
+          // not an array
+          return x;
         }
-      }
-      else {
-
-        // not an array
-        return x;
-      }
+      }());
     });
   }
 });
@@ -1555,9 +1594,19 @@ define('base',[
 
     // sum an array
     shrike.register('sum', function(arr) {
-      return _.reduce(shrike.toFloat(arr), function(memo, num) {
-        return memo + num;
-      }, 0.0);
+      if (!shrike.isArray(arr)) {
+        shrike.throwError('can\'t compute sum of non-array ' + arr);
+      }
+      else {
+        if (arr.length > 0 && shrike.isArray(arr[0])) {
+          shrike.throwError('can\'t compute sum of >1d arrays');
+        }
+        else {
+          return _.reduce(shrike.toFloat(arr), function(memo, num) {
+            return memo + num;
+          }, 0.0);
+        }
+      }
     });
 
     shrike.register('square', function(x) {
@@ -1622,8 +1671,39 @@ define('converters',[
       });
     });
 
-    // incidentally calling this with its default arguments will convert things to a float
-    shrike.register('toFloat', shrike.scalarIterator);
+    shrike.register('toFloat', function(thing) {
+
+      // its a number
+      if (shrike.isNumber(thing)) {
+        return parseFloat(thing);
+      }
+
+      // its an array
+      else if (shrike.isArray(thing)) {
+
+        var _convert = function(thing) {
+          if (shrike.isNumber(thing)) {
+            return parseFloat(thing);
+          }
+          else {
+            shrike.throwError('toFloat: thing in array is not a number: ' + thing);
+          }
+        };
+
+        // its a 2d array
+        if (thing.map(shrike.isArray).indexOf(false) === -1) {
+          return thing.map(function(row) {
+            return row.map(_convert);
+          });
+        }
+        else {
+          return thing.map(_convert);
+        }
+      }
+      else {
+        shrike.throwError('toFloat: can not convert thing to float');
+      }
+    });
 
     // parses an axis and an angle from some arguments
     // input can be an object with axis and angle properties
@@ -1762,7 +1842,25 @@ define('converters',[
       return T;
     });
 
-    shrike.register('matrixFromAxisAngle', shrike.rot);
+    // generates a 4x4 rotation matrix for a an axis and an angle (radians)
+    shrike.register('rot', function(_axis, _angle) {
+      var aa = shrike.parseAxisAngle(_axis, _angle);
+      var axis = aa.axis;
+      var angle = aa.angle;
+
+      // hat operator
+      var hat = function(k) {
+        return [[0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]];
+      };
+
+      axis = shrike.normalize(axis);
+      var rot = shrike.eye(3);
+      rot = shrike.add(rot, shrike.scalarMult(hat(axis), Math.sin(angle)));
+      rot = shrike.add(rot, shrike.matrixMult(shrike.scalarMult(hat(axis), 1.0 - Math.cos(angle)), hat(axis)));
+      return shrike.matrix4(rot);
+    });
+
+    shrike.alias('matrixFromAxisAngle', 'rot');
 
     // angle is returned in radians
     shrike.register('axisAngleFromQuat', function(quatraw) {
@@ -1932,9 +2030,7 @@ define('converters',[
 
     // carves out the 3x3 rotation matrix out of a 3x4 or 4x4 transform
     shrike.register('matrix4to3', function(M) {
-      return [
-      [M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]
-        ];
+      return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
     });
 
     // makes sure that a matrix is a 4x4 transform
@@ -1953,9 +2049,7 @@ define('converters',[
     });
 
     shrike.register('composeTransform', function(rot, trans) {
-      return [
-      [rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]
-        ];
+      return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
     });
 
     shrike.register('decomposeTransform', function(T) {
@@ -1975,9 +2069,7 @@ define('converters',[
 
     shrike.register('mjsToMujin', function(mjsMatrix) {
       var m = mjsMatrix;
-      return [
-      [m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]
-        ];
+      return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
     });
   }
 });
@@ -2094,26 +2186,6 @@ define('matrix',[
         throw new Error('Trying to normalize a zero array');
       }
       return shrike.divide(array, length);
-    });
-
-    // generates a 4x4 rotation matrix for a an axis and an angle (radians)
-    shrike.register('rot', function(_axis, _angle) {
-      var aa = shrike.parseAxisAngle(_axis, _angle);
-      var axis = aa.axis;
-      var angle = aa.angle;
-
-      // hat operator
-      var hat = function(k) {
-        return [
-        [0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]
-          ];
-      };
-
-      axis = shrike.normalize(axis);
-      var rot = shrike.eye(3);
-      rot = shrike.add(rot, shrike.scalarMult(hat(axis), Math.sin(angle)));
-      rot = shrike.add(rot, shrike.matrixMult(shrike.scalarMult(hat(axis), 1.0 - Math.cos(angle)), hat(axis)));
-      return shrike.matrix4(rot);
     });
 
     shrike.register('translate', function(rowVector) {
@@ -2255,11 +2327,14 @@ define('shrike',[
   converters(shrike);
   matrix(shrike);
   tween(shrike);
-  
+
   // for debugging / console convenience
   if (window.makeGlobal !== undefined) {
     window.makeGlobal(shrike);
-    window.makeGlobal({shrike: shrike});
+    window.makeGlobal({
+      math: shrike,
+      shrike: shrike
+    });
   }
 
   return shrike;

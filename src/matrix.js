@@ -112,26 +112,6 @@ define([
       return shrike.divide(array, length);
     });
 
-    // generates a 4x4 rotation matrix for a an axis and an angle (radians)
-    shrike.register('rot', function(_axis, _angle) {
-      var aa = shrike.parseAxisAngle(_axis, _angle);
-      var axis = aa.axis;
-      var angle = aa.angle;
-
-      // hat operator
-      var hat = function(k) {
-        return [
-        [0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]
-          ];
-      };
-
-      axis = shrike.normalize(axis);
-      var rot = shrike.eye(3);
-      rot = shrike.add(rot, shrike.scalarMult(hat(axis), Math.sin(angle)));
-      rot = shrike.add(rot, shrike.matrixMult(shrike.scalarMult(hat(axis), 1.0 - Math.cos(angle)), hat(axis)));
-      return shrike.matrix4(rot);
-    });
-
     shrike.register('translate', function(rowVector) {
       var matrix = shrike.eye(4);
       matrix[0][3] = rowVector[0];

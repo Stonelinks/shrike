@@ -19,11 +19,14 @@ define([
   converters(shrike);
   matrix(shrike);
   tween(shrike);
-  
+
   // for debugging / console convenience
   if (window.makeGlobal !== undefined) {
     window.makeGlobal(shrike);
-    window.makeGlobal({shrike: shrike});
+    window.makeGlobal({
+      math: shrike,
+      shrike: shrike
+    });
   }
 
   return shrike;

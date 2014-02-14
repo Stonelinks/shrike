@@ -14,9 +14,19 @@ define([
 
     // sum an array
     shrike.register('sum', function(arr) {
-      return _.reduce(shrike.toFloat(arr), function(memo, num) {
-        return memo + num;
-      }, 0.0);
+      if (!shrike.isArray(arr)) {
+        shrike.throwError('can\'t compute sum of non-array ' + arr);
+      }
+      else {
+        if (arr.length > 0 && shrike.isArray(arr[0])) {
+          shrike.throwError('can\'t compute sum of >1d arrays');
+        }
+        else {
+          return _.reduce(shrike.toFloat(arr), function(memo, num) {
+            return memo + num;
+          }, 0.0);
+        }
+      }
     });
 
     shrike.register('square', function(x) {
