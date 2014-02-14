@@ -1,4 +1,4 @@
-xdescribe('base', function() {
+describe('base', function() {
 
   var shrike = require('shrike');
 

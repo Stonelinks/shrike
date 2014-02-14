@@ -5,15 +5,15 @@ describe('converters', function() {
   it('should convert things into floats', function() {
 
     // throw if array contains unconvertable things
-    // expect(function() {shrike.toFloat(['i\m a string'])}).toThrow();
-    // expect(function() {shrike.toFloat([undefined])}).toThrow();
-    // expect(function() {shrike.toFloat([[undefined]])}).toThrow();
-    // expect(function() {shrike.toFloat([['boo']])}).toThrow();
-    // expect(function() {shrike.toFloat([['1.2boom']])}).toThrow();
-    // expect(function() {shrike.toFloat([[false]])}).toThrow();
-    // expect(function() {shrike.toFloat([[null]])}).toThrow();
-    // expect(function() {shrike.toFloat([[function() {}]])}).toThrow();
-    // expect(function() {shrike.toFloat([[], [], undefined])}).toThrow();
+    expect(function() {shrike.toFloat(['i\m a string'])}).toThrow();
+    expect(function() {shrike.toFloat([undefined])}).toThrow();
+    expect(function() {shrike.toFloat([[undefined]])}).toThrow();
+    expect(function() {shrike.toFloat([['boo']])}).toThrow();
+    expect(function() {shrike.toFloat([['1.2boom']])}).toThrow();
+    expect(function() {shrike.toFloat([[false]])}).toThrow();
+    expect(function() {shrike.toFloat([[null]])}).toThrow();
+    expect(function() {shrike.toFloat([[function() {}]])}).toThrow();
+    expect(function() {shrike.toFloat([[], [], undefined])}).toThrow();
 
     // 0d
     var num = 121.5;
