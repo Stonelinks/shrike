@@ -128,6 +128,11 @@ describe('utils', function() {
 
       // instance of a function
       expect(shrike.isNumber(function() {})).not.toBe(true);
+
+      // arrays
+      expect(shrike.isNumber([])).not.toBe(true);
+      expect(shrike.isNumber([13])).not.toBe(true);
+      expect(shrike.isNumber([[]])).not.toBe(true);
     });
   });
 
@@ -162,10 +167,12 @@ describe('utils', function() {
     expect(shrike.is2DArray(0)).not.toBe(true);
     expect(shrike.is2DArray(1.775)).not.toBe(true);
 
-
     // 1d stuff
     expect(shrike.is2DArray([])).not.toBe(true);
+    expect(shrike.is2DArray(['pow'])).not.toBe(true);
+    expect(shrike.is2DArray([1.23])).not.toBe(true);
     expect(shrike.is2DArray([1, 2, 3, 4])).not.toBe(true);
+    expect(shrike.is2DArray([1, 2.4, 3, 4])).not.toBe(true);
 
     // simple
     expect(shrike.is2DArray([[0, 1, 2]])).toBe(true);
@@ -179,9 +186,19 @@ describe('utils', function() {
 
     // empty
     expect(shrike.is2DArray([[]])).toBe(true);
+    expect(shrike.is2DArray([[], []])).toBe(true);
+
+    // one value
+    expect(shrike.is2DArray([[1.2]])).toBe(true);
+    expect(shrike.is2DArray([[1.2], [1.2]])).toBe(true);
 
     // make sure weird array types work
     var f32a = new Float32Array([100.55]);
     expect(shrike.is2DArray([f32a])).toBe(true);
+
+    // throw out 3d arrays
+    // TODO
+    // expect(shrike.is2DArray([[['boo']]])).not.toBe(true);
+    // expect(shrike.is2DArray([[[], ['hi there']], [[], []]])).not.toBe(true);
   });
 });

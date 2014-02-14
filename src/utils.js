@@ -10,7 +10,7 @@ define([
   return function(shrike) {
 
     shrike.throwError = function(msg) {
-      throw new Error('error: ' + msg);
+      throw new Error('SHRIKE: ' + msg);
     };
 
     // set a property on the shrike object, warn if it conflicts
@@ -57,10 +57,11 @@ define([
     });
 
     shrike.register('isNumber', function(thing) {
-      return !isNaN(parseFloat(thing)) && isFinite(thing);
+      return !isNaN(parseFloat(thing)) && isFinite(thing) && !shrike.isArray(thing);
     });
 
     // for pretty printing a matrix
+    // TODO: maybe delete this? it is old and never really used
     shrike.register('prettyPrint', function(x) {
 
       console.log(function() {

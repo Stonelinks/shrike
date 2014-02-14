@@ -60,12 +60,12 @@ define([
             return parseFloat(thing);
           }
           else {
-            shrike.throwError('toFloat: thing in array is not a number: ' + thing);
+            shrike.throwError('toFloat: array has something in it that is not a number: ' + thing);
           }
         };
 
         // its a 2d array
-        if (thing.map(shrike.isArray).indexOf(false) === -1) {
+        if (shrike.is2DArray(thing)) {
           return thing.map(function(row) {
             return row.map(_convert);
           });
@@ -75,7 +75,7 @@ define([
         }
       }
       else {
-        shrike.throwError('toFloat: can not convert thing to float');
+        shrike.throwError('toFloat: can not convert to float: ' + thing);
       }
     });
 
