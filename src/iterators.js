@@ -33,7 +33,7 @@ define([
       var ret = [];
       for (var i = 0; i < A.length; i++) {
         if (is2d) {
-          if (!A[i].length === B[i].length) {
+          if (A[i].length !== B[i].length) {
             shrike.throwError('elementWiseIterator: unequal row lengths while iterating through 2d array');
           }
           var row = [];

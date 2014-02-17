@@ -1535,7 +1535,7 @@ define('iterators',[
       var ret = [];
       for (var i = 0; i < A.length; i++) {
         if (is2d) {
-          if (!A[i].length === B[i].length) {
+          if (A[i].length !== B[i].length) {
             shrike.throwError('elementWiseIterator: unequal row lengths while iterating through 2d array');
           }
           var row = [];
@@ -2077,32 +2077,32 @@ define('matrix',[
   return function(shrike) {
 
     shrike.register('add', function(A, B) {
-      return shrike.elementWiseIterator(A, B, function(a, b) {
+      return shrike.elementWiseIterator(shrike.toFloat(A), shrike.toFloat(B), function(a, b) {
         return a + b;
       });
     });
 
     shrike.register('subtract', function(A, B) {
-      return shrike.elementWiseIterator(A, B, function(a, b) {
+      return shrike.elementWiseIterator(shrike.toFloat(A), shrike.toFloat(B), function(a, b) {
         return a - b;
       });
     });
 
     shrike.register('eltMult', function(A, B) {
-      return shrike.elementWiseIterator(A, B, function(a, b) {
+      return shrike.elementWiseIterator(shrike.toFloat(A), shrike.toFloat(B), function(a, b) {
         return a * b;
       });
     });
 
     shrike.register('scalarMult', function(A, scalar) {
-      return shrike.scalarIterator(A, function(a) {
-        return a * scalar;
+      return shrike.scalarIterator(shrike.toFloat(A), function(a) {
+        return a * parseFloat(scalar);
       });
     });
 
     shrike.register('scalarDivide', function(A, scalar) {
-      return shrike.scalarIterator(A, function(a) {
-        return a / scalar;
+      return shrike.scalarIterator(shrike.toFloat(A), function(a) {
+        return a / parseFloat(scalar);
       });
     });
 
@@ -2192,11 +2192,11 @@ define('matrix',[
     // returns a camera 4x4 matrix that looks along a ray with a desired up vector.
     shrike.register('transformLookat', function(_lookat, _camerapos, _cameraup) {
 
-      lookat = shrike.toFloat(_lookat);
-      camerapos = shrike.toFloat(_camerapos);
-      cameraup = shrike.toFloat(_cameraup);
+      var lookat = shrike.toFloat(_lookat);
+      var camerapos = shrike.toFloat(_camerapos);
+      var cameraup = shrike.toFloat(_cameraup);
 
-      var cameradir = shrike.subtract(shrike.toFloat(lookat), camerapos);
+      var cameradir = shrike.subtract(lookat, camerapos);
       var cameradirlen = shrike.norm(cameradir);
 
       if (cameradirlen > 1e-15) {
@@ -2243,7 +2243,7 @@ define('matrix',[
       var A = shrike.toFloat(_A);
       var B = shrike.toFloat(_B);
 
-      if (A[0].length != A.length) {
+      if (A[0].length !== A.length) {
 
         shrike.prettyPrint(A);
         shrike.prettyPrint(B);
