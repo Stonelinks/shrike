@@ -1389,8 +1389,13 @@ define('utils',[
         return true;
       }
 
+      return shrike.isNativeFloatArray(thing);
+    });
+
+    // checks special array types
+    shrike.register('isNativeFloatArray', function(thing) {
       try {
-        return Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
+        return (_.isArray(thing) !== true) && Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
       }
       catch (e) {
         return false;
@@ -1399,6 +1404,10 @@ define('utils',[
 
     shrike.register('is2DArray', function(thing) {
       if (!shrike.isArray(thing)) {
+        return false;
+      }
+
+      if (shrike.isNativeFloatArray(thing)) {
         return false;
       }
 
@@ -1669,6 +1678,11 @@ define('converters',[
       // its a number
       if (shrike.isNumber(thing)) {
         return parseFloat(thing);
+      }
+
+      // its already floating point
+      else if (shrike.isNativeFloatArray(thing)) {
+        return thing;
       }
 
       // its an array

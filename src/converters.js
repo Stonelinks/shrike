@@ -52,6 +52,11 @@ define([
         return parseFloat(thing);
       }
 
+      // its already floating point
+      else if (shrike.isNativeFloatArray(thing)) {
+        return thing;
+      }
+
       // its an array
       else if (shrike.isArray(thing)) {
 
