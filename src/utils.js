@@ -53,7 +53,7 @@ define([
         return false;
       }
 
-      return thing.map(shrike.isArray).indexOf(false) === -1;
+      return _.some(thing.map(shrike.isArray));
     });
 
     shrike.register('isNumber', function(thing) {
