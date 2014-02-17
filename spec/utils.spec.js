@@ -4,20 +4,20 @@ describe('utils', function() {
 
   shrike.register('foo', 'bar');
 
-  it('should throw an error when you register the same thing twice', function() {
+  it('throw an error when you register the same thing twice', function() {
     expect(function() {shrike.register('foo', 'baz')}).toThrow();
   });
 
-  it('should properly alias things', function() {
+  it('properly alias things', function() {
     shrike.alias('fooNew', 'foo');
     expect(shrike.fooNew).toBe(shrike.foo);
   });
 
-  it('should throw an error when you try to alias things that are not there', function() {
+  it('throw an error when you try to alias things that are not there', function() {
     expect(function() {shrike.alias('boo', 'baz')}).toThrow();
   });
 
-  it('should test if things are numbers', function() {
+  it('detect numbers', function() {
 
     describe('integer literals', function() {
 
@@ -136,7 +136,7 @@ describe('utils', function() {
     });
   });
 
-  it('should test if things are arrays', function() {
+  it('detect arrays', function() {
 
     // strings, ints, floats, etc are not arrays
     // TODO make this as good as the isNumber stuff
@@ -157,7 +157,7 @@ describe('utils', function() {
     expect(shrike.isArray(f32a)).toBe(true);
   });
 
-  it('should test if things are native 1d float arrays', function() {
+  it('detect native 1d float arrays', function() {
 
     // strings, ints, floats, etc are not arrays
     // TODO make this as good as the isNumber stuff
@@ -178,7 +178,7 @@ describe('utils', function() {
     expect(shrike.isNativeFloatArray(f32a)).toBe(true);
   });
 
-  it('should test if things are 2d arrays', function() {
+  it('detect 2d arrays', function() {
 
     // strings, ints, floats, etc are not 2d arrays
     // TODO make this as good as the isNumber stuff

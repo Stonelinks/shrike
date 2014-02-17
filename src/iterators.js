@@ -12,7 +12,8 @@ define([
       _function = _function || pass;
 
       if (!shrike.isArray(A) || !shrike.isArray(B)) {
-        shrike.throwError('elementWiseIterator: one of these is not an array: ' + A + ' ' + B);
+        console.warn('elementWiseIterator: one of these is not an array: %o and %o', A, B);
+        shrike.throwError();
       }
 
       if (A.length !== B.length) {
@@ -25,7 +26,8 @@ define([
           is2d = true;
         }
         else {
-          shrike.throwError('elementWiseIterator: one of these is a 2d array and the other is not: ' + A + ' ' + B);
+          console.warn('elementWiseIterator: one of these is a 2d array and the other is not: %o and %o', A, B);
+          shrike.throwError();
         }
       }
 

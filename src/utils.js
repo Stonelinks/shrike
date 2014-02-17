@@ -10,6 +10,7 @@ define([
   return function(shrike) {
 
     shrike.throwError = function(msg) {
+      msg = msg || 'undefined error';
       throw new Error('SHRIKE: ' + msg);
     };
 

@@ -2,7 +2,7 @@ describe('converters', function() {
 
   var shrike = require('shrike');
 
-  it('should convert things into floats', function() {
+  it('convert things into floats', function() {
 
     // throw if array contains unconvertable things
     expect(function() {shrike.toFloat(['i\m a string'])}).toThrow();
