@@ -21,7 +21,7 @@
     "tests"
   ],
   "dependencies": {
-    "mjs": "~0.0.0",
+    "mjs": "0.0.1",
     "underscore": "~1.6.0"
   }
 }
