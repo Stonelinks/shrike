@@ -2126,6 +2126,15 @@ define('matrix',[
     // alias
     shrike.register('divide', shrike.scalarDivide);
 
+    shrike.register('transpose', function(A) {
+      if (shrike.is2DArray(A)) {
+        return _.zip.apply(_, A);
+      }
+      else {
+        shrike.throwError('can only transpose 2d arrays');
+      }
+    });
+
     shrike.register('dot', function(A, B) {
       return shrike.sum(shrike.eltMult(shrike.toFloat(A), shrike.toFloat(B)));
     });
