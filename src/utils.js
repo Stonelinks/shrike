@@ -14,13 +14,42 @@ define([
       throw new Error('SHRIKE: ' + msg);
     };
 
-    // set a property on the shrike object, warn if it conflicts
+    // set a (sometimes nested) property on the shrike object, warn if it conflicts
     shrike.register = function(k, v) {
-      if (shrike.hasOwnProperty(k)) {
-        shrike.throwError('shrike already has a ' + k);
+
+      // keys can be compound
+      var keys = k.split('.').reverse();
+      if (keys.length == 1) {
+        if (shrike.hasOwnProperty(k)) {
+          shrike.throwError('shrike already has a ' + k);
+        }
+        else {
+          shrike[k] = v;
+        }
       }
       else {
-        shrike[k] = v;
+        var lastKey = keys[0];
+        var prop = shrike;
+        while (keys.length > 0) {
+
+          var thisKey = keys.pop();
+
+          if (prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])) {
+            shrike.throwError('shrike already has a ' + k);
+          }
+
+          if (thisKey === lastKey) {
+            prop[thisKey] = v;
+          }
+          else {
+
+            if (!_.isObject(prop[thisKey])) {
+              prop[thisKey] = {};
+            }
+
+            prop = prop[thisKey];
+          }
+        }
       }
     };
 
