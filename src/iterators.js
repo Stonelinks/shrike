@@ -1,3 +1,4 @@
+// various ways of iterating through arrays
 define([
 
   'underscore'

@@ -1351,6 +1351,7 @@
   }
 }).call(this);
 
+// shrike utility functions, mostly for registering and detecting types
 define('utils',[
 
   'underscore'
@@ -1406,10 +1407,12 @@ define('utils',[
       }
     };
 
+    // TODO: make it so you can alias things with depth >1
     shrike.alias = function(newName, orig) {
       if (!shrike.hasOwnProperty(orig)) {
         shrike.throwError('shrike doesn\'t have a ' + orig + ' to alias');
       }
+
       shrike.register(newName, shrike[orig]);
     };
 
@@ -1539,6 +1542,7 @@ define('utils',[
   }
 });
 
+// various ways of iterating through arrays
 define('iterators',[
 
   'underscore'
@@ -3461,6 +3465,7 @@ var mjs = {
 return mjs;
 });
 
+// assign base properites to shrike
 define('base',[
 
   'underscore',
@@ -3471,7 +3476,7 @@ define('base',[
 
   return function(shrike) {
 
-    // borrow all of Math's functions and constants... except round since it is defined below
+    // borrow all of Math's functions and constants... except round since shrike provides its own round function
     _.without(Object.getOwnPropertyNames(Math), 'round').forEach(function(prop) {
       shrike.register(prop, Math[prop]);
     });
@@ -3481,40 +3486,48 @@ define('base',[
       shrike.register(prop, mjs[prop]);
     });
 
+    // alias M4x4 to M4 since it is shorter to type
+    shrike.alias('M4', 'M4x4');
+  }
+});
+
+// things common to both M4, V3 or all arrays in general
+define('common',[
+
+  'underscore'
+
+], function(_) {
+  
+
+  return function(shrike) {
+
     // sum an array
     shrike.register('sum', function(arr) {
       if (!shrike.isArray(arr)) {
         shrike.throwError('can\'t compute sum of non-array ' + arr);
       }
       else {
-        if (arr.length > 0 && shrike.isArray(arr[0])) {
-          shrike.throwError('can\'t compute sum of >1d arrays');
-        }
-        else {
-          return _.reduce(shrike.toFloat(arr), function(memo, num) {
-            return memo + num;
-          }, 0.0);
-        }
+        return _.reduce(shrike.toFloat(arr), function(memo, num) {
+          if (!shrike.isNumber(num)) {
+            shrike.throwError('can\'t compute sum of array with non numeric element: ' + num);
+          }
+
+          return memo + num;
+        }, 0.0);
       }
     });
 
     shrike.register('square', function(x) {
+      if (!shrike.isNumber(x)) {
+        shrike.throwError('can\'t square non numeric element: ' + num);
+      }
+
       return parseFloat(x) * parseFloat(x);
-    });
-
-    shrike.register('xround', function(num, dec) {
-      dec = dec || 0.0;
-      // works to 20 decimal points
-
-      return shrike.scalarIterator(num, function(a) {
-        return parseFloat(new Number(a + '').toFixed(parseInt(dec)));
-      });
     });
 
     shrike.register('round', function(n, dec) {
       dec = dec || 0;
 
-      // works to 20 decimal points
       if (dec >= 20) {
         shrike.throwError('round: can only round to 20 decimal places');
       }
@@ -3540,6 +3553,7 @@ define('base',[
   }
 });
 
+// data conversion
 define('converters',[
 
   'underscore'
@@ -3995,6 +4009,7 @@ define('converters',[
   }
 });
 
+// common matrix operations
 define('matrix',[
 
   'underscore'
@@ -4242,11 +4257,12 @@ define('shrike',[
   './utils',
   './iterators',
   './base',
+  './common',
   './converters',
   './matrix',
   './tween'
 
-], function(_, utils, iterators, base, converters, matrix, tween) {
+], function(_, utils, iterators, base, common, converters, matrix, tween) {
   
 
   var shrike = {};
@@ -4254,6 +4270,7 @@ define('shrike',[
   utils(shrike);
   iterators(shrike);
   base(shrike);
+  common(shrike);
   converters(shrike);
   matrix(shrike);
   tween(shrike);

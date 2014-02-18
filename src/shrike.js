@@ -4,11 +4,12 @@ define([
   './utils',
   './iterators',
   './base',
+  './common',
   './converters',
   './matrix',
   './tween'
 
-], function(_, utils, iterators, base, converters, matrix, tween) {
+], function(_, utils, iterators, base, common, converters, matrix, tween) {
   'use strict';
 
   var shrike = {};
@@ -16,6 +17,7 @@ define([
   utils(shrike);
   iterators(shrike);
   base(shrike);
+  common(shrike);
   converters(shrike);
   matrix(shrike);
   tween(shrike);

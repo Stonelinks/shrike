@@ -1,4 +1,4 @@
-describe('base', function() {
+describe('common', function() {
 
   var shrike = require('shrike');
 

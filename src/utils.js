@@ -1,3 +1,4 @@
+// shrike utility functions, mostly for registering and detecting types
 define([
 
   'underscore'
@@ -53,10 +54,12 @@ define([
       }
     };
 
+    // TODO: make it so you can alias things with depth >1
     shrike.alias = function(newName, orig) {
       if (!shrike.hasOwnProperty(orig)) {
         shrike.throwError('shrike doesn\'t have a ' + orig + ' to alias');
       }
+
       shrike.register(newName, shrike[orig]);
     };
 
