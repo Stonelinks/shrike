@@ -3519,7 +3519,7 @@ define('common',[
 
     shrike.register('square', function(x) {
       if (!shrike.isNumber(x)) {
-        shrike.throwError('can\'t square non numeric element: ' + num);
+        shrike.throwError('can\'t square non numeric element: ' + x);
       }
 
       return parseFloat(x) * parseFloat(x);
@@ -4123,6 +4123,11 @@ define('matrix',[
     });
 
     shrike.register('norm', shrike.magnitude);
+
+    // TODO: get rid of this,
+    shrike.register('normalizeColVector', function(array) {
+      return shrike.transpose([shrike.normalize(shrike.transpose(array)[0])]);
+    });
 
     shrike.register('normalize', function(array) {
       var length = shrike.magnitude(array);

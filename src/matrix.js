@@ -113,6 +113,11 @@ define([
 
     shrike.register('norm', shrike.magnitude);
 
+    // TODO: get rid of this,
+    shrike.register('normalizeColVector', function(array) {
+      return shrike.transpose([shrike.normalize(shrike.transpose(array)[0])]);
+    });
+
     shrike.register('normalize', function(array) {
       var length = shrike.magnitude(array);
       if (length == 0) {

@@ -26,7 +26,7 @@ define([
 
     shrike.register('square', function(x) {
       if (!shrike.isNumber(x)) {
-        shrike.throwError('can\'t square non numeric element: ' + num);
+        shrike.throwError('can\'t square non numeric element: ' + x);
       }
 
       return parseFloat(x) * parseFloat(x);
