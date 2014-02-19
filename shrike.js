@@ -1683,8 +1683,8 @@ const MJS_DO_ASSERT = true;
  * will be of this type.
  */
 // const MJS_FLOAT_ARRAY_TYPE = WebGLFloatArray;
-const MJS_FLOAT_ARRAY_TYPE = Float32Array;
-//const MJS_FLOAT_ARRAY_TYPE = Float64Array;
+// const MJS_FLOAT_ARRAY_TYPE = Float32Array;
+const MJS_FLOAT_ARRAY_TYPE = Float64Array;
 //const MJS_FLOAT_ARRAY_TYPE = Array;
 
 if (MJS_DO_ASSERT) {
@@ -3561,45 +3561,6 @@ define('converters',[
   
 
   return function(shrike) {
-
-    /* return a scale so that X source * scale = Y target */
-    /* this function mirrors GetUnitConversionScale in mujin/dev/mujin/__init__.py */
-    shrike.register('unitConversionScale', function(sourceUnit, targetUnit) {
-      var unitDict = {
-        m: 1.0,
-        meter: 1.0,
-        cm: 100.0,
-        mm: 1000.0,
-        um: 1e6,
-        nm: 1e9,
-        inch: 39.370078740157481
-      };
-      var units = _.keys(unitDict);
-      if (_.contains(units, targetUnit) && _.contains(units, sourceUnit)) {
-        return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
-      }
-      else {
-        throw new Error('no conversion for either ' + sourceUnit + ' or ' + targetUnit);
-      }
-    });
-
-    shrike.register('toDegrees', function(x) {
-      return shrike.scalarIterator(x, function(a) {
-        if (Math.abs(a) <= 1e-10) {
-          return 0.0;
-        }
-        else {
-          return (180.0 / Math.PI) * a;
-        }
-      });
-    });
-
-    shrike.register('toRadians', function(x) {
-      return shrike.scalarIterator(x, function(a) {
-        return (Math.PI / 180.0) * a;
-      });
-    });
-
     shrike.register('toFloat', function(thing) {
 
       // its a number
@@ -3636,6 +3597,65 @@ define('converters',[
       }
       else {
         shrike.throwError('toFloat: can not convert to float: ' + thing);
+      }
+    });
+
+    /* return a scale so that X source * scale = Y target */
+    /* this function mirrors GetUnitConversionScale in mujin/dev/mujin/__init__.py */
+    shrike.register('unitConversionScale', function(sourceUnit, targetUnit) {
+      var unitDict = {
+        m: 1.0,
+        meter: 1.0,
+        cm: 100.0,
+        mm: 1000.0,
+        um: 1e6,
+        nm: 1e9,
+        inch: 39.370078740157481,
+        in : 39.370078740157481
+      };
+      var units = _.keys(unitDict);
+      if (_.contains(units, targetUnit) && _.contains(units, sourceUnit)) {
+        return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
+      }
+      else {
+        shrike.throwError('no conversion for either ' + sourceUnit + ' or ' + targetUnit);
+      }
+    });
+
+    shrike.register('toDegrees', function(x) {
+      var _convert = function(n) {
+        if (!shrike.isNumber(n)) {
+          shrike.throwError('toDegrees: not a number');
+        }
+        if (shrike.abs(n) <= 1e-10) {
+          return 0.0;
+        }
+        else {
+          return (180.0 / shrike.PI) * n;
+        }
+      };
+
+      if (shrike.isNumber(x)) {
+        return _convert(x);
+      }
+      else {
+        return shrike.scalarIterator(x, _convert);
+      }
+    });
+
+    shrike.register('toRadians', function(x) {
+      var _convert = function(n) {
+        if (!shrike.isNumber(n)) {
+          shrike.throwError('toRadians: not a number');
+        }
+        return (shrike.PI / 180.0) * n;
+      };
+
+      if (shrike.isNumber(x)) {
+        return _convert(x);
+      }
+      else {
+        return shrike.scalarIterator(x, _convert);
       }
     });
 

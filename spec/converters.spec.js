@@ -68,4 +68,33 @@ describe('converters', function() {
     expect(shrike.toFloat([['13']])).toEqual([[13]]);
     expect(shrike.toFloat([[13]])).toEqual([[13.0]]);
   });
+
+  it('conversion scales for linear units', function() {
+    expect(shrike.unitConversionScale('mm', 'm') * 1000).toEqual(1);
+    expect(shrike.unitConversionScale('cm', 'm') * 100).toEqual(1);
+    expect(shrike.round(shrike.unitConversionScale('in', 'cm'), 2)).toEqual(2.54);
+    expect(function() {shrike.unitConversionScale('jkasdkjlsadlkjsdalkj', 'm') * 100}).toThrow();
+  });
+
+  it('to degrees', function() {
+    expect(shrike.toDegrees(shrike.PI / 2)).toEqual(90);
+    expect(shrike.toDegrees(shrike.PI / 4)).toEqual(45);
+    expect(shrike.toDegrees(shrike.PI)).toEqual(180);
+    expect(shrike.toDegrees(2 * shrike.PI)).toEqual(360);
+    expect(shrike.toDegrees('6.283185307179586')).toEqual(360);
+    expect(function() {shrike.toDegrees('jkasdkjlsadlkjsdalkj')}).toThrow();
+    expect(function() {shrike.toDegrees(undefined)}).toThrow();
+    expect(function() {shrike.toDegrees('-7723fsdfsad100')}).toThrow();
+  });
+
+  it('to radians', function() {
+    expect(shrike.toRadians(90)).toEqual(shrike.PI / 2);
+    expect(shrike.toRadians(45)).toEqual(shrike.PI / 4);
+    expect(shrike.toRadians(180)).toEqual(shrike.PI);
+    expect(shrike.toRadians(360)).toEqual(2 * shrike.PI);
+    expect(shrike.toRadians('360')).toEqual(6.283185307179586);
+    expect(function() {shrike.toRadians('jkasdkjlsadlkjsdalkj')}).toThrow();
+    expect(function() {shrike.toRadians(undefined)}).toThrow();
+    expect(function() {shrike.toRadians('-7723fsdfsad100')}).toThrow();
+  });
 });
