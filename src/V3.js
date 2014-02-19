@@ -1,12 +1,14 @@
 // functions to augment mjs's V3 vector
-define([define([
+define([
 
   'underscore',
   'mjs'
 
 ], function(_, mjs) {
-      'use strict';
+  'use strict';
 
-      return function(shrike) {}
+  return function(shrike) {
 
-    });
+  };
+
+});

@@ -113,18 +113,25 @@ define([
 
     shrike.register('norm', shrike.magnitude);
 
-    // TODO: get rid of this,
+    // TODO: rewrite the app so you can get rid of this
     shrike.register('normalizeColVector', function(array) {
       return shrike.transpose([shrike.normalize(shrike.transpose(array)[0])]);
     });
 
     shrike.register('normalize', function(array) {
-      var length = shrike.magnitude(array);
-      if (length == 0) {
 
-        throw new Error('Trying to normalize a zero array');
+      // TODO: this try..catch is bad and you should feel bad
+      try {
+        var length = shrike.magnitude(array);
+        if (length == 0) {
+
+          throw new Error('Trying to normalize a zero array');
+        }
+        return shrike.divide(array, length);
       }
-      return shrike.divide(array, length);
+      catch (e) {
+        return shrike.normalizeColVector(array);
+      }
     });
 
     shrike.register('translate', function(rowVector) {

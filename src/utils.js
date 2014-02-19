@@ -186,5 +186,6 @@ define([
         }
       }());
     });
+    window.pp = shrike.prettyPrint;
   }
 });
