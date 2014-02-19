@@ -107,12 +107,10 @@ define([
     shrike.register('prettyPrint', function(x) {
 
       console.log(function() {
-        if (_.isArray(x)) {
+        if (shrike.isArray(x)) {
 
-          // not a 2d matrix
-          if (!_.isArray(x[0])) {
-            // prettyPrint([x]);
-            var ret = '[ ' + x.join(', ') + ' ]';
+          if (!shrike.is2DArray(x)) {
+            var ret = '[ ' + new Array(x).join(', ') + ' ]';
             return ret;
           }
           else {

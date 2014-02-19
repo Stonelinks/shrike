@@ -1460,12 +1460,10 @@ define('utils',[
     shrike.register('prettyPrint', function(x) {
 
       console.log(function() {
-        if (_.isArray(x)) {
+        if (shrike.isArray(x)) {
 
-          // not a 2d matrix
-          if (!_.isArray(x[0])) {
-            // prettyPrint([x]);
-            var ret = '[ ' + x.join(', ') + ' ]';
+          if (!shrike.is2DArray(x)) {
+            var ret = '[ ' + new Array(x).join(', ') + ' ]';
             return ret;
           }
           else {
@@ -4281,7 +4279,7 @@ define('M4',[
       var quat = shrike.toFloat(quatRaw);
       var r = shrike.M4.clone(shrike.M4.I);
 
-      var length2 = shrike.sum(quat.map(square));
+      var length2 = shrike.sum(quat.map(shrike.square));
       if (length2 <= 1e-8) {
 
         // invalid quaternion, so return identity
@@ -4294,21 +4292,16 @@ define('M4',[
       var qq3 = ilength2 * quat[3] * quat[3];
 
       r[0] = 1.0 - qq2 - qq3;
-      r[1] = ilength2 * (quat[1] * quat[2] - quat[0] * quat[3]);
-      r[2] = ilength2 * (quat[1] * quat[3] + quat[0] * quat[2]);
-      // r[3] = 0.0
-      r[4] = ilength2 * (quat[1] * quat[2] + quat[0] * quat[3]);
+      r[1] = ilength2 * (quat[1] * quat[2] + quat[0] * quat[3]);
+      r[2] = ilength2 * (quat[1] * quat[3] - quat[0] * quat[2]);
+
+      r[4] = ilength2 * (quat[1] * quat[2] - quat[0] * quat[3]);
       r[5] = 1.0 - qq1 - qq3;
-      r[6] = ilength2 * (quat[2] * quat[3] - quat[0] * quat[1]);
-      // r[7] = 0.0
-      r[8] = ilength2 * (quat[1] * quat[3] - quat[0] * quat[2]);
-      r[9] = ilength2 * (quat[2] * quat[3] + quat[0] * quat[1]);
+      r[6] = ilength2 * (quat[2] * quat[3] + quat[0] * quat[1]);
+
+      r[8] = ilength2 * (quat[1] * quat[3] + quat[0] * quat[2]);
+      r[9] = ilength2 * (quat[2] * quat[3] - quat[0] * quat[1]);
       r[10] = 1.0 - qq1 - qq2;
-      // r[11] = 0.0
-      // r[12] = 0.0
-      // r[13] = 0.0
-      // r[14] = 0.0
-      // r[15] = 1.0
 
       return r;
     });
@@ -4320,15 +4313,19 @@ define('M4',[
       var m11 = m[0];
       var m21 = m[1];
       var m31 = m[2];
-      var m41 = m[3];
+      // var m41 = m[3];
       var m12 = m[4];
       var m22 = m[5];
       var m32 = m[6];
-      var m42 = m[7];
+      // var m42 = m[7];
       var m13 = m[8];
       var m23 = m[9];
       var m33 = m[10];
-      var m43 = m[11];
+      // var m43 = m[11];
+      // var m14 = m[12];
+      // var m24 = m[13];
+      // var m34 = m[14];
+      // var m44 = m[15];
 
       var tr = m11 + m22 + m33;
       var r = [0.0, 0.0, 0.0, 0.0];
@@ -4340,7 +4337,7 @@ define('M4',[
       }
       else {
 
-        // find the largest diagonal element and jump to the appropriate case
+        // find mhe largesm diagonal elemenm and jump mo mhe appropriame case
         if (m22 > m11) {
           if (m33 > m22) {
             r[3] = (m33 - (m11 + m22)) + 1.0;
