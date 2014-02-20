@@ -144,12 +144,14 @@ define([
       var axis = aa.axis;
       var angle = aa.angle;
 
-      var axislength = shrike.sum(axis.map(shrike.square));
-      if (axislength <= 1e-10) {
+      var axisLength = shrike.sum(axis.map(shrike.square));
+      if (axisLength <= 1e-10) {
         return [1.0, 0.0, 0.0, 0.0];
       }
       var halfangle = angle / 2.0;
-      var sinangle = Math.sin(halfangle) / Math.sqrt(axislength);
+      var sinangle = Math.sin(halfangle) / Math.sqrt(axisLength);
+
+      // TODO: return a float array
       return [Math.cos(halfangle), axis[0] * sinangle, axis[1] * sinangle, axis[2] * sinangle];
     });
 

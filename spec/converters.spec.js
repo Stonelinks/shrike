@@ -125,4 +125,29 @@ describe('converters', function() {
     expect(function() {shrike.parseAxisAngle([[function() {}]])}).toThrow();
     expect(function() {shrike.parseAxisAngle([[], [], undefined])}).toThrow();
   });
+
+  it('quaternion from axis and angle', function() {
+    var res = [0.5253219888177297, 0.22741353271464756, 0.45482706542929513, 0.6822405981439427];
+
+    expect(shrike.quatFromAxisAngle({
+      axis: [1, 2, 3],
+      angle: 90
+    })).toEqual(res);
+    expect(shrike.quatFromAxisAngle([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.quatFromAxisAngle([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.quatFromAxisAngle(['1', '2', '3'], '90')).toEqual(res);
+
+    expect(function() {shrike.quatFromAxisAngle('jkasdkjlsadlkjsdalkj')}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle(undefined)}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle('-7723fsdfsad100')}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle(['i\m a string'])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([undefined])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([[undefined]])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([['boo']])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([['1.2boom']])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([[false]])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([[null]])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([[function() {}]])}).toThrow();
+    expect(function() {shrike.quatFromAxisAngle([[], [], undefined])}).toThrow();
+  });
 });
