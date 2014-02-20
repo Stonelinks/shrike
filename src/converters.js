@@ -107,12 +107,13 @@ define([
 
     // parses an axis and an angle from some arguments
     // input can be an object with axis and angle properties
-    // an array of 3 values for axis and an angle
+    // or an array of 3 values for the axis and an angle as the second argument
     // or an array of 4 values, first three being axis and the last one angle
     shrike.register('parseAxisAngle', function(axis, angle) {
-      var _axis, _angle;
+      var _axis;
+      var _angle;
       var _throwError = function() {
-        throw new Error('parse axis and angle input was not something we recognized');
+        throw new Error('parseAxisAngle: arguments were not something we recognized');
       };
 
       if (shrike.isArray(axis)) {

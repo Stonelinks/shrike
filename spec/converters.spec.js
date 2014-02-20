@@ -97,4 +97,32 @@ describe('converters', function() {
     expect(function() {shrike.toRadians(undefined)}).toThrow();
     expect(function() {shrike.toRadians('-7723fsdfsad100')}).toThrow();
   });
+
+  it('parse axis and angles', function() {
+    var res = {
+      axis: [1, 2, 3],
+      angle: 90
+    };
+
+    expect(shrike.parseAxisAngle({
+      axis: [1, 2, 3],
+      angle: 90
+    })).toEqual(res);
+    expect(shrike.parseAxisAngle([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.parseAxisAngle([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.parseAxisAngle(['1', '2', '3'], '90')).toEqual(res);
+
+    expect(function() {shrike.parseAxisAngle('jkasdkjlsadlkjsdalkj')}).toThrow();
+    expect(function() {shrike.parseAxisAngle(undefined)}).toThrow();
+    expect(function() {shrike.parseAxisAngle('-7723fsdfsad100')}).toThrow();
+    expect(function() {shrike.parseAxisAngle(['i\m a string'])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([undefined])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([[undefined]])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([['boo']])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([['1.2boom']])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([[false]])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([[null]])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([[function() {}]])}).toThrow();
+    expect(function() {shrike.parseAxisAngle([[], [], undefined])}).toThrow();
+  });
 });
