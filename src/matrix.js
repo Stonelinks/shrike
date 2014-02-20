@@ -46,22 +46,6 @@ define([
       return _.zip.apply(_, A);
     });
 
-    shrike.register('dot', function(A, B) {
-      return shrike.sum(shrike.eltMult(shrike.toFloat(A), shrike.toFloat(B)));
-    });
-
-    shrike.register('cross', function(_A, _B) {
-      if (!shrike.isArray(_A) || !shrike.isArray(_B) || _A.length != 3 || _B.length != 3) {
-        shrike.throwError('cross: can\'t do a cross product with ' + _A + ' and ' + _B);
-      }
-
-      var A = shrike.toFloat(_A);
-      var B = shrike.toFloat(_B);
-
-      // a x b = (a2b3 - a3b2)i + (a3b1 - a1b3)j + (a1b2 - a2b1)k
-      return [(A[1] * B[2]) - (A[2] * B[1]), (A[2] * B[0]) - (A[0] * B[2]), (A[0] * B[1]) - (A[1] * B[0])];
-    });
-
     // identity matrix
     // returns an m x n identity matrix
     // if you leave out n, it will be an m x m matrix
@@ -82,8 +66,6 @@ define([
       }
       return ret;
     });
-
-    shrike.register('identity', shrike.eye);
 
     // zero matrix
     // returns an m x n matrix of zeros
@@ -150,16 +132,16 @@ define([
         cameradir = [0.0, 0.0, 1.0];
       }
 
-      var up = shrike.subtract(cameraup, shrike.scalarMult(cameradir, shrike.dot(cameradir, cameraup)));
+      var up = shrike.subtract(cameraup, shrike.scalarMult(cameradir, shrike.V3.dot(cameradir, cameraup)));
 
       cameradirlen = shrike.norm(up);
       if (cameradirlen < 1e-8) {
         up = [0.0, 1.0, 0.0];
-        up = shrike.subtract(up, shrike.scalarMult(cameradir, shrike.dot(cameradir, up)));
+        up = shrike.subtract(up, shrike.scalarMult(cameradir, shrike.V3.dot(cameradir, up)));
         cameradirlen = shrike.norm(up);
         if (cameradirlen < 1e-8) {
           up = [1.0, 0.0, 0.0];
-          up = shrike.subtract(up, shrike.scalarMult(cameradir, shrike.dot(cameradir, up)));
+          up = shrike.subtract(up, shrike.scalarMult(cameradir, shrike.V3.dot(cameradir, up)));
           cameradirlen = shrike.norm(up);
         }
       }
