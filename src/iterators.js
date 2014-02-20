@@ -17,9 +17,7 @@ define([
         shrike.throwError();
       }
 
-      if (A.length !== B.length) {
-        shrike.throwError('elementWiseIterator: trying to do an element-wise operation on unequal sized arrays');
-      }
+      shrike.assert(A.length === B.length, 'elementWiseIterator: trying to do an element-wise operation on unequal sized arrays');
 
       var is2d = false;
       if (shrike.is2DArray(A)) {
@@ -36,9 +34,7 @@ define([
       var ret = [];
       for (var i = 0; i < A.length; i++) {
         if (is2d) {
-          if (A[i].length !== B[i].length) {
-            shrike.throwError('elementWiseIterator: unequal row lengths while iterating through 2d array');
-          }
+          shrike.assert(A[i].length === B[i].length, 'elementWiseIterator: unequal row lengths while iterating through 2d array');
           var row = [];
           for (var j = 0; j < A[i].length; j++) {
             row.push(_function(A[i][j], B[i][j]));

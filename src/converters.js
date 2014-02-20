@@ -23,12 +23,9 @@ define([
       else if (shrike.isArray(thing)) {
 
         var _convert = function(thing) {
-          if (shrike.isNumber(thing)) {
-            return parseFloat(thing);
-          }
-          else {
-            shrike.throwError('toFloat: array has something in it that is not a number: ' + thing);
-          }
+          shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
+
+          return parseFloat(thing);
         };
 
         // its a 2d array
@@ -60,19 +57,15 @@ define([
         in : 39.370078740157481
       };
       var units = _.keys(unitDict);
-      if (_.contains(units, targetUnit) && _.contains(units, sourceUnit)) {
-        return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
-      }
-      else {
-        shrike.throwError('no conversion for either ' + sourceUnit + ' or ' + targetUnit);
-      }
+
+      shrike.assert(_.contains(units, targetUnit) && _.contains(units, sourceUnit), 'no conversion for either ' + sourceUnit + ' or ' + targetUnit);
+
+      return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
     });
 
     shrike.register('toDegrees', function(x) {
       var _convert = function(n) {
-        if (!shrike.isNumber(n)) {
-          shrike.throwError('toDegrees: not a number');
-        }
+        shrike.assert(shrike.isNumber(n), 'toDegrees: not a number');
         if (shrike.abs(n) <= 1e-10) {
           return 0.0;
         }
@@ -91,9 +84,7 @@ define([
 
     shrike.register('toRadians', function(x) {
       var _convert = function(n) {
-        if (!shrike.isNumber(n)) {
-          shrike.throwError('toRadians: not a number');
-        }
+        shrike.assert(shrike.isNumber(n), 'toRadians: not a number');
         return (shrike.PI / 180.0) * n;
       };
 
@@ -113,7 +104,7 @@ define([
       var _axis;
       var _angle;
       var _throwError = function() {
-        throw new Error('parseAxisAngle: arguments were not something we recognized');
+        shrike.throwError('parseAxisAngle: arguments were not something we recognized');
       };
 
       if (shrike.isArray(axis)) {
@@ -159,12 +150,7 @@ define([
       }
       var halfangle = angle / 2.0;
       var sinangle = Math.sin(halfangle) / Math.sqrt(axislength);
-      return [
-        Math.cos(halfangle),
-        axis[0] * sinangle,
-        axis[1] * sinangle,
-        axis[2] * sinangle
-        ];
+      return [Math.cos(halfangle), axis[0] * sinangle, axis[1] * sinangle, axis[2] * sinangle];
     });
 
     shrike.register('quatFromMatrix', function(Traw) {

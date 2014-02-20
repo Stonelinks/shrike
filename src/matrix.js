@@ -42,12 +42,8 @@ define([
     shrike.register('divide', shrike.scalarDivide);
 
     shrike.register('transpose', function(A) {
-      if (shrike.is2DArray(A)) {
-        return _.zip.apply(_, A);
-      }
-      else {
-        shrike.throwError('can only transpose 2d arrays');
-      }
+      shrike.assert(shrike.is2DArray(A), 'transpose: can only transpose 2d arrays');
+      return _.zip.apply(_, A);
     });
 
     shrike.register('dot', function(A, B) {
@@ -56,16 +52,14 @@ define([
 
     shrike.register('cross', function(_A, _B) {
       if (!shrike.isArray(_A) || !shrike.isArray(_B) || _A.length != 3 || _B.length != 3) {
-        throw new Error('can\'t do a cross product with ' + _A + ' and ' + _B);
+        shrike.throwError('cross: can\'t do a cross product with ' + _A + ' and ' + _B);
       }
 
       var A = shrike.toFloat(_A);
       var B = shrike.toFloat(_B);
 
       // a x b = (a2b3 - a3b2)i + (a3b1 - a1b3)j + (a1b2 - a2b1)k
-      return [
-        (A[1] * B[2]) - (A[2] * B[1]), (A[2] * B[0]) - (A[0] * B[2]), (A[0] * B[1]) - (A[1] * B[0])
-        ];
+      return [(A[1] * B[2]) - (A[2] * B[1]), (A[2] * B[0]) - (A[0] * B[2]), (A[0] * B[1]) - (A[1] * B[0])];
     });
 
     // identity matrix
@@ -123,10 +117,7 @@ define([
       // TODO: this try..catch is bad and you should feel bad
       try {
         var length = shrike.magnitude(array);
-        if (length == 0) {
-
-          throw new Error('Trying to normalize a zero array');
-        }
+        shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
         return shrike.divide(array, length);
       }
       catch (e) {
@@ -196,12 +187,7 @@ define([
       var A = shrike.toFloat(_A);
       var B = shrike.toFloat(_B);
 
-      if (A[0].length !== A.length) {
-
-        shrike.prettyPrint(A);
-        shrike.prettyPrint(B);
-        throw new Error('incompatible array sizes!');
-      }
+      shrike.assert(A[0].length === A.length, 'matrixMult: incompatible array sizes!');
 
       var result = [];
       for (var i = 0; i < A.length; i++) {

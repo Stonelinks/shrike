@@ -1368,18 +1368,27 @@ define('utils',[
       throw new Error('SHRIKE: ' + msg);
     };
 
+    var SHRIKE_DO_ASSERT = true;
+
+    if (SHRIKE_DO_ASSERT && (window.hasOwnProperty('DEBUG') ? window.DEBUG : SHRIKE_DO_ASSERT)) {
+      shrike.assert = function(cond, msg) {
+        if (!cond) {
+          shrike.throwError(msg);
+        }
+      };
+    }
+    else {
+      shrike.assert = window.pass;
+    }
+
     // set a (sometimes nested) property on the shrike object, warn if it conflicts
     shrike.register = function(k, v) {
 
       // keys can be compound
       var keys = k.split('.').reverse();
       if (keys.length == 1) {
-        if (shrike.hasOwnProperty(k)) {
-          shrike.throwError('shrike already has a ' + k);
-        }
-        else {
-          shrike[k] = v;
-        }
+        shrike.assert(!shrike.hasOwnProperty(k), 'shrike already has a ' + k);
+        shrike[k] = v;
       }
       else {
         var lastKey = keys[0];
@@ -1388,9 +1397,7 @@ define('utils',[
 
           var thisKey = keys.pop();
 
-          if (prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])) {
-            shrike.throwError('shrike already has a ' + k);
-          }
+          shrike.assert(!(prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])), 'shrike already has a ' + k);
 
           if (thisKey === lastKey) {
             prop[thisKey] = v;
@@ -1409,10 +1416,7 @@ define('utils',[
 
     // TODO: make it so you can alias things with depth >1
     shrike.alias = function(newName, orig) {
-      if (!shrike.hasOwnProperty(orig)) {
-        shrike.throwError('shrike doesn\'t have a ' + orig + ' to alias');
-      }
-
+      shrike.assert(shrike.hasOwnProperty(orig), 'shrike doesn\'t have a ' + orig + ' to alias');
       shrike.register(newName, shrike[orig]);
     };
 
@@ -1473,9 +1477,8 @@ define('utils',[
             var widest = 0;
             for (var i = 0; i < x.length; i++) {
               for (var j = 0; j < x[i].length; j++) {
-                if (typeof(x[i][j]) == 'string') {
-                  throw new Error('WARNING: there is a string in this matrix, you should fix that');
-                }
+
+                shrike.assert(!_.isString(x[i][j]), 'prettyPrint: there is a string in this matrix, you should fix that');
 
                 if (shrike.round(x[i][j], precision).toString().length > widest) {
                   widest = shrike.round(x[i][j], precision).toString().length;
@@ -1560,9 +1563,7 @@ define('iterators',[
         shrike.throwError();
       }
 
-      if (A.length !== B.length) {
-        shrike.throwError('elementWiseIterator: trying to do an element-wise operation on unequal sized arrays');
-      }
+      shrike.assert(A.length === B.length, 'elementWiseIterator: trying to do an element-wise operation on unequal sized arrays');
 
       var is2d = false;
       if (shrike.is2DArray(A)) {
@@ -1579,9 +1580,7 @@ define('iterators',[
       var ret = [];
       for (var i = 0; i < A.length; i++) {
         if (is2d) {
-          if (A[i].length !== B[i].length) {
-            shrike.throwError('elementWiseIterator: unequal row lengths while iterating through 2d array');
-          }
+          shrike.assert(A[i].length === B[i].length, 'elementWiseIterator: unequal row lengths while iterating through 2d array');
           var row = [];
           for (var j = 0; j < A[i].length; j++) {
             row.push(_function(A[i][j], B[i][j]));
@@ -3502,52 +3501,36 @@ define('common',[
 
     // sum an array
     shrike.register('sum', function(arr) {
-      if (!shrike.isArray(arr)) {
-        shrike.throwError('can\'t compute sum of non-array ' + arr);
-      }
-      else {
-        return _.reduce(shrike.toFloat(arr), function(memo, num) {
-          if (!shrike.isNumber(num)) {
-            shrike.throwError('can\'t compute sum of array with non numeric element: ' + num);
-          }
+      shrike.assert(shrike.isArray(arr), 'can\'t compute sum of non-array ' + arr);
 
-          return memo + num;
-        }, 0.0);
-      }
+      return _.reduce(shrike.toFloat(arr), function(memo, num) {
+        if (!shrike.isNumber(num)) {
+          shrike.throwError('can\'t compute sum of array with non numeric element: ' + num);
+        }
+
+        return memo + num;
+      }, 0.0);
     });
 
     shrike.register('square', function(x) {
-      if (!shrike.isNumber(x)) {
-        shrike.throwError('can\'t square non numeric element: ' + x);
-      }
-
+      shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
       return parseFloat(x) * parseFloat(x);
     });
 
     shrike.register('round', function(n, dec) {
       dec = dec || 0;
 
-      if (dec >= 20) {
-        shrike.throwError('round: can only round to 20 decimal places');
-      }
+      shrike.assert(dec <= 20, 'round: can only round to 20 decimal places');
+      shrike.assert(shrike.isNumber(n), 'round: ' + n + ' is not a numeric type');
 
-      if (shrike.isNumber(n)) {
-        return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
-      }
-      else {
-        shrike.throwError('round: ' + n + ' is not a numeric type');
-      }
+      return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
     });
 
     shrike.register('roundArray', function(A, dec) {
-      if (shrike.isArray(A)) {
-        return shrike.scalarIterator(A, function(a) {
-          return shrike.round(a, dec);
-        });
-      }
-      else {
-        shrike.throwError('roundArray: not an array');
-      }
+      shrike.throwError(shrike.isArray(A), 'roundArray: not an array');
+      return shrike.scalarIterator(A, function(a) {
+        return shrike.round(a, dec);
+      });
     });
   }
 });
@@ -3577,12 +3560,9 @@ define('converters',[
       else if (shrike.isArray(thing)) {
 
         var _convert = function(thing) {
-          if (shrike.isNumber(thing)) {
-            return parseFloat(thing);
-          }
-          else {
-            shrike.throwError('toFloat: array has something in it that is not a number: ' + thing);
-          }
+          shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
+
+          return parseFloat(thing);
         };
 
         // its a 2d array
@@ -3614,19 +3594,15 @@ define('converters',[
         in : 39.370078740157481
       };
       var units = _.keys(unitDict);
-      if (_.contains(units, targetUnit) && _.contains(units, sourceUnit)) {
-        return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
-      }
-      else {
-        shrike.throwError('no conversion for either ' + sourceUnit + ' or ' + targetUnit);
-      }
+
+      shrike.assert(_.contains(units, targetUnit) && _.contains(units, sourceUnit), 'no conversion for either ' + sourceUnit + ' or ' + targetUnit);
+
+      return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
     });
 
     shrike.register('toDegrees', function(x) {
       var _convert = function(n) {
-        if (!shrike.isNumber(n)) {
-          shrike.throwError('toDegrees: not a number');
-        }
+        shrike.assert(shrike.isNumber(n), 'toDegrees: not a number');
         if (shrike.abs(n) <= 1e-10) {
           return 0.0;
         }
@@ -3645,9 +3621,7 @@ define('converters',[
 
     shrike.register('toRadians', function(x) {
       var _convert = function(n) {
-        if (!shrike.isNumber(n)) {
-          shrike.throwError('toRadians: not a number');
-        }
+        shrike.assert(shrike.isNumber(n), 'toRadians: not a number');
         return (shrike.PI / 180.0) * n;
       };
 
@@ -3667,7 +3641,7 @@ define('converters',[
       var _axis;
       var _angle;
       var _throwError = function() {
-        throw new Error('parseAxisAngle: arguments were not something we recognized');
+        shrike.throwError('parseAxisAngle: arguments were not something we recognized');
       };
 
       if (shrike.isArray(axis)) {
@@ -3713,12 +3687,7 @@ define('converters',[
       }
       var halfangle = angle / 2.0;
       var sinangle = Math.sin(halfangle) / Math.sqrt(axislength);
-      return [
-        Math.cos(halfangle),
-        axis[0] * sinangle,
-        axis[1] * sinangle,
-        axis[2] * sinangle
-        ];
+      return [Math.cos(halfangle), axis[0] * sinangle, axis[1] * sinangle, axis[2] * sinangle];
     });
 
     shrike.register('quatFromMatrix', function(Traw) {
@@ -4076,12 +4045,8 @@ define('matrix',[
     shrike.register('divide', shrike.scalarDivide);
 
     shrike.register('transpose', function(A) {
-      if (shrike.is2DArray(A)) {
-        return _.zip.apply(_, A);
-      }
-      else {
-        shrike.throwError('can only transpose 2d arrays');
-      }
+      shrike.assert(shrike.is2DArray(A), 'transpose: can only transpose 2d arrays');
+      return _.zip.apply(_, A);
     });
 
     shrike.register('dot', function(A, B) {
@@ -4090,16 +4055,14 @@ define('matrix',[
 
     shrike.register('cross', function(_A, _B) {
       if (!shrike.isArray(_A) || !shrike.isArray(_B) || _A.length != 3 || _B.length != 3) {
-        throw new Error('can\'t do a cross product with ' + _A + ' and ' + _B);
+        shrike.throwError('cross: can\'t do a cross product with ' + _A + ' and ' + _B);
       }
 
       var A = shrike.toFloat(_A);
       var B = shrike.toFloat(_B);
 
       // a x b = (a2b3 - a3b2)i + (a3b1 - a1b3)j + (a1b2 - a2b1)k
-      return [
-        (A[1] * B[2]) - (A[2] * B[1]), (A[2] * B[0]) - (A[0] * B[2]), (A[0] * B[1]) - (A[1] * B[0])
-        ];
+      return [(A[1] * B[2]) - (A[2] * B[1]), (A[2] * B[0]) - (A[0] * B[2]), (A[0] * B[1]) - (A[1] * B[0])];
     });
 
     // identity matrix
@@ -4157,10 +4120,7 @@ define('matrix',[
       // TODO: this try..catch is bad and you should feel bad
       try {
         var length = shrike.magnitude(array);
-        if (length == 0) {
-
-          throw new Error('Trying to normalize a zero array');
-        }
+        shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
         return shrike.divide(array, length);
       }
       catch (e) {
@@ -4230,12 +4190,7 @@ define('matrix',[
       var A = shrike.toFloat(_A);
       var B = shrike.toFloat(_B);
 
-      if (A[0].length !== A.length) {
-
-        shrike.prettyPrint(A);
-        shrike.prettyPrint(B);
-        throw new Error('incompatible array sizes!');
-      }
+      shrike.assert(A[0].length === A.length, 'matrixMult: incompatible array sizes!');
 
       var result = [];
       for (var i = 0; i < A.length; i++) {
@@ -4297,6 +4252,7 @@ define('M4',[
   return function(shrike) {
 
     shrike.register('M4.matrixFromQuat', function(quatRaw) {
+      shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
       var quat = shrike.toFloat(quatRaw);
       var r = shrike.M4.clone(shrike.M4.I);
 
@@ -4407,9 +4363,7 @@ define('M4',[
 
       var trans = shrike.toFloat(transRaw);
 
-      if (trans.length !== 3) {
-        shrike.throwError('M4.composeFromQuatTrans: trans.length !== 3');
-      }
+      shrike.assert(trans.length === 3, 'M4.composeFromQuatTrans: trans.length !== 3');
 
       r[12] = trans[0];
       r[13] = trans[1];

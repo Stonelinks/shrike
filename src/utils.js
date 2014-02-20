@@ -15,18 +15,27 @@ define([
       throw new Error('SHRIKE: ' + msg);
     };
 
+    var SHRIKE_DO_ASSERT = true;
+
+    if (SHRIKE_DO_ASSERT && (window.hasOwnProperty('DEBUG') ? window.DEBUG : SHRIKE_DO_ASSERT)) {
+      shrike.assert = function(cond, msg) {
+        if (!cond) {
+          shrike.throwError(msg);
+        }
+      };
+    }
+    else {
+      shrike.assert = window.pass;
+    }
+
     // set a (sometimes nested) property on the shrike object, warn if it conflicts
     shrike.register = function(k, v) {
 
       // keys can be compound
       var keys = k.split('.').reverse();
       if (keys.length == 1) {
-        if (shrike.hasOwnProperty(k)) {
-          shrike.throwError('shrike already has a ' + k);
-        }
-        else {
-          shrike[k] = v;
-        }
+        shrike.assert(!shrike.hasOwnProperty(k), 'shrike already has a ' + k);
+        shrike[k] = v;
       }
       else {
         var lastKey = keys[0];
@@ -35,9 +44,7 @@ define([
 
           var thisKey = keys.pop();
 
-          if (prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])) {
-            shrike.throwError('shrike already has a ' + k);
-          }
+          shrike.assert(!(prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])), 'shrike already has a ' + k);
 
           if (thisKey === lastKey) {
             prop[thisKey] = v;
@@ -56,10 +63,7 @@ define([
 
     // TODO: make it so you can alias things with depth >1
     shrike.alias = function(newName, orig) {
-      if (!shrike.hasOwnProperty(orig)) {
-        shrike.throwError('shrike doesn\'t have a ' + orig + ' to alias');
-      }
-
+      shrike.assert(shrike.hasOwnProperty(orig), 'shrike doesn\'t have a ' + orig + ' to alias');
       shrike.register(newName, shrike[orig]);
     };
 
@@ -120,9 +124,8 @@ define([
             var widest = 0;
             for (var i = 0; i < x.length; i++) {
               for (var j = 0; j < x[i].length; j++) {
-                if (typeof(x[i][j]) == 'string') {
-                  throw new Error('WARNING: there is a string in this matrix, you should fix that');
-                }
+
+                shrike.assert(!_.isString(x[i][j]), 'prettyPrint: there is a string in this matrix, you should fix that');
 
                 if (shrike.round(x[i][j], precision).toString().length > widest) {
                   widest = shrike.round(x[i][j], precision).toString().length;

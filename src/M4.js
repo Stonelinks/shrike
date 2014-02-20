@@ -10,6 +10,7 @@ define([
   return function(shrike) {
 
     shrike.register('M4.matrixFromQuat', function(quatRaw) {
+      shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
       var quat = shrike.toFloat(quatRaw);
       var r = shrike.M4.clone(shrike.M4.I);
 
@@ -120,9 +121,7 @@ define([
 
       var trans = shrike.toFloat(transRaw);
 
-      if (trans.length !== 3) {
-        shrike.throwError('M4.composeFromQuatTrans: trans.length !== 3');
-      }
+      shrike.assert(trans.length === 3, 'M4.composeFromQuatTrans: trans.length !== 3');
 
       r[12] = trans[0];
       r[13] = trans[1];
