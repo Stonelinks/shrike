@@ -84,27 +84,19 @@ define([
     });
 
     shrike.register('magnitude', function(a) {
-      return Math.sqrt(shrike.sum(shrike.toFloat(a).map(square)));
+      if (shrike.isNativeFloatArray(a)) {
+        shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
+        return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+      }
+      return shrike.sqrt(shrike.sum(shrike.toFloat(a).map(square)));
     });
 
     shrike.register('norm', shrike.magnitude);
 
-    // TODO: rewrite the app so you can get rid of this
-    shrike.register('normalizeColVector', function(array) {
-      return shrike.transpose([shrike.normalize(shrike.transpose(array)[0])]);
-    });
-
     shrike.register('normalize', function(array) {
-
-      // TODO: this try..catch is bad and you should feel bad
-      try {
-        var length = shrike.magnitude(array);
-        shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
-        return shrike.divide(array, length);
-      }
-      catch (e) {
-        return shrike.normalizeColVector(array);
-      }
+      var length = shrike.magnitude(array);
+      shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
+      return shrike.divide(array, length);
     });
 
     shrike.register('translate', function(rowVector) {

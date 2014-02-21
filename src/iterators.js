@@ -59,7 +59,16 @@ define([
         });
       }
       else if (shrike.isArray(A)) {
-        return A.map(_function);
+        if (shrike.isNativeFloatArray(A)) {
+          var ret = new shrike.FLOAT_ARRAY_TYPE(A.length);
+          for (var i = 0; i < A.length; i++) {
+            ret[i] = _function(A[i]);
+          }
+          return ret;
+        }
+        else {
+          return A.map(_function);
+        }
       }
       else {
         return _function(A);
