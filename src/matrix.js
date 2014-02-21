@@ -26,12 +26,6 @@ define([
       });
     });
 
-    shrike.register('scalarMult', function(A, scalar) {
-      return shrike.scalarIterator(shrike.toFloat(A), function(a) {
-        return a * parseFloat(scalar);
-      });
-    });
-
     shrike.register('scalarDivide', function(A, scalar) {
       return shrike.scalarIterator(shrike.toFloat(A), function(a) {
         return a / parseFloat(scalar);
@@ -105,56 +99,6 @@ define([
       matrix[1][3] = rowVector[1];
       matrix[2][3] = rowVector[2];
       return matrix;
-    });
-
-    // returns a camera 4x4 matrix that looks along a ray with a desired up vector.
-    shrike.register('transformLookat', function(_lookat, _camerapos, _cameraup) {
-
-      var lookat = shrike.toFloat(_lookat);
-      var camerapos = shrike.toFloat(_camerapos);
-      var cameraup = shrike.toFloat(_cameraup);
-
-      var cameradir = shrike.subtract(lookat, camerapos);
-      var cameradirlen = shrike.norm(cameradir);
-
-      if (cameradirlen > 1e-15) {
-        cameradir = shrike.scalarMult(cameradir, 1.0 / cameradirlen);
-      }
-      else {
-        cameradir = [0.0, 0.0, 1.0];
-      }
-
-      var up = shrike.subtract(cameraup, shrike.scalarMult(cameradir, shrike.V3.dot(cameradir, cameraup)));
-
-      cameradirlen = shrike.norm(up);
-      if (cameradirlen < 1e-8) {
-        up = [0.0, 1.0, 0.0];
-        up = shrike.subtract(up, shrike.scalarMult(cameradir, shrike.V3.dot(cameradir, up)));
-        cameradirlen = shrike.norm(up);
-        if (cameradirlen < 1e-8) {
-          up = [1.0, 0.0, 0.0];
-          up = shrike.subtract(up, shrike.scalarMult(cameradir, shrike.V3.dot(cameradir, up)));
-          cameradirlen = shrike.norm(up);
-        }
-      }
-
-      up = shrike.scalarMult(up, 1.0 / cameradirlen);
-
-      var right = shrike.cross(up, cameradir);
-      var t = shrike.eye(4);
-      t[0][0] = right[0];
-      t[0][1] = up[0];
-      t[0][2] = cameradir[0];
-      t[0][3] = camerapos[0];
-      t[1][0] = right[1];
-      t[1][1] = up[1];
-      t[1][2] = cameradir[1];
-      t[1][3] = camerapos[1];
-      t[2][0] = right[2];
-      t[2][1] = up[2];
-      t[2][2] = cameradir[2];
-      t[2][3] = camerapos[2];
-      return t;
     });
 
     shrike.register('matrixMult', function(_A, _B) {
