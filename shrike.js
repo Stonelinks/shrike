@@ -3982,6 +3982,7 @@ define('converters',[
       };
     });
 
+    // TODO move into M4 namespace as toArray and fromArray
     shrike.register('M4toArray', function(m) {
       return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
     });
@@ -4019,12 +4020,6 @@ define('matrix',[
         return a * b;
       });
     });
-
-    // shrike.register('scalarMult', function(A, scalar) {
-    // return shrike.scalarIterator(shrike.toFloat(A), function(a) {
-    // return a * parseFloat(scalar);
-    // });
-    // });
 
     shrike.register('scalarDivide', function(A, scalar) {
       return shrike.scalarIterator(shrike.toFloat(A), function(a) {
@@ -4151,8 +4146,18 @@ define('V3',[
 
   return function(shrike) {
 
-  };
+    shrike.register('V3.objectToArray', function(_v) {
+      var v = shrike.toFloat(_v);
+      return ['x', 'y', 'z'].map(function(c) {
+        return v[c];
+      });
+    });
 
+    shrike.register('V3.arrayToObject', function(_v) {
+      var v = shrike.toFloat(_v);
+      return _.object(['x', 'y', 'z'], v);
+    });
+  };
 });
 
 // functions to augment mjs's 4x4 matrix
