@@ -1554,46 +1554,6 @@ define('iterators',[
 
   return function(shrike) {
 
-    // traverse through two transforms and call a function that recives an element from both arrays
-    shrike.register('elementWiseIterator', function(A, B, _function) {
-      _function = _function || pass;
-
-      if (!shrike.isArray(A) || !shrike.isArray(B)) {
-        console.warn('elementWiseIterator: one of these is not an array: %o and %o', A, B);
-        shrike.throwError();
-      }
-
-      shrike.assert(A.length === B.length, 'elementWiseIterator: trying to do an element-wise operation on unequal sized arrays');
-
-      var is2d = false;
-      if (shrike.is2DArray(A)) {
-        if (shrike.is2DArray(B)) {
-          is2d = true;
-        }
-        else {
-          console.warn('elementWiseIterator: one of these is a 2d array and the other is not: %o and %o', A, B);
-          shrike.throwError();
-        }
-      }
-
-      // actially iterate
-      var ret = [];
-      for (var i = 0; i < A.length; i++) {
-        if (is2d) {
-          shrike.assert(A[i].length === B[i].length, 'elementWiseIterator: unequal row lengths while iterating through 2d array');
-          var row = [];
-          for (var j = 0; j < A[i].length; j++) {
-            row.push(_function(A[i][j], B[i][j]));
-          }
-          ret.push(row);
-        }
-        else {
-          ret.push(_function(A[i], B[i]));
-        }
-      }
-      return ret;
-    });
-
     // applies a function to every element in A
     // input can be a string, integer, 1d or 2d array
     // if its a string or integer, the function will just be called once
@@ -3948,46 +3908,23 @@ define('converters',[
       return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
     });
 
-    // makes sure that a matrix is a 4x4 transform
-    shrike.register('matrix4', function(M) {
-      if (M[0].length == 3) {
-        M[0].push(0.0);
-        M[1].push(0.0);
-        M[2].push(0.0);
-      }
-
-      if (M.length == 3) {
-        M.push([0.0, 0.0, 0.0, 1.0]);
-      }
-
-      return M;
-    });
-
-    shrike.register('composeTransform', function(rot, trans) {
+    shrike.register('composeTransformArray', function(rot, trans) {
       return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
     });
 
-    shrike.register('decomposeTransform', function(T) {
-      var trans = [T[0][3], T[1][3], T[2][3]];
-
-      var rot = [
-      T[0].slice(0, 3),
-      T[1].slice(0, 3),
-      T[2].slice(0, 3)
-    ];
-
+    shrike.register('decomposeTransformArray', function(T) {
       return {
-        rotationMatrix: rot,
-        translation: trans
+        rotationMatrix: [T[0].slice(0, 3), T[1].slice(0, 3), T[2].slice(0, 3)],
+        translation: [T[0][3], T[1][3], T[2][3]]
       };
     });
 
-    // TODO move into M4 namespace as toArray and fromArray
-    shrike.register('M4toArray', function(m) {
+    // TODO move into M4 namespace as toTransformArray and fromTransformArray
+    shrike.register('M4toTransformArray', function(m) {
       return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
     });
 
-    shrike.register('ArrayToM4', function(m) {
+    shrike.register('transformArrayToM4', function(m) {
       return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
     });
   }
@@ -4003,36 +3940,10 @@ define('matrix',[
 
   return function(shrike) {
 
-    shrike.register('add', function(A, B) {
-      return shrike.elementWiseIterator(shrike.toFloat(A), shrike.toFloat(B), function(a, b) {
-        return a + b;
-      });
-    });
-
-    shrike.register('subtract', function(A, B) {
-      return shrike.elementWiseIterator(shrike.toFloat(A), shrike.toFloat(B), function(a, b) {
-        return a - b;
-      });
-    });
-
-    shrike.register('eltMult', function(A, B) {
-      return shrike.elementWiseIterator(shrike.toFloat(A), shrike.toFloat(B), function(a, b) {
-        return a * b;
-      });
-    });
-
-    shrike.register('scalarDivide', function(A, scalar) {
+    shrike.register('divide', function(A, scalar) {
       return shrike.scalarIterator(shrike.toFloat(A), function(a) {
         return a / parseFloat(scalar);
       });
-    });
-
-    // alias
-    shrike.register('divide', shrike.scalarDivide);
-
-    shrike.register('transpose', function(A) {
-      shrike.assert(shrike.is2DArray(A), 'transpose: can only transpose 2d arrays');
-      return _.zip.apply(_, A);
     });
 
     // identity matrix
@@ -4056,22 +3967,6 @@ define('matrix',[
       return ret;
     });
 
-    // zero matrix
-    // returns an m x n matrix of zeros
-    // if you leave out n, it will be an m x m matrix
-    shrike.register('zeros', function(m, n) {
-      n = n || m;
-      var ret = [];
-      for (var i = 0; i < n; i++) {
-        var row = [];
-        for (var j = 0; j < m; j++) {
-          row.push(0.0);
-        }
-        ret.push(row);
-      }
-      return ret;
-    });
-
     shrike.register('magnitude', function(a) {
       if (shrike.isNativeFloatArray(a)) {
         shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
@@ -4086,14 +3981,6 @@ define('matrix',[
       var length = shrike.magnitude(array);
       shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
       return shrike.divide(array, length);
-    });
-
-    shrike.register('translate', function(rowVector) {
-      var matrix = shrike.eye(4);
-      matrix[0][3] = rowVector[0];
-      matrix[1][3] = rowVector[1];
-      matrix[2][3] = rowVector[2];
-      return matrix;
     });
 
     shrike.register('matrixMult', function(_A, _B) {
@@ -4113,21 +4000,6 @@ define('matrix',[
           row.push(sum);
         }
         result.push(row);
-      }
-
-      return result;
-    });
-
-    shrike.register('matrixMultWithRow', function(_M, _v) {
-      var M = shrike.toFloat(_M);
-      var v = shrike.toFloat(_v);
-      var result = new Array(M.length);
-
-      for (var i = 0; i < M.length; ++i) {
-        result[i] = 0.0;
-        for (var j = 0; j < v.length; ++j) {
-          result[i] += M[i][j] * v[j];
-        }
       }
 
       return result;

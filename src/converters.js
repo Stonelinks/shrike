@@ -402,46 +402,23 @@ define([
       return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
     });
 
-    // makes sure that a matrix is a 4x4 transform
-    shrike.register('matrix4', function(M) {
-      if (M[0].length == 3) {
-        M[0].push(0.0);
-        M[1].push(0.0);
-        M[2].push(0.0);
-      }
-
-      if (M.length == 3) {
-        M.push([0.0, 0.0, 0.0, 1.0]);
-      }
-
-      return M;
-    });
-
-    shrike.register('composeTransform', function(rot, trans) {
+    shrike.register('composeTransformArray', function(rot, trans) {
       return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
     });
 
-    shrike.register('decomposeTransform', function(T) {
-      var trans = [T[0][3], T[1][3], T[2][3]];
-
-      var rot = [
-      T[0].slice(0, 3),
-      T[1].slice(0, 3),
-      T[2].slice(0, 3)
-    ];
-
+    shrike.register('decomposeTransformArray', function(T) {
       return {
-        rotationMatrix: rot,
-        translation: trans
+        rotationMatrix: [T[0].slice(0, 3), T[1].slice(0, 3), T[2].slice(0, 3)],
+        translation: [T[0][3], T[1][3], T[2][3]]
       };
     });
 
-    // TODO move into M4 namespace as toArray and fromArray
-    shrike.register('M4toArray', function(m) {
+    // TODO move into M4 namespace as toTransformArray and fromTransformArray
+    shrike.register('M4toTransformArray', function(m) {
       return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
     });
 
-    shrike.register('ArrayToM4', function(m) {
+    shrike.register('transformArrayToM4', function(m) {
       return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
     });
   }
