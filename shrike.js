@@ -1429,7 +1429,7 @@ define('utils',[
       return shrike.isNativeFloatArray(thing);
     });
 
-    // checks special array types
+    // checks for special array types
     shrike.register('isNativeFloatArray', function(thing) {
       try {
         return (_.isArray(thing) !== true) && Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
@@ -1452,7 +1452,7 @@ define('utils',[
         return false;
       }
 
-      return _.some(thing.map(shrike.isArray));
+      return _.some(_.map(thing, shrike.isArray));
     });
 
     shrike.register('isNumber', function(thing) {
@@ -1560,8 +1560,8 @@ define('iterators',[
     shrike.register('scalarIterator', function(A, _function) {
       _function = _function || pass;
       if (shrike.is2DArray(A)) {
-        return A.map(function(element) {
-          return element.map(_function);
+        return _.map(A, function(element) {
+          return _.map(element, _function);
         });
       }
       else if (shrike.isArray(A)) {
@@ -1573,7 +1573,7 @@ define('iterators',[
           return ret;
         }
         else {
-          return A.map(_function);
+          return _.map(A, _function);
         }
       }
       else {
@@ -3536,12 +3536,12 @@ define('converters',[
 
         // its a 2d array
         if (shrike.is2DArray(thing)) {
-          return thing.map(function(row) {
-            return row.map(_convert);
+          return _.map(thing, function(row) {
+            return _.map(row, _convert);
           });
         }
         else {
-          return thing.map(_convert);
+          return _.map(thing, _convert);
         }
       }
       else {
@@ -3650,7 +3650,7 @@ define('converters',[
       var axis = aa.axis;
       var angle = aa.angle;
 
-      var axisLength = shrike.sum(axis.map(shrike.square));
+      var axisLength = shrike.sum(_.map(axis, shrike.square));
       if (axisLength <= 1e-10) {
         return [1.0, 0.0, 0.0, 0.0];
       }
@@ -3741,7 +3741,7 @@ define('converters',[
     shrike.register('axisAngleFromQuat', function(quatraw) {
 
       var quat = shrike.toFloat(quatraw);
-      var sinang = shrike.sum(quat.slice(1, 4).map(shrike.square));
+      var sinang = shrike.sum(_.map(quat.slice(1, 4), shrike.square));
 
       var identity = {
         axis: [1.0, 0.0, 0.0],
@@ -3972,10 +3972,10 @@ define('matrix',[
         shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
         return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
       }
-      return shrike.sqrt(shrike.sum(shrike.toFloat(a).map(square)));
+      return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
     });
 
-    shrike.register('norm', shrike.magnitude);
+    shrike.alias('norm', 'magnitude');
 
     shrike.register('normalize', function(array) {
       var length = shrike.magnitude(array);
@@ -4049,7 +4049,7 @@ define('M4',[
       var quat = shrike.toFloat(quatRaw);
       var r = shrike.M4.clone(shrike.M4.I);
 
-      var length2 = shrike.sum(quat.map(shrike.square));
+      var length2 = shrike.sum(_.map(quat, shrike.square));
       if (length2 <= 1e-8) {
 
         // invalid quaternion, so return identity

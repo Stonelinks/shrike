@@ -14,7 +14,7 @@ define([
       var quat = shrike.toFloat(quatRaw);
       var r = shrike.M4.clone(shrike.M4.I);
 
-      var length2 = shrike.sum(quat.map(shrike.square));
+      var length2 = shrike.sum(_.map(quat, shrike.square));
       if (length2 <= 1e-8) {
 
         // invalid quaternion, so return identity

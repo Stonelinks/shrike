@@ -40,10 +40,10 @@ define([
         shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
         return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
       }
-      return shrike.sqrt(shrike.sum(shrike.toFloat(a).map(square)));
+      return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
     });
 
-    shrike.register('norm', shrike.magnitude);
+    shrike.alias('norm', 'magnitude');
 
     shrike.register('normalize', function(array) {
       var length = shrike.magnitude(array);

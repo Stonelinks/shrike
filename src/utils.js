@@ -76,7 +76,7 @@ define([
       return shrike.isNativeFloatArray(thing);
     });
 
-    // checks special array types
+    // checks for special array types
     shrike.register('isNativeFloatArray', function(thing) {
       try {
         return (_.isArray(thing) !== true) && Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
@@ -99,7 +99,7 @@ define([
         return false;
       }
 
-      return _.some(thing.map(shrike.isArray));
+      return _.some(_.map(thing, shrike.isArray));
     });
 
     shrike.register('isNumber', function(thing) {

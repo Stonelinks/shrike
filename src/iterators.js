@@ -14,8 +14,8 @@ define([
     shrike.register('scalarIterator', function(A, _function) {
       _function = _function || pass;
       if (shrike.is2DArray(A)) {
-        return A.map(function(element) {
-          return element.map(_function);
+        return _.map(A, function(element) {
+          return _.map(element, _function);
         });
       }
       else if (shrike.isArray(A)) {
@@ -27,7 +27,7 @@ define([
           return ret;
         }
         else {
-          return A.map(_function);
+          return _.map(A, _function);
         }
       }
       else {

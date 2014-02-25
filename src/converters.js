@@ -30,12 +30,12 @@ define([
 
         // its a 2d array
         if (shrike.is2DArray(thing)) {
-          return thing.map(function(row) {
-            return row.map(_convert);
+          return _.map(thing, function(row) {
+            return _.map(row, _convert);
           });
         }
         else {
-          return thing.map(_convert);
+          return _.map(thing, _convert);
         }
       }
       else {
@@ -144,7 +144,7 @@ define([
       var axis = aa.axis;
       var angle = aa.angle;
 
-      var axisLength = shrike.sum(axis.map(shrike.square));
+      var axisLength = shrike.sum(_.map(axis, shrike.square));
       if (axisLength <= 1e-10) {
         return [1.0, 0.0, 0.0, 0.0];
       }
@@ -235,7 +235,7 @@ define([
     shrike.register('axisAngleFromQuat', function(quatraw) {
 
       var quat = shrike.toFloat(quatraw);
-      var sinang = shrike.sum(quat.slice(1, 4).map(shrike.square));
+      var sinang = shrike.sum(_.map(quat.slice(1, 4), shrike.square));
 
       var identity = {
         axis: [1.0, 0.0, 0.0],
