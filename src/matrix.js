@@ -9,6 +9,7 @@ shrike.divide = function(A, scalar) {
 // identity matrix
 // returns an m x n identity matrix
 // if you leave out n, it will be an m x m matrix
+
 shrike.eye = function(m, n) {
   n = n || m;
   var ret = [];
@@ -27,8 +28,9 @@ shrike.eye = function(m, n) {
   return ret;
 };
 
+
 shrike.magnitude = function(a) {
-  if (shrike.isNativeFloatArray(a)) {
+  if (shrike.isFloatArray(a)) {
     shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
     return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   }
@@ -37,11 +39,13 @@ shrike.magnitude = function(a) {
 
 shrike.norm = shrike.magnitude;
 
+
 shrike.normalize = function(array) {
   var length = shrike.magnitude(array);
   shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
   return shrike.divide(array, length);
 };
+
 
 shrike.matrixMult = function(_A, _B) {
   var A = shrike.toFloat(_A);

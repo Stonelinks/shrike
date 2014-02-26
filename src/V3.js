@@ -7,6 +7,7 @@ shrike.V3.objectToArray = function(o) {
   });
 };
 
+
 shrike.V3.arrayToObject = function(_v) {
   shrike.assert(shrike.isArray(_v), 'not an array');
   var v = shrike.toFloat(_v);

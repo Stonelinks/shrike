@@ -146,21 +146,21 @@ describe('utils', function() {
 
     // strings, ints, floats, etc are not arrays
     // TODO make this as good as the isNumber stuff
-    expect(shrike.isNativeFloatArray(undefined)).not.toBe(true);
-    expect(shrike.isNativeFloatArray(false)).not.toBe(true);
-    expect(shrike.isNativeFloatArray('0')).not.toBe(true);
-    expect(shrike.isNativeFloatArray(0)).not.toBe(true);
-    expect(shrike.isNativeFloatArray(1.775)).not.toBe(true);
+    expect(shrike.isFloatArray(undefined)).not.toBe(true);
+    expect(shrike.isFloatArray(false)).not.toBe(true);
+    expect(shrike.isFloatArray('0')).not.toBe(true);
+    expect(shrike.isFloatArray(0)).not.toBe(true);
+    expect(shrike.isFloatArray(1.775)).not.toBe(true);
 
     // arguments isn't an array!
-    expect(shrike.isNativeFloatArray(arguments)).not.toBe(true);
+    expect(shrike.isFloatArray(arguments)).not.toBe(true);
 
     // this isn't a native 1d flaot array
-    expect(shrike.isNativeFloatArray([0, 1, 2])).not.toBe(true);
+    expect(shrike.isFloatArray([0, 1, 2])).not.toBe(true);
 
     // but this is
     var f32a = new Float32Array([100.55]);
-    expect(shrike.isNativeFloatArray(f32a)).toBe(true);
+    expect(shrike.isFloatArray(f32a)).toBe(true);
   });
 
   it('detect 2d arrays', function() {

@@ -1,6 +1,10 @@
-// shrike utility functions, mostly for registering and detecting types
+//
+// ##Constant: SHRIKE_FLOAT_ARRAY_TYPE
+//
+// The base float array type, borrowed it from mjs.
+//
 
-window.pass = window.pass || function() {};
+var SHRIKE_FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
 
 shrike.throwError = function(msg) {
   msg = msg || 'undefined error';
@@ -20,47 +24,113 @@ else {
   shrike.assert = window.pass;
 }
 
-// safe version of isArray
-shrike.isArray = function(thing) {
-  if (_.isArray(thing)) {
+//
+// ##Function: shrike.isArray
+//
+// A safer version of _.isArray that works with float32 array types.
+//
+// **Parameters:**
+//
+//   - **a** - the array / object / whatever operand.
+//
+// **Returns:**
+//
+// true or false
+//
+
+shrike.isArray = function(a) {
+  if (_.isArray(a)) {
     return true;
   }
 
-  return shrike.isNativeFloatArray(thing);
+  return shrike.isFloatArray(a);
 };
 
-// checks for special array types
-shrike.isNativeFloatArray = function(thing) {
+//
+// ##Function: shrike.isFloatArray
+//
+// Detects if something is a float array.
+//
+// **Parameters:**
+//
+//   - **a** - the array / object / whatever operand.
+//
+// **Returns:**
+//
+// true or false
+//
+
+shrike.isFloatArray = function(a) {
   try {
-    return (_.isArray(thing) !== true) && Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
+    return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
   }
   catch (e) {
     return false;
   }
 };
 
-shrike.is2DArray = function(thing) {
-  if (!shrike.isArray(thing)) {
+//
+// ##Function: shrike.is2DArray
+//
+// Detects if something is a 2d array.
+//
+// **Parameters:**
+//
+//   - **a** - the array / object / whatever operand.
+//
+// **Returns:**
+//
+// true or false
+//
+
+shrike.is2DArray = function(a) {
+  if (!shrike.isArray(a)) {
     return false;
   }
 
-  if (shrike.isNativeFloatArray(thing)) {
+  if (shrike.isFloatArray(a)) {
     return false;
   }
 
-  if (thing.length === 0) {
+  if (a.length === 0) {
     return false;
   }
 
-  return _.every(_.map(thing, shrike.isArray));
+  return _.every(_.map(a, shrike.isArray));
 };
 
-shrike.isNumber = function(thing) {
-  return !isNaN(parseFloat(thing)) && isFinite(thing) && !shrike.isArray(thing);
+//
+// ##Function: shrike.isNumber
+//
+// Detects if something is a number or numeric type, or can be converted into one.
+//
+// **Parameters:**
+//
+//   - **a** - the operand.
+//
+// **Returns:**
+//
+// true or false
+//
+
+shrike.isNumber = function(a) {
+  return !isNaN(parseFloat(a)) && isFinite(a) && !shrike.isArray(a);
 };
 
-// for pretty printing a matrix
-// TODO: maybe delete this? it is old and never really used
+//
+// ##Function: shrike.prettyPrint
+//
+// Pretty printing a matrix. TODO: maybe delete this? it is old and never really used.
+//
+// **Parameters:**
+//
+//   - **x** - whatever it is you're trying to print.
+//
+// **Returns:**
+//
+// nothing
+//
+
 shrike.prettyPrint = function(x) {
 
   console.log(function() {

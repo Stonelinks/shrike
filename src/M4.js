@@ -32,6 +32,7 @@ shrike.M4.matrixFromQuat = function(quatRaw) {
   return r;
 };
 
+
 shrike.M4.quatFromMatrix = function(_m) {
 
   var m = shrike.toFloat(_m);
@@ -95,6 +96,7 @@ shrike.M4.quatFromMatrix = function(_m) {
   return shrike.divide(r, shrike.magnitude(r));
 };
 
+
 shrike.M4.transFromMatrix = function(m) {
   // var r = new shrike.FLOAT_ARRAY_TYPE(3);
 
@@ -107,6 +109,7 @@ shrike.M4.transFromMatrix = function(m) {
 };
 
 // composes an instance from a quaternion and translation V3
+
 shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
   var r = shrike.M4.matrixFromQuat(quatRaw);
 

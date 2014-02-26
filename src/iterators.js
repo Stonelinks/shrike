@@ -1,8 +1,18 @@
-// various ways of iterating through arrays
+//
+// ##Function: shrike.scalarIterator
+//
+// Iterates through an array and applies a function to every element.
+//
+// **Parameters:**
+//
+//   - **A** - 1d or 2d array.
+//   - **_function** - function to be called with each element supplied as its single argument.
+//
+// **Returns:**
+//
+// The modified array.
+//
 
-// applies a function to every element in A
-// input can be a string, integer, 1d or 2d array
-// if its a string or integer, the function will just be called once
 shrike.scalarIterator = function(A, _function) {
   _function = _function || pass;
   if (shrike.is2DArray(A)) {
@@ -11,7 +21,7 @@ shrike.scalarIterator = function(A, _function) {
     });
   }
   else if (shrike.isArray(A)) {
-    if (shrike.isNativeFloatArray(A)) {
+    if (shrike.isFloatArray(A)) {
       var ret = new shrike.FLOAT_ARRAY_TYPE(A.length);
       for (var i = 0; i < A.length; i++) {
         ret[i] = _function(A[i]);

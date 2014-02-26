@@ -30,7 +30,7 @@
               <p>shrike - v0.0.0</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 Lucas Doyle <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#108;&#x75;&#x63;&#97;&#x73;&#46;&#x70;&#x2e;&#100;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;">&#108;&#x75;&#x63;&#97;&#x73;&#46;&#x70;&#x2e;&#100;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x6c;&#x75;&#99;&#x61;&#115;&#46;&#x70;&#46;&#100;&#x6f;&#121;&#x6c;&#101;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#x6c;&#x75;&#99;&#x61;&#115;&#46;&#x70;&#46;&#100;&#x6f;&#121;&#x6c;&#101;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -51,12 +51,13 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>shrike utility functions, mostly for registering and detecting types</p>
+              <h2 id="constant-shrike_float_array_type">Constant: SHRIKE_FLOAT_ARRAY_TYPE</h2>
+<p>The base float array type, borrowed it from mjs.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  
-  window.pass = window.pass || <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>};
+  <span class="hljs-keyword">var</span> SHRIKE_FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
   
   shrike.throwError = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(msg)</span> {</span>
     msg = msg || <span class="hljs-string">'undefined error'</span>;
@@ -85,16 +86,24 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>safe version of isArray</p>
+              <h2 id="function-shrike-isarray">Function: shrike.isArray</h2>
+<p>A safer version of _.isArray that works with float32 array types.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>a</strong> - the array / object / whatever operand.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>true or false</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.isArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span>
-    <span class="hljs-keyword">if</span> (_.isArray(thing)) {
+            <div class="content"><div class='highlight'><pre>  
+  shrike.isArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+    <span class="hljs-keyword">if</span> (_.isArray(a)) {
       <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
   
-    <span class="hljs-keyword">return</span> shrike.isNativeFloatArray(thing);
+    <span class="hljs-keyword">return</span> shrike.isFloatArray(a);
   };</pre></div></div>
             
         </li>
@@ -106,37 +115,25 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>checks for special array types</p>
+              <h2 id="function-shrike-isfloatarray">Function: shrike.isFloatArray</h2>
+<p>Detects if something is a float array.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>a</strong> - the array / object / whatever operand.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>true or false</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.isNativeFloatArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.isFloatArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
     <span class="hljs-keyword">try</span> {
-      <span class="hljs-keyword">return</span> (_.isArray(thing) !== <span class="hljs-literal">true</span>) &amp;&amp; <span class="hljs-built_in">Object</span>.prototype.toString.call(thing).slice(-<span class="hljs-string">'Array]'</span>.length) == <span class="hljs-string">'Array]'</span>;
+      <span class="hljs-keyword">return</span> (_.isArray(a) !== <span class="hljs-literal">true</span>) &amp;&amp; <span class="hljs-built_in">Object</span>.prototype.toString.call(a).slice(-<span class="hljs-string">'Array]'</span>.length) == <span class="hljs-string">'Array]'</span>;
     }
     <span class="hljs-keyword">catch</span> (e) {
       <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
-  };
-  
-  shrike.is2DArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span>
-    <span class="hljs-keyword">if</span> (!shrike.isArray(thing)) {
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }
-  
-    <span class="hljs-keyword">if</span> (shrike.isNativeFloatArray(thing)) {
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }
-  
-    <span class="hljs-keyword">if</span> (thing.length === <span class="hljs-number">0</span>) {
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }
-  
-    <span class="hljs-keyword">return</span> _.every(_.map(thing, shrike.isArray));
-  };
-  
-  shrike.isNumber = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span>
-    <span class="hljs-keyword">return</span> !<span class="hljs-built_in">isNaN</span>(<span class="hljs-built_in">parseFloat</span>(thing)) &amp;&amp; <span class="hljs-built_in">isFinite</span>(thing) &amp;&amp; !shrike.isArray(thing);
   };</pre></div></div>
             
         </li>
@@ -148,12 +145,81 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>for pretty printing a matrix
-TODO: maybe delete this? it is old and never really used</p>
+              <h2 id="function-shrike-is2darray">Function: shrike.is2DArray</h2>
+<p>Detects if something is a 2d array.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>a</strong> - the array / object / whatever operand.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>true or false</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.prettyPrint = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.is2DArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+    <span class="hljs-keyword">if</span> (!shrike.isArray(a)) {
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+  
+    <span class="hljs-keyword">if</span> (shrike.isFloatArray(a)) {
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+  
+    <span class="hljs-keyword">if</span> (a.length === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+  
+    <span class="hljs-keyword">return</span> _.every(_.map(a, shrike.isArray));
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="function-shrike-isnumber">Function: shrike.isNumber</h2>
+<p>Detects if something is a number or numeric type, or can be converted into one.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>a</strong> - the operand.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>true or false</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  shrike.isNumber = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+    <span class="hljs-keyword">return</span> !<span class="hljs-built_in">isNaN</span>(<span class="hljs-built_in">parseFloat</span>(a)) &amp;&amp; <span class="hljs-built_in">isFinite</span>(a) &amp;&amp; !shrike.isArray(a);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="function-shrike-prettyprint">Function: shrike.prettyPrint</h2>
+<p>Pretty printing a matrix. TODO: maybe delete this? it is old and never really used.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>x</strong> - whatever it is you’re trying to print.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>nothing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  shrike.prettyPrint = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
   
     console.log(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">if</span> (shrike.isArray(x)) {
@@ -167,11 +233,11 @@ TODO: maybe delete this? it is old and never really used</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>find out what the widest number will be</p>
 
@@ -193,11 +259,11 @@ TODO: maybe delete this? it is old and never really used</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>add spacing and create borders</p>
 
@@ -241,11 +307,11 @@ TODO: maybe delete this? it is old and never really used</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>actually print everything</p>
 
@@ -266,11 +332,11 @@ TODO: maybe delete this? it is old and never really used</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>not an array</p>
 
@@ -285,32 +351,26 @@ TODO: maybe delete this? it is old and never really used</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>various ways of iterating through arrays</p>
+              <h2 id="function-shrike-scalariterator">Function: shrike.scalarIterator</h2>
+<p>Iterates through an array and applies a function to every element.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>A</strong> - 1d or 2d array.</li>
+<li><strong>_function</strong> - function to be called with each element supplied as its single argument.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>The modified array.</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>applies a function to every element in A
-input can be a string, integer, 1d or 2d array
-if its a string or integer, the function will just be called once</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  shrike.scalarIterator = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(A, _function)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.scalarIterator = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(A, _function)</span> {</span>
     _function = _function || pass;
     <span class="hljs-keyword">if</span> (shrike.is2DArray(A)) {
       <span class="hljs-keyword">return</span> _.map(A, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(element)</span> {</span>
@@ -318,7 +378,7 @@ if its a string or integer, the function will just be called once</p>
       });
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isArray(A)) {
-      <span class="hljs-keyword">if</span> (shrike.isNativeFloatArray(A)) {
+      <span class="hljs-keyword">if</span> (shrike.isFloatArray(A)) {
         <span class="hljs-keyword">var</span> ret = <span class="hljs-keyword">new</span> shrike.FLOAT_ARRAY_TYPE(A.length);
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; A.length; i++) {
           ret[i] = _function(A[i]);
@@ -337,26 +397,13 @@ if its a string or integer, the function will just be called once</p>
         </li>
         
         
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>assign base properites to shrike</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>borrow all of Math’s functions and constants… except round since shrike provides its own round function</p>
+              <p>Borrow all of window.Math’s functions and constants… except round since shrike provides its own round function.</p>
 
             </div>
             
@@ -373,7 +420,7 @@ if its a string or integer, the function will just be called once</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>borrow mjs too</p>
+              <p>Borrow mjs too.</p>
 
             </div>
             
@@ -390,7 +437,7 @@ if its a string or integer, the function will just be called once</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>alias M4x4 to M4 since it is shorter to type</p>
+              <p>Alias M4x4 to M4 for convenience.</p>
 
             </div>
             
@@ -405,9 +452,29 @@ if its a string or integer, the function will just be called once</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>things common to both M4, V3 or all arrays in general</p>
+              <h2 id="function-shrike-sum">Function: shrike.sum</h2>
+<p>Sum up a 1d array.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>a</strong> - the array operand.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float sum.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  shrike.sum = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+    shrike.assert(shrike.isArray(a), <span class="hljs-string">'can\'t compute sum of non-array '</span> + a);
+  
+    <span class="hljs-keyword">return</span> _.reduce(shrike.toFloat(a), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(memo, num)</span> {</span>
+      <span class="hljs-keyword">if</span> (!shrike.isNumber(num)) {
+        shrike.throwError(<span class="hljs-string">'can\'t compute sum of array with non numeric element: '</span> + num);
+      }
+  
+      <span class="hljs-keyword">return</span> memo + num;
+    }, <span class="hljs-number">0.0</span>);
+  };</pre></div></div>
             
         </li>
         
@@ -418,41 +485,21 @@ if its a string or integer, the function will just be called once</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>sum an array</p>
+              <h2 id="function-shrike-square">Function: shrike.square</h2>
+<p>Square a number.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>x</strong> - the numeric operand.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float square.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.sum = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(arr)</span> {</span>
-    shrike.assert(shrike.isArray(arr), <span class="hljs-string">'can\'t compute sum of non-array '</span> + arr);
-  
-    <span class="hljs-keyword">return</span> _.reduce(shrike.toFloat(arr), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(memo, num)</span> {</span>
-      <span class="hljs-keyword">if</span> (!shrike.isNumber(num)) {
-        shrike.throwError(<span class="hljs-string">'can\'t compute sum of array with non numeric element: '</span> + num);
-      }
-  
-      <span class="hljs-keyword">return</span> memo + num;
-    }, <span class="hljs-number">0.0</span>);
-  };
-  
+            <div class="content"><div class='highlight'><pre>  
   shrike.square = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     shrike.assert(shrike.isNumber(x), <span class="hljs-string">'can\'t square non numeric element: '</span> + x);
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(x) * <span class="hljs-built_in">parseFloat</span>(x);
-  };
-  
-  shrike.round = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n, dec)</span> {</span>
-    dec = dec || <span class="hljs-number">0</span>;
-  
-    shrike.assert(dec &lt;= <span class="hljs-number">20</span>, <span class="hljs-string">'round: can only round to 20 decimal places'</span>);
-    shrike.assert(shrike.isNumber(n), <span class="hljs-string">'round: '</span> + n + <span class="hljs-string">' is not a numeric type'</span>);
-  
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Number</span>(n + <span class="hljs-string">''</span>).toFixed(<span class="hljs-built_in">parseInt</span>(dec)));
-  };
-  
-  shrike.roundArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(A, dec)</span> {</span>
-    shrike.throwError(shrike.isArray(A), <span class="hljs-string">'roundArray: not an array'</span>);
-    <span class="hljs-keyword">return</span> shrike.scalarIterator(A, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
-      <span class="hljs-keyword">return</span> shrike.round(a, dec);
-    });
   };</pre></div></div>
             
         </li>
@@ -464,12 +511,30 @@ if its a string or integer, the function will just be called once</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>data conversion</p>
+              <h2 id="function-shrike-round">Function: shrike.round</h2>
+<p>Round a number to a an arbitrary precision.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>x</strong> - numeric operand.</li>
+<li><strong>dec</strong> - (optional) the number of decimal places, defaults to zero.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float rounded number.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  
-  shrike.toFloat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span></pre></div></div>
+  shrike.round = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n, dec)</span> {</span>
+    <span class="hljs-keyword">if</span> (dec === <span class="hljs-literal">undefined</span>) {
+      dec = <span class="hljs-number">0</span>;
+    }
+  
+    shrike.assert(shrike.isNumber(dec), <span class="hljs-string">'round: '</span> + dec + <span class="hljs-string">' is not valid number of decimal places'</span>);
+    shrike.assert(dec &lt;= <span class="hljs-number">20</span>, <span class="hljs-string">'round: can only round up to 20 decimal places'</span>);
+    shrike.assert(shrike.isNumber(n), <span class="hljs-string">'round: '</span> + n + <span class="hljs-string">' is not a numeric type'</span>);
+  
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Number</span>(n + <span class="hljs-string">''</span>).toFixed(<span class="hljs-built_in">parseInt</span>(dec)));
+  };</pre></div></div>
             
         </li>
         
@@ -479,6 +544,58 @@ if its a string or integer, the function will just be called once</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h2 id="function-shrike-roundarray">Function: shrike.roundArray</h2>
+<p>Round each element in an array to a an arbitrary precision.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>A</strong> - numeric array operand.</li>
+<li><strong>dec</strong> - (optional) the number of decimal places, defaults to zero.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float rounded array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  shrike.roundArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(A, dec)</span> {</span>
+    shrike.throwError(shrike.isArray(A), <span class="hljs-string">'roundArray: not an array'</span>);
+    <span class="hljs-keyword">return</span> shrike.scalarIterator(A, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+      <span class="hljs-keyword">return</span> shrike.round(a, dec);
+    });
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h2 id="function-shrike-tofloat">Function: shrike.toFloat</h2>
+<p>Converts the argument to a float value.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>x, y, z</strong> - the 3 elements of the new vector.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>A new vector containing with the given argument values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  shrike.toFloat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>its a number</p>
 
@@ -491,28 +608,28 @@ if its a string or integer, the function will just be called once</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>its already floating point</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isNativeFloatArray(thing)) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isFloatArray(thing)) {
       <span class="hljs-keyword">return</span> thing;
     }</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>its an array</p>
 
@@ -529,11 +646,11 @@ if its a string or integer, the function will just be called once</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>its a 2d array</p>
 
@@ -555,6 +672,7 @@ if its a string or integer, the function will just be called once</p>
   
   <span class="hljs-comment">/* return a scale so that X source * scale = Y target */</span>
   <span class="hljs-comment">/* this function mirrors GetUnitConversionScale in mujin/dev/mujin/__init__.py */</span>
+  
   shrike.unitConversionScale = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sourceUnit, targetUnit)</span> {</span>
     <span class="hljs-keyword">var</span> unitDict = {
       m: <span class="hljs-number">1.0</span>,
@@ -572,6 +690,7 @@ if its a string or integer, the function will just be called once</p>
   
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(unitDict[targetUnit] / unitDict[sourceUnit]);
   };
+  
   
   shrike.toDegrees = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> {</span>
@@ -592,6 +711,7 @@ if its a string or integer, the function will just be called once</p>
     }
   };
   
+  
   shrike.toRadians = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> {</span>
       shrike.assert(shrike.isNumber(n), <span class="hljs-string">'toRadians: not a number'</span>);
@@ -609,11 +729,11 @@ if its a string or integer, the function will just be called once</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>parses an axis and an angle from some arguments
 input can be an object with axis and angle properties
@@ -622,7 +742,8 @@ or an array of 4 values, first three being axis and the last one angle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.parseAxisAngle = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(axis, angle)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.parseAxisAngle = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(axis, angle)</span> {</span>
     <span class="hljs-keyword">var</span> _axis;
     <span class="hljs-keyword">var</span> _angle;
     <span class="hljs-keyword">var</span> _throwError = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
@@ -663,17 +784,18 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>convert a quaternion from axis angle (radians)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.quatFromAxisAngle = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_axis, _angle)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.quatFromAxisAngle = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_axis, _angle)</span> {</span>
     <span class="hljs-keyword">var</span> aa = shrike.parseAxisAngle(_axis, _angle);
     <span class="hljs-keyword">var</span> axis = aa.axis;
     <span class="hljs-keyword">var</span> angle = aa.angle;
@@ -688,11 +810,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>TODO: return a float array</p>
 
@@ -718,11 +840,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>find the largest diagonal element and jump to the appropriate case</p>
 
@@ -759,6 +881,7 @@ or an array of 4 values, first three being axis and the last one angle</p>
     <span class="hljs-keyword">return</span> shrike.divide(rot, shrike.magnitude(rot));
   };
   
+  
   shrike.matrixFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw)</span> {</span>
     <span class="hljs-keyword">var</span> quat = shrike.toFloat(quatRaw);
   
@@ -768,11 +891,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>invalid quaternion, so return identity</p>
 
@@ -804,17 +927,18 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>angle is returned in radians</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.axisAngleFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatraw)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.axisAngleFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatraw)</span> {</span>
   
     <span class="hljs-keyword">var</span> quat = shrike.toFloat(quatraw);
     <span class="hljs-keyword">var</span> sinang = shrike.sum(_.map(quat.slice(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>), shrike.square));
@@ -845,6 +969,7 @@ or an array of 4 values, first three being axis and the last one angle</p>
       angle: angle
     };
   };
+  
   
   shrike.axisAngleFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.axisAngleFromQuat(shrike.quatFromMatrix(m));
@@ -884,6 +1009,7 @@ or an array of 4 values, first three being axis and the last one angle</p>
     <span class="hljs-keyword">return</span> shrike.toDegrees([x, y, z]);
   };
   
+  
   shrike.zyxFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Traw)</span> {</span>
     <span class="hljs-keyword">var</span> T = shrike.toFloat(Traw);
     <span class="hljs-keyword">var</span> epsilon = <span class="hljs-number">1e-10</span>;
@@ -920,6 +1046,7 @@ or an array of 4 values, first three being axis and the last one angle</p>
     <span class="hljs-keyword">return</span> shrike.toDegrees([x, y, z]);
   };
   
+  
   shrike.matrixFromZXY = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ZXY)</span> {</span>
   
     <span class="hljs-keyword">var</span> x = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZXY[<span class="hljs-number">0</span>]));
@@ -942,6 +1069,7 @@ or an array of 4 values, first three being axis and the last one angle</p>
       ];
   };
   
+  
   shrike.matrixFromZYX = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ZYX)</span> {</span>
     <span class="hljs-keyword">var</span> x = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZYX[<span class="hljs-number">0</span>]));
     <span class="hljs-keyword">var</span> y = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZYX[<span class="hljs-number">1</span>]));
@@ -963,17 +1091,21 @@ or an array of 4 values, first three being axis and the last one angle</p>
       ];
   };
   
+  
   shrike.zxyFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quat)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.zxyFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
   };
+  
   
   shrike.quatFromZXY = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(zxy)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.quatFromMatrix(shrike.matrixFromZXY(shrike.toFloat(zxy)));
   };
   
+  
   shrike.zyxFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quat)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.zyxFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
   };
+  
   
   shrike.quatFromZYX = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(zyx)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.quatFromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
@@ -982,23 +1114,26 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>carves out the 3x3 rotation matrix out of a 3x4 or 4x4 transform</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.matrix4to3 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(M)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.matrix4to3 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(M)</span> {</span>
     <span class="hljs-keyword">return</span> [[M[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]], [M[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]], [M[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>]]];
   };
+  
   
   shrike.composeTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(rot, trans)</span> {</span>
     <span class="hljs-keyword">return</span> [[rot[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">0</span>]], [rot[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">1</span>]], [rot[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">2</span>]], [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>]];
   };
+  
   
   shrike.decomposeTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(T)</span> {</span>
     <span class="hljs-keyword">return</span> {
@@ -1010,19 +1145,21 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>TODO move into M4 namespace as toTransformArray and fromTransformArray</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.M4toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.M4toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">return</span> [[m[<span class="hljs-number">0</span>], m[<span class="hljs-number">4</span>], m[<span class="hljs-number">8</span>], m[<span class="hljs-number">12</span>]], [m[<span class="hljs-number">1</span>], m[<span class="hljs-number">5</span>], m[<span class="hljs-number">9</span>], m[<span class="hljs-number">13</span>]], [m[<span class="hljs-number">2</span>], m[<span class="hljs-number">6</span>], m[<span class="hljs-number">10</span>], m[<span class="hljs-number">14</span>]], [m[<span class="hljs-number">3</span>], m[<span class="hljs-number">7</span>], m[<span class="hljs-number">11</span>], m[<span class="hljs-number">15</span>]]];
   };
+  
   
   shrike.transformArrayToM4 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">return</span> [m[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]];
@@ -1031,11 +1168,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>common matrix operations</p>
 
@@ -1051,11 +1188,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>identity matrix
 returns an m x n identity matrix
@@ -1063,7 +1200,8 @@ if you leave out n, it will be an m x m matrix</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.eye = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m, n)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.eye = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m, n)</span> {</span>
     n = n || m;
     <span class="hljs-keyword">var</span> ret = [];
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
@@ -1081,8 +1219,9 @@ if you leave out n, it will be an m x m matrix</p>
     <span class="hljs-keyword">return</span> ret;
   };
   
+  
   shrike.magnitude = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
-    <span class="hljs-keyword">if</span> (shrike.isNativeFloatArray(a)) {
+    <span class="hljs-keyword">if</span> (shrike.isFloatArray(a)) {
       shrike.assert(a.length === <span class="hljs-number">3</span>, <span class="hljs-string">'magnitude: native float array\'s need to be of length three'</span>);
       <span class="hljs-keyword">return</span> shrike.sqrt(a[<span class="hljs-number">0</span>] * a[<span class="hljs-number">0</span>] + a[<span class="hljs-number">1</span>] * a[<span class="hljs-number">1</span>] + a[<span class="hljs-number">2</span>] * a[<span class="hljs-number">2</span>]);
     }
@@ -1091,11 +1230,13 @@ if you leave out n, it will be an m x m matrix</p>
   
   shrike.norm = shrike.magnitude;
   
+  
   shrike.normalize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(array)</span> {</span>
     <span class="hljs-keyword">var</span> length = shrike.magnitude(array);
     shrike.assert(length !== <span class="hljs-number">0</span>, <span class="hljs-string">'normalize: trying to normalize a zero array'</span>);
     <span class="hljs-keyword">return</span> shrike.divide(array, length);
   };
+  
   
   shrike.matrixMult = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_A, _B)</span> {</span>
     <span class="hljs-keyword">var</span> A = shrike.toFloat(_A);
@@ -1122,11 +1263,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>functions to augment mjs’s V3 vector</p>
 
@@ -1140,6 +1281,7 @@ if you leave out n, it will be an m x m matrix</p>
     });
   };
   
+  
   shrike.V3.arrayToObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_v)</span> {</span>
     shrike.assert(shrike.isArray(_v), <span class="hljs-string">'not an array'</span>);
     <span class="hljs-keyword">var</span> v = shrike.toFloat(_v);
@@ -1149,11 +1291,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>functions to augment mjs’s 4x4 matrix</p>
 
@@ -1171,11 +1313,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>invalid quaternion, so return identity</p>
 
@@ -1204,6 +1346,7 @@ if you leave out n, it will be an m x m matrix</p>
     <span class="hljs-keyword">return</span> r;
   };
   
+  
   shrike.M4.quatFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_m)</span> {</span>
   
     <span class="hljs-keyword">var</span> m = shrike.toFloat(_m);
@@ -1215,11 +1358,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>var m41 = m[3];</p>
 
@@ -1232,11 +1375,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>var m42 = m[7];</p>
 
@@ -1249,11 +1392,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>var m43 = m[11];
 var m14 = m[12];
@@ -1277,11 +1420,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>find mhe largesm diagonal elemenm and jump mo mhe appropriame case</p>
 
@@ -1318,16 +1461,17 @@ var m44 = m[15];</p>
     <span class="hljs-keyword">return</span> shrike.divide(r, shrike.magnitude(r));
   };
   
+  
   shrike.M4.transFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>var r = new shrike.FLOAT_ARRAY_TYPE(3);</p>
 
@@ -1336,11 +1480,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>TODO use native array type here…</p>
 
@@ -1356,17 +1500,18 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>composes an instance from a quaternion and translation V3</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.M4.composeFromQuatTrans = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw, transRaw)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.M4.composeFromQuatTrans = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw, transRaw)</span> {</span>
     <span class="hljs-keyword">var</span> r = shrike.M4.matrixFromQuat(quatRaw);
   
     <span class="hljs-keyword">var</span> trans = shrike.toFloat(transRaw);
@@ -1383,28 +1528,29 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>requires t0, t1 to be distinct</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.linearlyInterpolate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t0, x0, t1, x1, t)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.linearlyInterpolate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t0, x0, t1, x1, t)</span> {</span>
     <span class="hljs-keyword">return</span> (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>for debugging / console convenience</p>
 

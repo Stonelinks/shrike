@@ -42,6 +42,14 @@ describe('common', function() {
     expect(function() {shrike.round([undefined])}).toThrow();
     expect(function() {shrike.round([[undefined]])}).toThrow();
 
+    // expect(function() {shrike.round(100, undefined)}).toThrow();
+    expect(function() {shrike.round(100, false)}).toThrow();
+    expect(function() {shrike.round(100, 'lol wtf')}).toThrow();
+    expect(function() {shrike.round(100, [[1, 2, 3], [1, 2, 4]])}).toThrow();
+    expect(function() {shrike.round(100, ['i\m a string'])}).toThrow();
+    expect(function() {shrike.round(100, [undefined])}).toThrow();
+    expect(function() {shrike.round(100, [[undefined]])}).toThrow();
+
     // ints
     expect(shrike.round(1111)).toEqual(1111);
     expect(shrike.round(1111, 2)).toEqual(1111);
