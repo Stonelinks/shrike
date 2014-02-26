@@ -37,65 +37,26 @@ define(['underscore', 'mjs'], function(_, mjs) {
     shrike.assert = window.pass;
   }
   
-  // set a (sometimes nested) property on the shrike object, warn if it conflicts
-  shrike.register = function(k, v) {
-  
-    // keys can be compound
-    var keys = k.split('.').reverse();
-    if (keys.length == 1) {
-      shrike.assert(!shrike.hasOwnProperty(k), 'shrike already has a ' + k);
-      shrike[k] = v;
-    }
-    else {
-      var lastKey = keys[0];
-      var prop = shrike;
-      while (keys.length > 0) {
-  
-        var thisKey = keys.pop();
-  
-        shrike.assert(!(prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])), 'shrike already has a ' + k);
-  
-        if (thisKey === lastKey) {
-          prop[thisKey] = v;
-        }
-        else {
-  
-          if (!_.isObject(prop[thisKey])) {
-            prop[thisKey] = {};
-          }
-  
-          prop = prop[thisKey];
-        }
-      }
-    }
-  };
-  
-  // TODO: make it so you can alias things with depth >1
-  shrike.alias = function(newName, orig) {
-    shrike.assert(shrike.hasOwnProperty(orig), 'shrike doesn\'t have a ' + orig + ' to alias');
-    shrike.register(newName, shrike[orig]);
-  };
-  
   // safe version of isArray
-  shrike.register('isArray', function(thing) {
+  shrike.isArray = function(thing) {
     if (_.isArray(thing)) {
       return true;
     }
   
     return shrike.isNativeFloatArray(thing);
-  });
+  };
   
   // checks for special array types
-  shrike.register('isNativeFloatArray', function(thing) {
+  shrike.isNativeFloatArray = function(thing) {
     try {
       return (_.isArray(thing) !== true) && Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
     }
     catch (e) {
       return false;
     }
-  });
+  };
   
-  shrike.register('is2DArray', function(thing) {
+  shrike.is2DArray = function(thing) {
     if (!shrike.isArray(thing)) {
       return false;
     }
@@ -109,15 +70,15 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
   
     return _.every(_.map(thing, shrike.isArray));
-  });
+  };
   
-  shrike.register('isNumber', function(thing) {
+  shrike.isNumber = function(thing) {
     return !isNaN(parseFloat(thing)) && isFinite(thing) && !shrike.isArray(thing);
-  });
+  };
   
   // for pretty printing a matrix
   // TODO: maybe delete this? it is old and never really used
-  shrike.register('prettyPrint', function(x) {
+  shrike.prettyPrint = function(x) {
   
     console.log(function() {
       if (shrike.isArray(x)) {
@@ -195,7 +156,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
         return x;
       }
     }());
-  });
+  };
   window.pp = shrike.prettyPrint;
   
   // various ways of iterating through arrays
@@ -203,7 +164,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // applies a function to every element in A
   // input can be a string, integer, 1d or 2d array
   // if its a string or integer, the function will just be called once
-  shrike.register('scalarIterator', function(A, _function) {
+  shrike.scalarIterator = function(A, _function) {
     _function = _function || pass;
     if (shrike.is2DArray(A)) {
       return _.map(A, function(element) {
@@ -225,27 +186,27 @@ define(['underscore', 'mjs'], function(_, mjs) {
     else {
       return _function(A);
     }
-  });
+  };
   
   // assign base properites to shrike
   
   // borrow all of Math's functions and constants... except round since shrike provides its own round function
   _.without(Object.getOwnPropertyNames(Math), 'round').forEach(function(prop) {
-    shrike.register(prop, Math[prop]);
+    shrike[prop] = Math[prop];
   });
   
   // borrow mjs too
   Object.getOwnPropertyNames(mjs).forEach(function(prop) {
-    shrike.register(prop, mjs[prop]);
+    shrike[prop] = mjs[prop];
   });
   
   // alias M4x4 to M4 since it is shorter to type
-  shrike.alias('M4', 'M4x4');
+  shrike.M4 = shrike.M4x4;
   
   // things common to both M4, V3 or all arrays in general
   
   // sum an array
-  shrike.register('sum', function(arr) {
+  shrike.sum = function(arr) {
     shrike.assert(shrike.isArray(arr), 'can\'t compute sum of non-array ' + arr);
   
     return _.reduce(shrike.toFloat(arr), function(memo, num) {
@@ -255,32 +216,32 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
       return memo + num;
     }, 0.0);
-  });
+  };
   
-  shrike.register('square', function(x) {
+  shrike.square = function(x) {
     shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
     return parseFloat(x) * parseFloat(x);
-  });
+  };
   
-  shrike.register('round', function(n, dec) {
+  shrike.round = function(n, dec) {
     dec = dec || 0;
   
     shrike.assert(dec <= 20, 'round: can only round to 20 decimal places');
     shrike.assert(shrike.isNumber(n), 'round: ' + n + ' is not a numeric type');
   
     return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
-  });
+  };
   
-  shrike.register('roundArray', function(A, dec) {
+  shrike.roundArray = function(A, dec) {
     shrike.throwError(shrike.isArray(A), 'roundArray: not an array');
     return shrike.scalarIterator(A, function(a) {
       return shrike.round(a, dec);
     });
-  });
+  };
   
   // data conversion
   
-  shrike.register('toFloat', function(thing) {
+  shrike.toFloat = function(thing) {
   
     // its a number
     if (shrike.isNumber(thing)) {
@@ -314,11 +275,11 @@ define(['underscore', 'mjs'], function(_, mjs) {
     else {
       shrike.throwError('toFloat: can not convert to float: ' + thing);
     }
-  });
+  };
   
   /* return a scale so that X source * scale = Y target */
   /* this function mirrors GetUnitConversionScale in mujin/dev/mujin/__init__.py */
-  shrike.register('unitConversionScale', function(sourceUnit, targetUnit) {
+  shrike.unitConversionScale = function(sourceUnit, targetUnit) {
     var unitDict = {
       m: 1.0,
       meter: 1.0,
@@ -334,9 +295,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     shrike.assert(_.contains(units, targetUnit) && _.contains(units, sourceUnit), 'no conversion for either ' + sourceUnit + ' or ' + targetUnit);
   
     return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
-  });
+  };
   
-  shrike.register('toDegrees', function(x) {
+  shrike.toDegrees = function(x) {
     var _convert = function(n) {
       shrike.assert(shrike.isNumber(n), 'toDegrees: not a number');
       if (shrike.abs(n) <= 1e-10) {
@@ -353,9 +314,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     else {
       return shrike.scalarIterator(x, _convert);
     }
-  });
+  };
   
-  shrike.register('toRadians', function(x) {
+  shrike.toRadians = function(x) {
     var _convert = function(n) {
       shrike.assert(shrike.isNumber(n), 'toRadians: not a number');
       return (shrike.PI / 180.0) * n;
@@ -367,13 +328,13 @@ define(['underscore', 'mjs'], function(_, mjs) {
     else {
       return shrike.scalarIterator(x, _convert);
     }
-  });
+  };
   
   // parses an axis and an angle from some arguments
   // input can be an object with axis and angle properties
   // or an array of 3 values for the axis and an angle as the second argument
   // or an array of 4 values, first three being axis and the last one angle
-  shrike.register('parseAxisAngle', function(axis, angle) {
+  shrike.parseAxisAngle = function(axis, angle) {
     var _axis;
     var _angle;
     var _throwError = function() {
@@ -409,10 +370,10 @@ define(['underscore', 'mjs'], function(_, mjs) {
       axis: shrike.toFloat(_axis),
       angle: shrike.toFloat(_angle)
     };
-  });
+  };
   
   // convert a quaternion from axis angle (radians)
-  shrike.register('quatFromAxisAngle', function(_axis, _angle) {
+  shrike.quatFromAxisAngle = function(_axis, _angle) {
     var aa = shrike.parseAxisAngle(_axis, _angle);
     var axis = aa.axis;
     var angle = aa.angle;
@@ -426,9 +387,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
     // TODO: return a float array
     return [Math.cos(halfangle), axis[0] * sinangle, axis[1] * sinangle, axis[2] * sinangle];
-  });
+  };
   
-  shrike.register('quatFromMatrix', function(Traw) {
+  shrike.quatFromMatrix = function(Traw) {
   
     var T = shrike.toFloat(Traw);
   
@@ -472,9 +433,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
   
     return shrike.divide(rot, shrike.magnitude(rot));
-  });
+  };
   
-  shrike.register('matrixFromQuat', function(quatRaw) {
+  shrike.matrixFromQuat = function(quatRaw) {
     var quat = shrike.toFloat(quatRaw);
   
     var length2 = shrike.square(shrike.magnitude(quat));
@@ -502,10 +463,10 @@ define(['underscore', 'mjs'], function(_, mjs) {
     T[2][2] = 1.0 - qq1 - qq2;
   
     return T;
-  });
+  };
   
   // angle is returned in radians
-  shrike.register('axisAngleFromQuat', function(quatraw) {
+  shrike.axisAngleFromQuat = function(quatraw) {
   
     var quat = shrike.toFloat(quatraw);
     var sinang = shrike.sum(_.map(quat.slice(1, 4), shrike.square));
@@ -535,13 +496,13 @@ define(['underscore', 'mjs'], function(_, mjs) {
       axis: [_quat[1] * f, _quat[2] * f, _quat[3] * f],
       angle: angle
     };
-  });
+  };
   
-  shrike.register('axisAngleFromMatrix', function(m) {
+  shrike.axisAngleFromMatrix = function(m) {
     return shrike.axisAngleFromQuat(shrike.quatFromMatrix(m));
-  });
+  };
   
-  shrike.register('zxyFromMatrix', function(Traw) {
+  shrike.zxyFromMatrix = function(Traw) {
   
     var T = shrike.matrix4to3(shrike.toFloat(Traw));
   
@@ -573,9 +534,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
       z = Math.atan2(Rzx[1][0], Rzx[0][0]);
     }
     return shrike.toDegrees([x, y, z]);
-  });
+  };
   
-  shrike.register('zyxFromMatrix', function(Traw) {
+  shrike.zyxFromMatrix = function(Traw) {
     var T = shrike.toFloat(Traw);
     var epsilon = 1e-10;
     var x, y, z;
@@ -609,9 +570,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
   
     return shrike.toDegrees([x, y, z]);
-  });
+  };
   
-  shrike.register('matrixFromZXY', function(ZXY) {
+  shrike.matrixFromZXY = function(ZXY) {
   
     var x = shrike.toRadians(parseFloat(ZXY[0]));
     var y = shrike.toRadians(parseFloat(ZXY[1]));
@@ -631,9 +592,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
       Math.cos(x) * Math.cos(y)
     ]
       ];
-  });
+  };
   
-  shrike.register('matrixFromZYX', function(ZYX) {
+  shrike.matrixFromZYX = function(ZYX) {
     var x = shrike.toRadians(parseFloat(ZYX[0]));
     var y = shrike.toRadians(parseFloat(ZYX[1]));
     var z = shrike.toRadians(parseFloat(ZYX[2]));
@@ -652,61 +613,61 @@ define(['underscore', 'mjs'], function(_, mjs) {
       Math.cos(x) * Math.cos(y)
     ]
       ];
-  });
+  };
   
-  shrike.register('zxyFromQuat', function(quat) {
+  shrike.zxyFromQuat = function(quat) {
     return shrike.zxyFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
-  });
+  };
   
-  shrike.register('quatFromZXY', function(zxy) {
+  shrike.quatFromZXY = function(zxy) {
     return shrike.quatFromMatrix(shrike.matrixFromZXY(shrike.toFloat(zxy)));
-  });
+  };
   
-  shrike.register('zyxFromQuat', function(quat) {
+  shrike.zyxFromQuat = function(quat) {
     return shrike.zyxFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
-  });
+  };
   
-  shrike.register('quatFromZYX', function(zyx) {
+  shrike.quatFromZYX = function(zyx) {
     return shrike.quatFromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
-  });
+  };
   
   // carves out the 3x3 rotation matrix out of a 3x4 or 4x4 transform
-  shrike.register('matrix4to3', function(M) {
+  shrike.matrix4to3 = function(M) {
     return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
-  });
+  };
   
-  shrike.register('composeTransformArray', function(rot, trans) {
+  shrike.composeTransformArray = function(rot, trans) {
     return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
-  });
+  };
   
-  shrike.register('decomposeTransformArray', function(T) {
+  shrike.decomposeTransformArray = function(T) {
     return {
       rotationMatrix: [T[0].slice(0, 3), T[1].slice(0, 3), T[2].slice(0, 3)],
       translation: [T[0][3], T[1][3], T[2][3]]
     };
-  });
+  };
   
   // TODO move into M4 namespace as toTransformArray and fromTransformArray
-  shrike.register('M4toTransformArray', function(m) {
+  shrike.M4toTransformArray = function(m) {
     return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
-  });
+  };
   
-  shrike.register('transformArrayToM4', function(m) {
+  shrike.transformArrayToM4 = function(m) {
     return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
-  });
+  };
   
   // common matrix operations
   
-  shrike.register('divide', function(A, scalar) {
+  shrike.divide = function(A, scalar) {
     return shrike.scalarIterator(shrike.toFloat(A), function(a) {
       return a / parseFloat(scalar);
     });
-  });
+  };
   
   // identity matrix
   // returns an m x n identity matrix
   // if you leave out n, it will be an m x m matrix
-  shrike.register('eye', function(m, n) {
+  shrike.eye = function(m, n) {
     n = n || m;
     var ret = [];
     for (var i = 0; i < n; i++) {
@@ -722,25 +683,25 @@ define(['underscore', 'mjs'], function(_, mjs) {
       ret.push(row);
     }
     return ret;
-  });
+  };
   
-  shrike.register('magnitude', function(a) {
+  shrike.magnitude = function(a) {
     if (shrike.isNativeFloatArray(a)) {
       shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
       return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
     }
     return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
-  });
+  };
   
-  shrike.alias('norm', 'magnitude');
+  shrike.norm = shrike.magnitude;
   
-  shrike.register('normalize', function(array) {
+  shrike.normalize = function(array) {
     var length = shrike.magnitude(array);
     shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
     return shrike.divide(array, length);
-  });
+  };
   
-  shrike.register('matrixMult', function(_A, _B) {
+  shrike.matrixMult = function(_A, _B) {
     var A = shrike.toFloat(_A);
     var B = shrike.toFloat(_B);
   
@@ -760,26 +721,26 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
   
     return result;
-  });
+  };
   
   // functions to augment mjs's V3 vector
   
-  shrike.register('V3.objectToArray', function(o) {
+  shrike.V3.objectToArray = function(o) {
     shrike.assert(_.isObject(o), 'not an object');
     return ['x', 'y', 'z'].map(function(p) {
       return o[p];
     });
-  });
+  };
   
-  shrike.register('V3.arrayToObject', function(_v) {
+  shrike.V3.arrayToObject = function(_v) {
     shrike.assert(shrike.isArray(_v), 'not an array');
     var v = shrike.toFloat(_v);
     return _.object(['x', 'y', 'z'], v);
-  });
+  };
   
   // functions to augment mjs's 4x4 matrix
   
-  shrike.register('M4.matrixFromQuat', function(quatRaw) {
+  shrike.M4.matrixFromQuat = function(quatRaw) {
     shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
     var quat = shrike.toFloat(quatRaw);
     var r = shrike.M4.clone(shrike.M4.I);
@@ -809,9 +770,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     r[10] = 1.0 - qq1 - qq2;
   
     return r;
-  });
+  };
   
-  shrike.register('M4.quatFromMatrix', function(_m) {
+  shrike.M4.quatFromMatrix = function(_m) {
   
     var m = shrike.toFloat(_m);
   
@@ -872,9 +833,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
   
     return shrike.divide(r, shrike.magnitude(r));
-  });
+  };
   
-  shrike.register('M4.transFromMatrix', function(m) {
+  shrike.M4.transFromMatrix = function(m) {
     // var r = new shrike.FLOAT_ARRAY_TYPE(3);
   
     // TODO use native array type here...
@@ -883,10 +844,10 @@ define(['underscore', 'mjs'], function(_, mjs) {
     r[1] = m[13];
     r[2] = m[14];
     return r;
-  });
+  };
   
   // composes an instance from a quaternion and translation V3
-  shrike.register('M4.composeFromQuatTrans', function(quatRaw, transRaw) {
+  shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
     var r = shrike.M4.matrixFromQuat(quatRaw);
   
     var trans = shrike.toFloat(transRaw);
@@ -898,12 +859,12 @@ define(['underscore', 'mjs'], function(_, mjs) {
     r[14] = trans[2];
   
     return r;
-  });
+  };
   
   // requires t0, t1 to be distinct
-  shrike.register('linearlyInterpolate', function(t0, x0, t1, x1, t) {
+  shrike.linearlyInterpolate = function(t0, x0, t1, x1, t) {
     return (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
-  });
+  };
   
 
   // for debugging / console convenience

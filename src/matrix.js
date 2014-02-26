@@ -1,15 +1,15 @@
 // common matrix operations
 
-shrike.register('divide', function(A, scalar) {
+shrike.divide = function(A, scalar) {
   return shrike.scalarIterator(shrike.toFloat(A), function(a) {
     return a / parseFloat(scalar);
   });
-});
+};
 
 // identity matrix
 // returns an m x n identity matrix
 // if you leave out n, it will be an m x m matrix
-shrike.register('eye', function(m, n) {
+shrike.eye = function(m, n) {
   n = n || m;
   var ret = [];
   for (var i = 0; i < n; i++) {
@@ -25,25 +25,25 @@ shrike.register('eye', function(m, n) {
     ret.push(row);
   }
   return ret;
-});
+};
 
-shrike.register('magnitude', function(a) {
+shrike.magnitude = function(a) {
   if (shrike.isNativeFloatArray(a)) {
     shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
     return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   }
   return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
-});
+};
 
-shrike.alias('norm', 'magnitude');
+shrike.norm = shrike.magnitude;
 
-shrike.register('normalize', function(array) {
+shrike.normalize = function(array) {
   var length = shrike.magnitude(array);
   shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
   return shrike.divide(array, length);
-});
+};
 
-shrike.register('matrixMult', function(_A, _B) {
+shrike.matrixMult = function(_A, _B) {
   var A = shrike.toFloat(_A);
   var B = shrike.toFloat(_B);
 
@@ -63,4 +63,4 @@ shrike.register('matrixMult', function(_A, _B) {
   }
 
   return result;
-});
+};

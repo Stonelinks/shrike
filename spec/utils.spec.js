@@ -2,37 +2,6 @@ describe('utils', function() {
 
   var shrike = require('shrike');
 
-  it('register properties', function() {
-    shrike.register('foo', 'bar');
-    expect(shrike.foo).toBe('bar');
-  });
-
-  it('register compound properties', function() {
-    shrike.register('testy.foo', 'bar');
-    expect(shrike.testy.foo).toBe('bar');
-
-    shrike.register('testy.foo2', 'bar2');
-    expect(shrike.testy.foo2).toBe('bar2');
-
-    shrike.register('really.big.compound.key', '1234A');
-    expect(shrike.really.big.compound.key).toBe('1234A');
-  });
-
-  it('throw an error when you register the same thing twice', function() {
-    expect(function() {shrike.register('foo', 'baz')}).toThrow();
-    expect(function() {shrike.register('foo.bar', 'baz')}).toThrow();
-    expect(function() {shrike.register('really.big.compound.key', '1234A')}).toThrow();
-  });
-
-  it('properly alias things', function() {
-    shrike.alias('fooNew', 'foo');
-    expect(shrike.fooNew).toBe(shrike.foo);
-  });
-
-  it('throw an error when you try to alias things that are not there', function() {
-    expect(function() {shrike.alias('boo', 'baz')}).toThrow();
-  });
-
   it('detect numbers', function() {
 
     describe('integer literals', function() {

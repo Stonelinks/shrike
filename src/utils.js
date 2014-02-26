@@ -20,65 +20,26 @@ else {
   shrike.assert = window.pass;
 }
 
-// set a (sometimes nested) property on the shrike object, warn if it conflicts
-shrike.register = function(k, v) {
-
-  // keys can be compound
-  var keys = k.split('.').reverse();
-  if (keys.length == 1) {
-    shrike.assert(!shrike.hasOwnProperty(k), 'shrike already has a ' + k);
-    shrike[k] = v;
-  }
-  else {
-    var lastKey = keys[0];
-    var prop = shrike;
-    while (keys.length > 0) {
-
-      var thisKey = keys.pop();
-
-      shrike.assert(!(prop.hasOwnProperty(thisKey) && !_.isObject(prop[thisKey])), 'shrike already has a ' + k);
-
-      if (thisKey === lastKey) {
-        prop[thisKey] = v;
-      }
-      else {
-
-        if (!_.isObject(prop[thisKey])) {
-          prop[thisKey] = {};
-        }
-
-        prop = prop[thisKey];
-      }
-    }
-  }
-};
-
-// TODO: make it so you can alias things with depth >1
-shrike.alias = function(newName, orig) {
-  shrike.assert(shrike.hasOwnProperty(orig), 'shrike doesn\'t have a ' + orig + ' to alias');
-  shrike.register(newName, shrike[orig]);
-};
-
 // safe version of isArray
-shrike.register('isArray', function(thing) {
+shrike.isArray = function(thing) {
   if (_.isArray(thing)) {
     return true;
   }
 
   return shrike.isNativeFloatArray(thing);
-});
+};
 
 // checks for special array types
-shrike.register('isNativeFloatArray', function(thing) {
+shrike.isNativeFloatArray = function(thing) {
   try {
     return (_.isArray(thing) !== true) && Object.prototype.toString.call(thing).slice(-'Array]'.length) == 'Array]';
   }
   catch (e) {
     return false;
   }
-});
+};
 
-shrike.register('is2DArray', function(thing) {
+shrike.is2DArray = function(thing) {
   if (!shrike.isArray(thing)) {
     return false;
   }
@@ -92,15 +53,15 @@ shrike.register('is2DArray', function(thing) {
   }
 
   return _.every(_.map(thing, shrike.isArray));
-});
+};
 
-shrike.register('isNumber', function(thing) {
+shrike.isNumber = function(thing) {
   return !isNaN(parseFloat(thing)) && isFinite(thing) && !shrike.isArray(thing);
-});
+};
 
 // for pretty printing a matrix
 // TODO: maybe delete this? it is old and never really used
-shrike.register('prettyPrint', function(x) {
+shrike.prettyPrint = function(x) {
 
   console.log(function() {
     if (shrike.isArray(x)) {
@@ -178,5 +139,5 @@ shrike.register('prettyPrint', function(x) {
       return x;
     }
   }());
-});
+};
 window.pp = shrike.prettyPrint;

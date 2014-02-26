@@ -3,7 +3,7 @@
 // applies a function to every element in A
 // input can be a string, integer, 1d or 2d array
 // if its a string or integer, the function will just be called once
-shrike.register('scalarIterator', function(A, _function) {
+shrike.scalarIterator = function(A, _function) {
   _function = _function || pass;
   if (shrike.is2DArray(A)) {
     return _.map(A, function(element) {
@@ -25,4 +25,4 @@ shrike.register('scalarIterator', function(A, _function) {
   else {
     return _function(A);
   }
-});
+};

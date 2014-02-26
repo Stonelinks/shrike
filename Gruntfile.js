@@ -37,9 +37,7 @@ module.exports = function(grunt) {
       },
 
       src: {
-        src: [
-          'src/**/*.js'
-        ]
+        src: ['src/**/*.js']
       },
 
       extras: {
@@ -72,7 +70,7 @@ module.exports = function(grunt) {
 
     jasmine: {
       shrike: {
-        src: 'src/**/*.js',
+        src: 'shrike.js',
         options: {
           specs: 'spec/*.spec.js',
           helpers: 'spec/helpers/*.js',

@@ -1,6 +1,6 @@
 // functions to augment mjs's 4x4 matrix
 
-shrike.register('M4.matrixFromQuat', function(quatRaw) {
+shrike.M4.matrixFromQuat = function(quatRaw) {
   shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
   var quat = shrike.toFloat(quatRaw);
   var r = shrike.M4.clone(shrike.M4.I);
@@ -30,9 +30,9 @@ shrike.register('M4.matrixFromQuat', function(quatRaw) {
   r[10] = 1.0 - qq1 - qq2;
 
   return r;
-});
+};
 
-shrike.register('M4.quatFromMatrix', function(_m) {
+shrike.M4.quatFromMatrix = function(_m) {
 
   var m = shrike.toFloat(_m);
 
@@ -93,9 +93,9 @@ shrike.register('M4.quatFromMatrix', function(_m) {
   }
 
   return shrike.divide(r, shrike.magnitude(r));
-});
+};
 
-shrike.register('M4.transFromMatrix', function(m) {
+shrike.M4.transFromMatrix = function(m) {
   // var r = new shrike.FLOAT_ARRAY_TYPE(3);
 
   // TODO use native array type here...
@@ -104,10 +104,10 @@ shrike.register('M4.transFromMatrix', function(m) {
   r[1] = m[13];
   r[2] = m[14];
   return r;
-});
+};
 
 // composes an instance from a quaternion and translation V3
-shrike.register('M4.composeFromQuatTrans', function(quatRaw, transRaw) {
+shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
   var r = shrike.M4.matrixFromQuat(quatRaw);
 
   var trans = shrike.toFloat(transRaw);
@@ -119,4 +119,4 @@ shrike.register('M4.composeFromQuatTrans', function(quatRaw, transRaw) {
   r[14] = trans[2];
 
   return r;
-});
+};
