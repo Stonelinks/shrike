@@ -77,6 +77,10 @@ module.exports = function(grunt) {
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
             requireConfig: {
+              paths: {
+                'mjs': 'bower_components/mjs/mjs',
+                'underscore': 'bower_components/underscore/underscore'
+              },
               deps: ['shrike']
             }
           }
