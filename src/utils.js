@@ -99,7 +99,7 @@ define([
         return false;
       }
 
-      return _.some(_.map(thing, shrike.isArray));
+      return _.every(_.map(thing, shrike.isArray));
     });
 
     shrike.register('isNumber', function(thing) {

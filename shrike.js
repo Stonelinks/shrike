@@ -1452,7 +1452,7 @@ define('utils',[
         return false;
       }
 
-      return _.some(_.map(thing, shrike.isArray));
+      return _.every(_.map(thing, shrike.isArray));
     });
 
     shrike.register('isNumber', function(thing) {
@@ -3513,6 +3513,7 @@ define('converters',[
   
 
   return function(shrike) {
+
     shrike.register('toFloat', function(thing) {
 
       // its a number

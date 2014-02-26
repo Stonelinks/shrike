@@ -7,6 +7,7 @@ define([
   'use strict';
 
   return function(shrike) {
+
     shrike.register('toFloat', function(thing) {
 
       // its a number

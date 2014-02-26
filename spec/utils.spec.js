@@ -221,6 +221,12 @@ describe('utils', function() {
     // jagged
     expect(shrike.is2DArray([[1], [1, 2], [1, 2, 3, 4]])).toBe(true);
 
+    // mixed stuff
+    expect(shrike.is2DArray([[1], [1, 2], [1], undefined])).not.toBe(true);
+    expect(shrike.is2DArray([[1], [1, 2], [1], false])).not.toBe(true);
+    expect(shrike.is2DArray([[1], [1, 2], [1], true])).not.toBe(true);
+    expect(shrike.is2DArray([[1], [1, 2], [1], 'pow'])).not.toBe(true);
+
     // empty
     expect(shrike.is2DArray([[]])).toBe(true);
     expect(shrike.is2DArray([[], []])).toBe(true);
