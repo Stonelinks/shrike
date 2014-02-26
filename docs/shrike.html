@@ -30,7 +30,7 @@
               <p>shrike - v0.0.0</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x6c;&#x75;&#99;&#x61;&#115;&#46;&#x70;&#46;&#100;&#x6f;&#121;&#x6c;&#101;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#x6c;&#x75;&#99;&#x61;&#115;&#46;&#x70;&#46;&#100;&#x6f;&#121;&#x6c;&#101;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#108;&#x75;&#x63;&#97;&#115;&#x2e;&#x70;&#46;&#x64;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#108;&#x75;&#x63;&#97;&#115;&#x2e;&#x70;&#46;&#x64;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -64,18 +64,11 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'SHRIKE: '</span> + msg);
   };
   
-  <span class="hljs-keyword">var</span> SHRIKE_DO_ASSERT = <span class="hljs-literal">true</span>;
-  
-  <span class="hljs-keyword">if</span> (SHRIKE_DO_ASSERT &amp;&amp; (window.hasOwnProperty(<span class="hljs-string">'DEBUG'</span>) ? window.DEBUG : SHRIKE_DO_ASSERT)) {
-    shrike.assert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(cond, msg)</span> {</span>
-      <span class="hljs-keyword">if</span> (!cond) {
-        shrike.throwError(msg);
-      }
-    };
-  }
-  <span class="hljs-keyword">else</span> {
-    shrike.assert = window.pass;
-  }</pre></div></div>
+  shrike.assert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(cond, msg)</span> {</span>
+    <span class="hljs-keyword">if</span> (!cond) {
+      shrike.throwError(msg);
+    }
+  };</pre></div></div>
             
         </li>
         
@@ -249,7 +242,6 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; x[i].length; j++) {
   
               shrike.assert(!_.isString(x[i][j]), <span class="hljs-string">'prettyPrint: there is a string in this matrix, you should fix that'</span>);
-  
               <span class="hljs-keyword">if</span> (shrike.round(x[i][j], precision).toString().length &gt; widest) {
                 widest = shrike.round(x[i][j], precision).toString().length;
               }
@@ -465,8 +457,8 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             
             <div class="content"><div class='highlight'><pre>  
   shrike.sum = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
-    shrike.assert(shrike.isArray(a), <span class="hljs-string">'can\'t compute sum of non-array '</span> + a);
   
+    shrike.assert(shrike.isArray(a), <span class="hljs-string">'can\'t compute sum of non-array '</span> + a);
     <span class="hljs-keyword">return</span> _.reduce(shrike.toFloat(a), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(memo, num)</span> {</span>
       <span class="hljs-keyword">if</span> (!shrike.isNumber(num)) {
         shrike.throwError(<span class="hljs-string">'can\'t compute sum of array with non numeric element: '</span> + num);
@@ -498,6 +490,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             
             <div class="content"><div class='highlight'><pre>  
   shrike.square = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
+  
     shrike.assert(shrike.isNumber(x), <span class="hljs-string">'can\'t square non numeric element: '</span> + x);
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(x) * <span class="hljs-built_in">parseFloat</span>(x);
   };</pre></div></div>
@@ -532,7 +525,6 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     shrike.assert(shrike.isNumber(dec), <span class="hljs-string">'round: '</span> + dec + <span class="hljs-string">' is not valid number of decimal places'</span>);
     shrike.assert(dec &lt;= <span class="hljs-number">20</span>, <span class="hljs-string">'round: can only round up to 20 decimal places'</span>);
     shrike.assert(shrike.isNumber(n), <span class="hljs-string">'round: '</span> + n + <span class="hljs-string">' is not a numeric type'</span>);
-  
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Number</span>(n + <span class="hljs-string">''</span>).toFixed(<span class="hljs-built_in">parseInt</span>(dec)));
   };</pre></div></div>
             
@@ -638,8 +630,8 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isArray(thing)) {
   
       <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(thing)</span> {</span>
-        shrike.assert(shrike.isNumber(thing), <span class="hljs-string">'toFloat: array has something in it that is not a number: '</span> + thing);
   
+        shrike.assert(shrike.isNumber(thing), <span class="hljs-string">'toFloat: array has something in it that is not a number: '</span> + thing);
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(thing);
       };</pre></div></div>
             
@@ -687,13 +679,13 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">var</span> units = _.keys(unitDict);
   
     shrike.assert(_.contains(units, targetUnit) &amp;&amp; _.contains(units, sourceUnit), <span class="hljs-string">'no conversion for either '</span> + sourceUnit + <span class="hljs-string">' or '</span> + targetUnit);
-  
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(unitDict[targetUnit] / unitDict[sourceUnit]);
   };
   
   
   shrike.toDegrees = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> {</span>
+  
       shrike.assert(shrike.isNumber(n), <span class="hljs-string">'toDegrees: not a number'</span>);
       <span class="hljs-keyword">if</span> (shrike.abs(n) &lt;= <span class="hljs-number">1e-10</span>) {
         <span class="hljs-keyword">return</span> <span class="hljs-number">0.0</span>;
@@ -714,6 +706,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
   
   shrike.toRadians = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> {</span>
+  
       shrike.assert(shrike.isNumber(n), <span class="hljs-string">'toRadians: not a number'</span>);
       <span class="hljs-keyword">return</span> (shrike.PI / <span class="hljs-number">180.0</span>) * n;
     };
@@ -1222,6 +1215,7 @@ if you leave out n, it will be an m x m matrix</p>
   
   shrike.magnitude = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
     <span class="hljs-keyword">if</span> (shrike.isFloatArray(a)) {
+  
       shrike.assert(a.length === <span class="hljs-number">3</span>, <span class="hljs-string">'magnitude: native float array\'s need to be of length three'</span>);
       <span class="hljs-keyword">return</span> shrike.sqrt(a[<span class="hljs-number">0</span>] * a[<span class="hljs-number">0</span>] + a[<span class="hljs-number">1</span>] * a[<span class="hljs-number">1</span>] + a[<span class="hljs-number">2</span>] * a[<span class="hljs-number">2</span>]);
     }
@@ -1233,6 +1227,7 @@ if you leave out n, it will be an m x m matrix</p>
   
   shrike.normalize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(array)</span> {</span>
     <span class="hljs-keyword">var</span> length = shrike.magnitude(array);
+  
     shrike.assert(length !== <span class="hljs-number">0</span>, <span class="hljs-string">'normalize: trying to normalize a zero array'</span>);
     <span class="hljs-keyword">return</span> shrike.divide(array, length);
   };
@@ -1243,7 +1238,6 @@ if you leave out n, it will be an m x m matrix</p>
     <span class="hljs-keyword">var</span> B = shrike.toFloat(_B);
   
     shrike.assert(A[<span class="hljs-number">0</span>].length === A.length, <span class="hljs-string">'matrixMult: incompatible array sizes!'</span>);
-  
     <span class="hljs-keyword">var</span> result = [];
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; A.length; i++) {
       <span class="hljs-keyword">var</span> row = [];
@@ -1275,6 +1269,7 @@ if you leave out n, it will be an m x m matrix</p>
             
             <div class="content"><div class='highlight'><pre>  
   shrike.V3.objectToArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(o)</span> {</span>
+  
     shrike.assert(_.isObject(o), <span class="hljs-string">'not an object'</span>);
     <span class="hljs-keyword">return</span> [<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, <span class="hljs-string">'z'</span>].map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span>
       <span class="hljs-keyword">return</span> o[p];
@@ -1283,6 +1278,7 @@ if you leave out n, it will be an m x m matrix</p>
   
   
   shrike.V3.arrayToObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_v)</span> {</span>
+  
     shrike.assert(shrike.isArray(_v), <span class="hljs-string">'not an array'</span>);
     <span class="hljs-keyword">var</span> v = shrike.toFloat(_v);
     <span class="hljs-keyword">return</span> _.object([<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, <span class="hljs-string">'z'</span>], v);
@@ -1303,6 +1299,7 @@ if you leave out n, it will be an m x m matrix</p>
             
             <div class="content"><div class='highlight'><pre>  
   shrike.M4.matrixFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw)</span> {</span>
+  
     shrike.assert(quatRaw.length === <span class="hljs-number">4</span>, <span class="hljs-string">'M4.matrixFromQuat: quatRaw.length !== 4'</span>);
     <span class="hljs-keyword">var</span> quat = shrike.toFloat(quatRaw);
     <span class="hljs-keyword">var</span> r = shrike.M4.clone(shrike.M4.I);
@@ -1517,7 +1514,6 @@ var m44 = m[15];</p>
     <span class="hljs-keyword">var</span> trans = shrike.toFloat(transRaw);
   
     shrike.assert(trans.length === <span class="hljs-number">3</span>, <span class="hljs-string">'M4.composeFromQuatTrans: trans.length !== 3'</span>);
-  
     r[<span class="hljs-number">12</span>] = trans[<span class="hljs-number">0</span>];
     r[<span class="hljs-number">13</span>] = trans[<span class="hljs-number">1</span>];
     r[<span class="hljs-number">14</span>] = trans[<span class="hljs-number">2</span>];
@@ -1538,8 +1534,7 @@ var m44 = m[15];</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  
-  shrike.linearlyInterpolate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t0, x0, t1, x1, t)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  shrike.linearlyInterpolate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t0, x0, t1, x1, t)</span> {</span>
     <span class="hljs-keyword">return</span> (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
   };</pre></div></div>
             

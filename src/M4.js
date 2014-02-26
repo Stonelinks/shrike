@@ -1,7 +1,11 @@
 // functions to augment mjs's 4x4 matrix
 
 shrike.M4.matrixFromQuat = function(quatRaw) {
+
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
+  // @endif
+
   var quat = shrike.toFloat(quatRaw);
   var r = shrike.M4.clone(shrike.M4.I);
 
@@ -115,7 +119,9 @@ shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
 
   var trans = shrike.toFloat(transRaw);
 
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(trans.length === 3, 'M4.composeFromQuatTrans: trans.length !== 3');
+  // @endif
 
   r[12] = trans[0];
   r[13] = trans[1];

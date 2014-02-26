@@ -11,18 +11,13 @@ shrike.throwError = function(msg) {
   throw new Error('SHRIKE: ' + msg);
 };
 
-var SHRIKE_DO_ASSERT = true;
-
-if (SHRIKE_DO_ASSERT && (window.hasOwnProperty('DEBUG') ? window.DEBUG : SHRIKE_DO_ASSERT)) {
-  shrike.assert = function(cond, msg) {
-    if (!cond) {
-      shrike.throwError(msg);
-    }
-  };
-}
-else {
-  shrike.assert = window.pass;
-}
+// @if SHRIKE_DO_ASSERT
+shrike.assert = function(cond, msg) {
+  if (!cond) {
+    shrike.throwError(msg);
+  }
+};
+// @endif
 
 //
 // ##Function: shrike.isArray
@@ -148,7 +143,9 @@ shrike.prettyPrint = function(x) {
         for (var i = 0; i < x.length; i++) {
           for (var j = 0; j < x[i].length; j++) {
 
+            // @if SHRIKE_DO_ASSERT
             shrike.assert(!_.isString(x[i][j]), 'prettyPrint: there is a string in this matrix, you should fix that');
+            // @endif
 
             if (shrike.round(x[i][j], precision).toString().length > widest) {
               widest = shrike.round(x[i][j], precision).toString().length;

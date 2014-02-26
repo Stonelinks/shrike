@@ -28,19 +28,11 @@ define(['underscore', 'mjs'], function(_, mjs) {
     throw new Error('SHRIKE: ' + msg);
   };
   
-  var SHRIKE_DO_ASSERT = true;
-  
-  if (SHRIKE_DO_ASSERT && (window.hasOwnProperty('DEBUG') ? window.DEBUG : SHRIKE_DO_ASSERT)) {
-    shrike.assert = function(cond, msg) {
-      if (!cond) {
-        shrike.throwError(msg);
-      }
-    };
-  }
-  else {
-    shrike.assert = window.pass;
-  }
-  
+  shrike.assert = function(cond, msg) {
+    if (!cond) {
+      shrike.throwError(msg);
+    }
+  };
   //
   // ##Function: shrike.isArray
   //
@@ -166,7 +158,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
             for (var j = 0; j < x[i].length; j++) {
   
               shrike.assert(!_.isString(x[i][j]), 'prettyPrint: there is a string in this matrix, you should fix that');
-  
               if (shrike.round(x[i][j], precision).toString().length > widest) {
                 widest = shrike.round(x[i][j], precision).toString().length;
               }
@@ -296,8 +287,8 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   
   shrike.sum = function(a) {
-    shrike.assert(shrike.isArray(a), 'can\'t compute sum of non-array ' + a);
   
+    shrike.assert(shrike.isArray(a), 'can\'t compute sum of non-array ' + a);
     return _.reduce(shrike.toFloat(a), function(memo, num) {
       if (!shrike.isNumber(num)) {
         shrike.throwError('can\'t compute sum of array with non numeric element: ' + num);
@@ -322,6 +313,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   
   shrike.square = function(x) {
+  
     shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
     return parseFloat(x) * parseFloat(x);
   };
@@ -349,7 +341,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
     shrike.assert(shrike.isNumber(dec), 'round: ' + dec + ' is not valid number of decimal places');
     shrike.assert(dec <= 20, 'round: can only round up to 20 decimal places');
     shrike.assert(shrike.isNumber(n), 'round: ' + n + ' is not a numeric type');
-  
     return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
   };
   
@@ -405,8 +396,8 @@ define(['underscore', 'mjs'], function(_, mjs) {
     else if (shrike.isArray(thing)) {
   
       var _convert = function(thing) {
-        shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
   
+        shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
         return parseFloat(thing);
       };
   
@@ -442,13 +433,13 @@ define(['underscore', 'mjs'], function(_, mjs) {
     var units = _.keys(unitDict);
   
     shrike.assert(_.contains(units, targetUnit) && _.contains(units, sourceUnit), 'no conversion for either ' + sourceUnit + ' or ' + targetUnit);
-  
     return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
   };
   
   
   shrike.toDegrees = function(x) {
     var _convert = function(n) {
+  
       shrike.assert(shrike.isNumber(n), 'toDegrees: not a number');
       if (shrike.abs(n) <= 1e-10) {
         return 0.0;
@@ -469,6 +460,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
   shrike.toRadians = function(x) {
     var _convert = function(n) {
+  
       shrike.assert(shrike.isNumber(n), 'toRadians: not a number');
       return (shrike.PI / 180.0) * n;
     };
@@ -857,6 +849,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
   shrike.magnitude = function(a) {
     if (shrike.isFloatArray(a)) {
+  
       shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
       return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
     }
@@ -868,6 +861,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
   shrike.normalize = function(array) {
     var length = shrike.magnitude(array);
+  
     shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
     return shrike.divide(array, length);
   };
@@ -878,7 +872,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
     var B = shrike.toFloat(_B);
   
     shrike.assert(A[0].length === A.length, 'matrixMult: incompatible array sizes!');
-  
     var result = [];
     for (var i = 0; i < A.length; i++) {
       var row = [];
@@ -898,6 +891,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // functions to augment mjs's V3 vector
   
   shrike.V3.objectToArray = function(o) {
+  
     shrike.assert(_.isObject(o), 'not an object');
     return ['x', 'y', 'z'].map(function(p) {
       return o[p];
@@ -906,6 +900,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
   
   shrike.V3.arrayToObject = function(_v) {
+  
     shrike.assert(shrike.isArray(_v), 'not an array');
     var v = shrike.toFloat(_v);
     return _.object(['x', 'y', 'z'], v);
@@ -914,6 +909,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // functions to augment mjs's 4x4 matrix
   
   shrike.M4.matrixFromQuat = function(quatRaw) {
+  
     shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
     var quat = shrike.toFloat(quatRaw);
     var r = shrike.M4.clone(shrike.M4.I);
@@ -1029,7 +1025,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
     var trans = shrike.toFloat(transRaw);
   
     shrike.assert(trans.length === 3, 'M4.composeFromQuatTrans: trans.length !== 3');
-  
     r[12] = trans[0];
     r[13] = trans[1];
     r[14] = trans[2];
@@ -1038,7 +1033,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   // requires t0, t1 to be distinct
-  
   shrike.linearlyInterpolate = function(t0, x0, t1, x1, t) {
     return (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
   };

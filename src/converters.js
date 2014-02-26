@@ -28,7 +28,10 @@ shrike.toFloat = function(thing) {
   else if (shrike.isArray(thing)) {
 
     var _convert = function(thing) {
+
+      // @if SHRIKE_DO_ASSERT
       shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
+      // @endif
 
       return parseFloat(thing);
     };
@@ -64,7 +67,9 @@ shrike.unitConversionScale = function(sourceUnit, targetUnit) {
   };
   var units = _.keys(unitDict);
 
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(_.contains(units, targetUnit) && _.contains(units, sourceUnit), 'no conversion for either ' + sourceUnit + ' or ' + targetUnit);
+  // @endif
 
   return parseFloat(unitDict[targetUnit] / unitDict[sourceUnit]);
 };
@@ -72,7 +77,11 @@ shrike.unitConversionScale = function(sourceUnit, targetUnit) {
 
 shrike.toDegrees = function(x) {
   var _convert = function(n) {
+
+    // @if SHRIKE_DO_ASSERT
     shrike.assert(shrike.isNumber(n), 'toDegrees: not a number');
+    // @endif
+
     if (shrike.abs(n) <= 1e-10) {
       return 0.0;
     }
@@ -92,7 +101,11 @@ shrike.toDegrees = function(x) {
 
 shrike.toRadians = function(x) {
   var _convert = function(n) {
+
+    // @if SHRIKE_DO_ASSERT
     shrike.assert(shrike.isNumber(n), 'toRadians: not a number');
+    // @endif
+
     return (shrike.PI / 180.0) * n;
   };
 

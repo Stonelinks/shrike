@@ -13,7 +13,10 @@
 //
 
 shrike.sum = function(a) {
+
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(shrike.isArray(a), 'can\'t compute sum of non-array ' + a);
+  // @endif
 
   return _.reduce(shrike.toFloat(a), function(memo, num) {
     if (!shrike.isNumber(num)) {
@@ -39,7 +42,11 @@ shrike.sum = function(a) {
 //
 
 shrike.square = function(x) {
+
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
+  // @endif
+
   return parseFloat(x) * parseFloat(x);
 };
 
@@ -63,9 +70,11 @@ shrike.round = function(n, dec) {
     dec = 0;
   }
 
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(shrike.isNumber(dec), 'round: ' + dec + ' is not valid number of decimal places');
   shrike.assert(dec <= 20, 'round: can only round up to 20 decimal places');
   shrike.assert(shrike.isNumber(n), 'round: ' + n + ' is not a numeric type');
+  // @endif
 
   return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
 };
