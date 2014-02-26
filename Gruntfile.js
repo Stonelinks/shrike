@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 
-  var WEBSERVER_PORT = 8000;
-  var LIVERELOAD_PORT = 12000;
+  var WEBSERVER_PORT = 8010;
+  var LIVERELOAD_PORT = 12020;
 
   require('load-grunt-tasks')(grunt, {
     pattern: ['grunt-*', '!grunt-template-jasmine-requirejs']
@@ -48,18 +48,22 @@ module.exports = function(grunt) {
     },
 
     connect: {
-      browserTest: {
-        port: WEBSERVER_PORT,
+      options: {
+        livereload: LIVERELOAD_PORT
+      },
+
+      test: {
         options: {
-          // keepalive: true,
-          hostname: '*',
-          livereload: LIVERELOAD_PORT,
+          port: WEBSERVER_PORT,
           open: 'http://localhost:' + WEBSERVER_PORT + '/_SpecRunner.html'
         }
       },
 
-      test: {
-        port: WEBSERVER_PORT
+      docs: {
+        options: {
+          port: WEBSERVER_PORT + 1,
+          open: 'http://localhost:' + (WEBSERVER_PORT + 1) + '/docs/shrike.html'
+        }
       }
     },
 
@@ -76,40 +80,6 @@ module.exports = function(grunt) {
               deps: ['shrike']
             }
           }
-        }
-      }
-    },
-
-    requirejs: {
-      options: {
-        optimize: 'none',
-        preserveLicenseComments: false,
-
-        findNestedDependencies: true,
-        optimizeAllPluginResources: true,
-
-        baseUrl: 'src/',
-
-        include: ['shrike'],
-        paths: {
-          'mjs': '../bower_components/mjs/mjs',
-          'underscore': '../bower_components/underscore/underscore'
-        },
-        wrap: {
-          start: '<%= meta.banner %>'
-        }
-      },
-
-      dev: {
-        options: {
-          out: 'shrike.js'
-        }
-      },
-
-      production: {
-        options: {
-          optimize: 'uglify2',
-          out: 'shrike.min.js'
         }
       }
     },
@@ -135,7 +105,56 @@ module.exports = function(grunt) {
           'src/**/*.js',
           'spec/**/*.js'
         ],
-        tasks: ['lint', 'browserTest']
+        tasks: [
+          'lint',
+          'build',
+          'docs',
+          'test'
+        ]
+      }
+    },
+
+    preprocess: {
+      options: {
+        context: {
+          BANNER: '<%= meta.banner %>',
+          SHRIKE_DO_ASSERT: true
+        }
+      },
+      dev: {
+        src: 'src/shrike.js',
+        dest: 'shrike.js'
+      },
+      prod: {
+        src: 'src/shrike.js',
+        dest: 'shrike.js',
+        options: {
+          context: {
+            SHRIKE_DO_ASSERT: false
+          }
+        }
+      }
+    },
+
+    uglify: {
+      options: {
+        banner: '<%= meta.banner %>'
+      },
+      prod: {
+        mangle: {
+          except: ['shrike', 'V3', 'M4']
+        },
+        src: 'shrike.js',
+        dest: 'shrike.min.js'
+      }
+    },
+
+    docco: {
+      debug: {
+        src: ['shrike.js'],
+        options: {
+          output: 'docs/'
+        }
       }
     }
   });
@@ -145,24 +164,24 @@ module.exports = function(grunt) {
     'exec:fixjsstyle'
   ]);
 
+  grunt.registerTask('build', ['requirejs']);
+
+  grunt.registerTask('test', ['jasmine:shrike:build']);
+
   grunt.registerTask('build', [
-    'requirejs'
+    'preprocess:prod',
+    'uglify',
+    'preprocess:dev'
   ]);
 
-  grunt.registerTask('test', [
-    'build',
-    'connect:test',
-    'jasmine:shrike'
-  ]);
-
-  grunt.registerTask('browserTest', [
-    'build',
-    'jasmine:shrike:build'
-  ]);
+  grunt.registerTask('docs', ['docco']);
 
   grunt.registerTask('default', [
-    'connect:browserTest',
-    'browserTest',
+    'lint',
+    'build',
+    'docs',
+    'test',
+    'connect',
     'watch'
   ]);
 };
