@@ -1,3 +1,4 @@
+/* @echo BANNER */
 define(['underscore', 'mjs'], function(_, mjs) {
   'use strict';
 

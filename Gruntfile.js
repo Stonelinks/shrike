@@ -13,12 +13,15 @@ module.exports = function(grunt) {
 
     meta: {
       banner: '// <%= pkg.name %> - v<%= pkg.version %>\n' +
+        '//\n' +
+        '// <%= pkg.homepage %>\n' +
+        '//\n' +
         '// <%= pkg.description %>\n' +
         '//\n' +
         '// Copyright (c)<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+        '//\n' +
         '// Distributed under <%= pkg.license %> license\n' +
         '//\n' +
-        '// <%= pkg.homepage %>\n' +
         '\n'
     },
 
