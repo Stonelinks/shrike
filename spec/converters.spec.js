@@ -28,7 +28,7 @@ describe('converters', function() {
     expect(shrike.toFloat('121')).toEqual(121.0);
 
     // 1d
-    var arr = [0.0, 1.5, 2.3];
+    var arr = new shrike.FLOAT_ARRAY_TYPE([0.0, 1.5, 2.3]);
 
     // floats
     expect(shrike.toFloat([0.0, 1.5, 2.3])).toEqual(arr);
@@ -40,15 +40,15 @@ describe('converters', function() {
     expect(shrike.toFloat([0, '1.5', 2.3])).toEqual(arr);
 
     // empty
-    expect(shrike.toFloat([])).toEqual([]);
+    expect(shrike.toFloat([])).toEqual(new shrike.FLOAT_ARRAY_TYPE([]));
 
     // one element
-    expect(shrike.toFloat(['1.3'])).toEqual([1.3]);
-    expect(shrike.toFloat(['13'])).toEqual([13]);
-    expect(shrike.toFloat([13])).toEqual([13.0]);
+    expect(shrike.toFloat(['1.3'])).toEqual(new shrike.FLOAT_ARRAY_TYPE([1.3]));
+    expect(shrike.toFloat(['13'])).toEqual(new shrike.FLOAT_ARRAY_TYPE([13]));
+    expect(shrike.toFloat([13])).toEqual(new shrike.FLOAT_ARRAY_TYPE([13.0]));
 
     // 2d
-    var arr = [[0.0, 1.5, 2.3], [1.4, 0, 112.34]];
+    var arr = [new shrike.FLOAT_ARRAY_TYPE([0.0, 1.5, 2.3]), new shrike.FLOAT_ARRAY_TYPE([1.4, 0, 112.34])];
 
     // floats
     expect(shrike.toFloat([[0.0, 1.5, 2.3], [1.4, 0, 112.34]])).toEqual(arr);
@@ -60,13 +60,13 @@ describe('converters', function() {
     expect(shrike.toFloat([[0, '1.5', 2.3], ['1.4', 0, 112.34]])).toEqual(arr);
 
     // empty
-    expect(shrike.toFloat([[]])).toEqual([[]]);
-    expect(shrike.toFloat([[], []])).toEqual([[], []]);
+    expect(shrike.toFloat([[]])).toEqual([new shrike.FLOAT_ARRAY_TYPE([])]);
+    expect(shrike.toFloat([[], []])).toEqual([new shrike.FLOAT_ARRAY_TYPE([]), new shrike.FLOAT_ARRAY_TYPE([])]);
 
     // one element
-    expect(shrike.toFloat([['1.3']])).toEqual([[1.3]]);
-    expect(shrike.toFloat([['13']])).toEqual([[13]]);
-    expect(shrike.toFloat([[13]])).toEqual([[13.0]]);
+    expect(shrike.toFloat([['1.3']])).toEqual([new shrike.FLOAT_ARRAY_TYPE([1.3])]);
+    expect(shrike.toFloat([['13']])).toEqual([new shrike.FLOAT_ARRAY_TYPE([13])]);
+    expect(shrike.toFloat([[13]])).toEqual([new shrike.FLOAT_ARRAY_TYPE([13.0])]);
   });
 
   it('conversion scales for linear units', function() {
@@ -100,7 +100,7 @@ describe('converters', function() {
 
   it('parse axis and angles', function() {
     var res = {
-      axis: [1, 2, 3],
+      axis: new shrike.FLOAT_ARRAY_TYPE([1, 2, 3]),
       angle: 90
     };
 
@@ -127,11 +127,11 @@ describe('converters', function() {
   });
 
   it('quaternion from axis and angle', function() {
-    var res = [0.5253219888177297, 0.22741353271464756, 0.45482706542929513, 0.6822405981439427];
+    var res = new shrike.FLOAT_ARRAY_TYPE([0.5253219888177297, 0.22741353271464756, 0.45482706542929513, 0.6822405981439427]);
 
     expect(shrike.quatFromAxisAngle({
-      axis: [1, 2, 3],
-      angle: 90
+      axis: new shrike.FLOAT_ARRAY_TYPE([1, 2, 3]),
+      angle: 90.0
     })).toEqual(res);
     expect(shrike.quatFromAxisAngle([1, 2, 3, 90])).toEqual(res);
     expect(shrike.quatFromAxisAngle([1, 2, 3, 90])).toEqual(res);

@@ -16,7 +16,7 @@ shrike.M4 = shrike.M4x4;
 //
 // The base float array type, borrowed it from mjs.
 //
-var FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
+var FLOAT_ARRAY_TYPE = shrike.FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
 
 shrike.throwError = function(msg) {
   msg = msg || 'undefined error';

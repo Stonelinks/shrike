@@ -177,7 +177,7 @@ shrike.parseAxisAngle = function(axis, angle) {
 
   if (shrike.isArray(axis)) {
     if (axis.length == 4 && angle === undefined) {
-      _axis = axis.slice(0, 3);
+      _axis = [axis[0], axis[1], axis[2]];
       _angle = axis[3];
     }
     else if (axis.length == 3 && angle !== undefined) {
@@ -355,7 +355,7 @@ shrike.matrixFromQuat = function(quatRaw) {
 shrike.axisAngleFromQuat = function(quatraw) {
 
   var quat = shrike.toFloat(quatraw);
-  var sinang = shrike.sum(_.map(quat.slice(1, 4), shrike.square));
+  var sinang = shrike.sum(_.map(new FLOAT_ARRAY_TYPE([quat[1], quat[2], quat[3]]), shrike.square));
 
   var identity = {
     axis: new FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0]),
@@ -703,9 +703,9 @@ shrike.composeTransformArray = function(rot, trans) {
 shrike.decomposeTransformArray = function(T) {
   return {
     rotationMatrix: [
-      new FLOAT_ARRAY_TYPE(T[0].slice(0, 3)),
-      new FLOAT_ARRAY_TYPE(T[1].slice(0, 3)),
-      new FLOAT_ARRAY_TYPE(T[2].slice(0, 3))
+      new FLOAT_ARRAY_TYPE([T[0][0], T[0][1], T[0][2]]),
+      new FLOAT_ARRAY_TYPE([T[1][0], T[1][1], T[1][2]]),
+      new FLOAT_ARRAY_TYPE([T[2][0], T[2][1], T[2][2]])
     ],
     translation: new FLOAT_ARRAY_TYPE([T[0][3], T[1][3], T[2][3]])
   };
