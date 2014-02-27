@@ -612,7 +612,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   // angle is returned in radians
-  
   shrike.axisAngleFromQuat = function(quatraw) {
   
     var quat = shrike.toFloat(quatraw);
@@ -626,7 +625,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
       return identity;
     }
     else if (quat[0] * quat[0] + sinang <= 1e-8) {
-      throw new Error('invalid quaternion ' + quat);
+      shrike.throwError('invalid quaternion ' + quat);
     }
     var _quat;
     if (quat[0] < 0.0) {
