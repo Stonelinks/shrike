@@ -12,7 +12,6 @@
 //
 // The modified array.
 //
-
 shrike.scalarIterator = function(A, _function) {
   _function = _function || pass;
   if (shrike.is2DArray(A)) {

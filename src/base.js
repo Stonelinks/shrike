@@ -44,7 +44,6 @@ shrike.assert = function(cond, msg) {
 //
 // nothing
 //
-
 shrike.prettyPrint = function(x) {
 
   console.log(function() {

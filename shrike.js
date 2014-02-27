@@ -58,7 +58,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // nothing
   //
-  
   shrike.prettyPrint = function(x) {
   
     console.log(function() {
@@ -152,7 +151,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // true or false
   //
-  
   shrike.isArray = function(a) {
     if (_.isArray(a)) {
       return true;
@@ -174,7 +172,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // true or false
   //
-  
   shrike.isFloatArray = function(a) {
     try {
       return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
@@ -197,7 +194,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // true or false
   //
-  
   shrike.is2DArray = function(a) {
     if (!shrike.isArray(a)) {
       return false;
@@ -227,7 +223,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // true or false
   //
-  
   shrike.isNumber = function(a) {
     return !isNaN(parseFloat(a)) && isFinite(a) && !shrike.isArray(a);
   };
@@ -245,7 +240,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // A new vector containing with the given argument values.
   //
-  
   shrike.toFloat = function(thing) {
   
     // its a number
@@ -296,7 +290,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float scale.
   //
-  
   shrike.unitConversionScale = function(sourceUnit, targetUnit) {
     var unitDict = {
       m: 1.0,
@@ -327,7 +320,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // the converted value.
   //
-  
   shrike.toDegrees = function(x) {
     var _convert = function(n) {
   
@@ -361,7 +353,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted value.
   //
-  
   shrike.toRadians = function(x) {
     var _convert = function(n) {
   
@@ -397,7 +388,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //       angle: float
   //     }
   //
-  
   shrike.parseAxisAngle = function(axis, angle) {
     var _axis;
     var _angle;
@@ -451,7 +441,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted quaternion.
   //
-  
   shrike.quatFromAxisAngle = function(_axis, _angle) {
     var aa = shrike.parseAxisAngle(_axis, _angle);
     var axis = aa.axis;
@@ -481,7 +470,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted quaternion.
   //
-  
   shrike.quatFromMatrix = function(Traw) {
   
     var T = shrike.toFloat(Traw);
@@ -541,7 +529,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted matrix.
   //
-  
   shrike.matrixFromQuat = function(quatRaw) {
     var quat = shrike.toFloat(quatRaw);
   
@@ -585,7 +572,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted axis angle object (angle is in radians).
   //
-  
   shrike.axisAngleFromQuat = function(quatraw) {
   
     var quat = shrike.toFloat(quatraw);
@@ -631,7 +617,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted axis angle object (angle is in radians).
   //
-  
   shrike.axisAngleFromMatrix = function(m) {
     return shrike.axisAngleFromQuat(shrike.quatFromMatrix(m));
   };
@@ -649,7 +634,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted array of angles (angles are is in degrees).
   //
-  
   shrike.zxyFromMatrix = function(Traw) {
   
     var T = shrike.matrix4to3(shrike.toFloat(Traw));
@@ -697,7 +681,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted array of angles (angles are is in degrees).
   //
-  
   shrike.zyxFromMatrix = function(Traw) {
     var T = shrike.toFloat(Traw);
     var epsilon = 1e-10;
@@ -747,7 +730,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted matrix.
   //
-  
   shrike.matrixFromZXY = function(ZXY) {
   
     var x = shrike.toRadians(parseFloat(ZXY[0]));
@@ -783,7 +765,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted matrix.
   //
-  
   shrike.matrixFromZYX = function(ZYX) {
     var x = shrike.toRadians(parseFloat(ZYX[0]));
     var y = shrike.toRadians(parseFloat(ZYX[1]));
@@ -818,7 +799,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted array of angles (angles are is in degrees).
   //
-  
   shrike.zxyFromQuat = function(quat) {
     return shrike.zxyFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
   };
@@ -836,7 +816,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted quaternion.
   //
-  
   shrike.quatFromZXY = function(zxy) {
     return shrike.quatFromMatrix(shrike.matrixFromZXY(shrike.toFloat(zxy)));
   };
@@ -854,7 +833,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted array of angles (angles are is in degrees).
   //
-  
   shrike.zyxFromQuat = function(quat) {
     return shrike.zyxFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
   };
@@ -872,7 +850,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted quaternion.
   //
-  
   shrike.quatFromZYX = function(zyx) {
     return shrike.quatFromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
   };
@@ -890,7 +867,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float 3x3 rotation matrix.
   //
-  
   shrike.matrix4to3 = function(M) {
     return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
   };
@@ -909,7 +885,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the 4x4 result matrix.
   //
-  
   shrike.composeTransformArray = function(rot, trans) {
     return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
   };
@@ -953,7 +928,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // The modified array.
   //
-  
   shrike.scalarIterator = function(A, _function) {
     _function = _function || pass;
     if (shrike.is2DArray(A)) {
@@ -991,7 +965,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float sum.
   //
-  
   shrike.sum = function(a) {
   
     shrike.assert(shrike.isArray(a), 'can\'t compute sum of non-array ' + a);
@@ -1017,7 +990,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float square.
   //
-  
   shrike.square = function(x) {
   
     shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
@@ -1038,7 +1010,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float rounded number.
   //
-  
   shrike.round = function(n, dec) {
     if (dec === undefined) {
       dec = 0;
@@ -1064,7 +1035,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float rounded array.
   //
-  
   shrike.roundArray = function(A, dec) {
     shrike.throwError(shrike.isArray(A), 'roundArray: not an array');
     return shrike.scalarIterator(A, function(a) {
@@ -1086,7 +1056,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result array.
   //
-  
   shrike.divide = function(A, scalar) {
     return shrike.scalarIterator(shrike.toFloat(A), function(a) {
       return a / parseFloat(scalar);
@@ -1106,7 +1075,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float
   //
-  
   shrike.magnitude = function(a) {
     if (shrike.isFloatArray(a)) {
   
@@ -1132,7 +1100,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float normalized array or matrix
   //
-  
   shrike.normalize = function(array) {
     var length = shrike.magnitude(array);
   
@@ -1154,7 +1121,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // An m x n identity matrix.
   //
-  
   shrike.eye = function(m, n) {
     n = n || m;
     var ret = [];
@@ -1187,7 +1153,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float result of A * B
   //
-  
   shrike.matrixMult = function(_A, _B) {
     var A = shrike.toFloat(_A);
     var B = shrike.toFloat(_B);
@@ -1222,7 +1187,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result V3.
   //
-  
   shrike.V3.fromObject = function(o) {
   
     shrike.assert(_.isObject(o), 'not an object');
@@ -1244,7 +1208,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result object.
   //
-  
   shrike.V3.toObject = function(_v) {
   
     shrike.assert(shrike.isArray(_v), 'not an array');
@@ -1265,7 +1228,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted M4.
   //
-  
   shrike.M4.matrixFromQuat = function(quatRaw) {
   
     shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
@@ -1312,7 +1274,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the converted quaternion.
   //
-  
   shrike.M4.quatFromMatrix = function(_m) {
   
     var m = shrike.toFloat(_m);
@@ -1382,7 +1343,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result translation.
   //
-  
   shrike.M4.transFromMatrix = function(m) {
     // var r = new shrike.FLOAT_ARRAY_TYPE(3);
   
@@ -1408,7 +1368,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result M4.
   //
-  
   shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
     var r = shrike.M4.matrixFromQuat(quatRaw);
   
@@ -1435,7 +1394,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result transform array.
   //
-  
   shrike.M4.toTransformArray = function(m) {
     return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
   };
@@ -1453,7 +1411,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result M4.
   //
-  
   shrike.M4.fromTransformArray = function(m) {
     return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
   };
@@ -1476,7 +1433,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // float the result object.
   //
-  
   shrike.linearlyInterpolate = function(t0, x0, t1, x1, t) {
     return (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
   };

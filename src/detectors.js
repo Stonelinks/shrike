@@ -11,7 +11,6 @@
 //
 // true or false
 //
-
 shrike.isArray = function(a) {
   if (_.isArray(a)) {
     return true;
@@ -33,7 +32,6 @@ shrike.isArray = function(a) {
 //
 // true or false
 //
-
 shrike.isFloatArray = function(a) {
   try {
     return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
@@ -56,7 +54,6 @@ shrike.isFloatArray = function(a) {
 //
 // true or false
 //
-
 shrike.is2DArray = function(a) {
   if (!shrike.isArray(a)) {
     return false;
@@ -86,7 +83,6 @@ shrike.is2DArray = function(a) {
 //
 // true or false
 //
-
 shrike.isNumber = function(a) {
   return !isNaN(parseFloat(a)) && isFinite(a) && !shrike.isArray(a);
 };

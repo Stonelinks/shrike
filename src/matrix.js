@@ -12,7 +12,6 @@
 //
 // An m x n identity matrix.
 //
-
 shrike.eye = function(m, n) {
   n = n || m;
   var ret = [];
@@ -45,7 +44,6 @@ shrike.eye = function(m, n) {
 //
 // float result of A * B
 //
-
 shrike.matrixMult = function(_A, _B) {
   var A = shrike.toFloat(_A);
   var B = shrike.toFloat(_B);

@@ -11,7 +11,6 @@
 //
 // A new vector containing with the given argument values.
 //
-
 shrike.toFloat = function(thing) {
 
   // its a number
@@ -62,7 +61,6 @@ shrike.toFloat = function(thing) {
 //
 // float scale.
 //
-
 shrike.unitConversionScale = function(sourceUnit, targetUnit) {
   var unitDict = {
     m: 1.0,
@@ -96,7 +94,6 @@ shrike.unitConversionScale = function(sourceUnit, targetUnit) {
 //
 // the converted value.
 //
-
 shrike.toDegrees = function(x) {
   var _convert = function(n) {
 
@@ -133,7 +130,6 @@ shrike.toDegrees = function(x) {
 //
 // float the converted value.
 //
-
 shrike.toRadians = function(x) {
   var _convert = function(n) {
 
@@ -172,7 +168,6 @@ shrike.toRadians = function(x) {
 //       angle: float
 //     }
 //
-
 shrike.parseAxisAngle = function(axis, angle) {
   var _axis;
   var _angle;
@@ -226,7 +221,6 @@ shrike.parseAxisAngle = function(axis, angle) {
 //
 // float the converted quaternion.
 //
-
 shrike.quatFromAxisAngle = function(_axis, _angle) {
   var aa = shrike.parseAxisAngle(_axis, _angle);
   var axis = aa.axis;
@@ -256,7 +250,6 @@ shrike.quatFromAxisAngle = function(_axis, _angle) {
 //
 // float the converted quaternion.
 //
-
 shrike.quatFromMatrix = function(Traw) {
 
   var T = shrike.toFloat(Traw);
@@ -316,7 +309,6 @@ shrike.quatFromMatrix = function(Traw) {
 //
 // float the converted matrix.
 //
-
 shrike.matrixFromQuat = function(quatRaw) {
   var quat = shrike.toFloat(quatRaw);
 
@@ -360,7 +352,6 @@ shrike.matrixFromQuat = function(quatRaw) {
 //
 // float the converted axis angle object (angle is in radians).
 //
-
 shrike.axisAngleFromQuat = function(quatraw) {
 
   var quat = shrike.toFloat(quatraw);
@@ -406,7 +397,6 @@ shrike.axisAngleFromQuat = function(quatraw) {
 //
 // float the converted axis angle object (angle is in radians).
 //
-
 shrike.axisAngleFromMatrix = function(m) {
   return shrike.axisAngleFromQuat(shrike.quatFromMatrix(m));
 };
@@ -424,7 +414,6 @@ shrike.axisAngleFromMatrix = function(m) {
 //
 // float the converted array of angles (angles are is in degrees).
 //
-
 shrike.zxyFromMatrix = function(Traw) {
 
   var T = shrike.matrix4to3(shrike.toFloat(Traw));
@@ -472,7 +461,6 @@ shrike.zxyFromMatrix = function(Traw) {
 //
 // float the converted array of angles (angles are is in degrees).
 //
-
 shrike.zyxFromMatrix = function(Traw) {
   var T = shrike.toFloat(Traw);
   var epsilon = 1e-10;
@@ -522,7 +510,6 @@ shrike.zyxFromMatrix = function(Traw) {
 //
 // float the converted matrix.
 //
-
 shrike.matrixFromZXY = function(ZXY) {
 
   var x = shrike.toRadians(parseFloat(ZXY[0]));
@@ -558,7 +545,6 @@ shrike.matrixFromZXY = function(ZXY) {
 //
 // float the converted matrix.
 //
-
 shrike.matrixFromZYX = function(ZYX) {
   var x = shrike.toRadians(parseFloat(ZYX[0]));
   var y = shrike.toRadians(parseFloat(ZYX[1]));
@@ -593,7 +579,6 @@ shrike.matrixFromZYX = function(ZYX) {
 //
 // float the converted array of angles (angles are is in degrees).
 //
-
 shrike.zxyFromQuat = function(quat) {
   return shrike.zxyFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
 };
@@ -611,7 +596,6 @@ shrike.zxyFromQuat = function(quat) {
 //
 // float the converted quaternion.
 //
-
 shrike.quatFromZXY = function(zxy) {
   return shrike.quatFromMatrix(shrike.matrixFromZXY(shrike.toFloat(zxy)));
 };
@@ -629,7 +613,6 @@ shrike.quatFromZXY = function(zxy) {
 //
 // float the converted array of angles (angles are is in degrees).
 //
-
 shrike.zyxFromQuat = function(quat) {
   return shrike.zyxFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
 };
@@ -647,7 +630,6 @@ shrike.zyxFromQuat = function(quat) {
 //
 // float the converted quaternion.
 //
-
 shrike.quatFromZYX = function(zyx) {
   return shrike.quatFromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
 };
@@ -665,7 +647,6 @@ shrike.quatFromZYX = function(zyx) {
 //
 // float 3x3 rotation matrix.
 //
-
 shrike.matrix4to3 = function(M) {
   return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
 };
@@ -684,7 +665,6 @@ shrike.matrix4to3 = function(M) {
 //
 // float the 4x4 result matrix.
 //
-
 shrike.composeTransformArray = function(rot, trans) {
   return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
 };

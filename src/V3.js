@@ -11,7 +11,6 @@
 //
 // float the result V3.
 //
-
 shrike.V3.fromObject = function(o) {
 
   // @if SHRIKE_DO_ASSERT
@@ -36,7 +35,6 @@ shrike.V3.fromObject = function(o) {
 //
 // float the result object.
 //
-
 shrike.V3.toObject = function(_v) {
 
   // @if SHRIKE_DO_ASSERT

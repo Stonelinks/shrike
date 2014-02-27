@@ -11,7 +11,6 @@
 //
 // float sum.
 //
-
 shrike.sum = function(a) {
 
   // @if SHRIKE_DO_ASSERT
@@ -40,7 +39,6 @@ shrike.sum = function(a) {
 //
 // float square.
 //
-
 shrike.square = function(x) {
 
   // @if SHRIKE_DO_ASSERT
@@ -64,7 +62,6 @@ shrike.square = function(x) {
 //
 // float rounded number.
 //
-
 shrike.round = function(n, dec) {
   if (dec === undefined) {
     dec = 0;
@@ -93,7 +90,6 @@ shrike.round = function(n, dec) {
 //
 // float rounded array.
 //
-
 shrike.roundArray = function(A, dec) {
   shrike.throwError(shrike.isArray(A), 'roundArray: not an array');
   return shrike.scalarIterator(A, function(a) {
@@ -115,7 +111,6 @@ shrike.roundArray = function(A, dec) {
 //
 // float the result array.
 //
-
 shrike.divide = function(A, scalar) {
   return shrike.scalarIterator(shrike.toFloat(A), function(a) {
     return a / parseFloat(scalar);
@@ -135,7 +130,6 @@ shrike.divide = function(A, scalar) {
 //
 // float
 //
-
 shrike.magnitude = function(a) {
   if (shrike.isFloatArray(a)) {
 
@@ -164,7 +158,6 @@ shrike.norm = shrike.magnitude;
 //
 // float normalized array or matrix
 //
-
 shrike.normalize = function(array) {
   var length = shrike.magnitude(array);
 
