@@ -1,4 +1,17 @@
-// common matrix operations
+//
+// ##Function: shrike.divide
+//
+// Divides an arbitrarily large 1 or 2d array by a scalar.
+//
+// **Parameters:**
+//
+//   - **A** - the source array.
+//   - **scalar** - scalar that each element in the array will be be divided by.
+//
+// **Returns:**
+//
+// float the result array.
+//
 
 shrike.divide = function(A, scalar) {
   return shrike.scalarIterator(shrike.toFloat(A), function(a) {
@@ -6,9 +19,20 @@ shrike.divide = function(A, scalar) {
   });
 };
 
-// identity matrix
-// returns an m x n identity matrix
-// if you leave out n, it will be an m x m matrix
+//
+// ##Function: shrike.eye
+//
+// Makes an identity matrix.
+//
+// **Parameters:**
+//
+//   - **m** - number of columns.
+//   - **n** - (optional) number of rows. If left unspecified, result will be an m x m matrix
+//
+// **Returns:**
+//
+// An m x n identity matrix.
+//
 
 shrike.eye = function(m, n) {
   n = n || m;
@@ -28,6 +52,19 @@ shrike.eye = function(m, n) {
   return ret;
 };
 
+//
+// ##Function: shrike.magnitude
+//
+// Matrix or vector norm.
+//
+// **Parameters:**
+//
+//   - **a** - source.
+//
+// **Returns:**
+//
+// float
+//
 
 shrike.magnitude = function(a) {
   if (shrike.isFloatArray(a)) {
@@ -43,6 +80,19 @@ shrike.magnitude = function(a) {
 
 shrike.norm = shrike.magnitude;
 
+//
+// ##Function: shrike.normalize
+//
+// Matrix or vector normalization.
+//
+// **Parameters:**
+//
+//   - **a** - source.
+//
+// **Returns:**
+//
+// float normalized array or matrix
+//
 
 shrike.normalize = function(array) {
   var length = shrike.magnitude(array);
@@ -54,6 +104,20 @@ shrike.normalize = function(array) {
   return shrike.divide(array, length);
 };
 
+//
+// ##Function: shrike.matrixMult
+//
+// Unfancy 2d matrix multiplication.
+//
+// **Parameters:**
+//
+//   - **_A** - first array operand.
+//   - **_B** - second array operand.
+//
+// **Returns:**
+//
+// float result of A * B
+//
 
 shrike.matrixMult = function(_A, _B) {
   var A = shrike.toFloat(_A);

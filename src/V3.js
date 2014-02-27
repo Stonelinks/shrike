@@ -1,4 +1,16 @@
-// functions to augment mjs's V3 vector
+//
+// ##Function: shrike.V3.objectToArray
+//
+// Converts an object with xyz attributes into a V3.
+//
+// **Parameters:**
+//
+//   - **o** - the source object.
+//
+// **Returns:**
+//
+// float the result V3.
+//
 
 shrike.V3.objectToArray = function(o) {
 
@@ -11,6 +23,19 @@ shrike.V3.objectToArray = function(o) {
   });
 };
 
+//
+// ##Function: shrike.V3.arrayToObject
+//
+// Converts a V3 into an object with xyz attributes.
+//
+// **Parameters:**
+//
+//   - **_v** - the source V3.
+//
+// **Returns:**
+//
+// float the result object.
+//
 
 shrike.V3.arrayToObject = function(_v) {
 

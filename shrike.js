@@ -1073,7 +1073,20 @@ define(['underscore', 'mjs'], function(_, mjs) {
     };
   };
   
-  // common matrix operations
+  //
+  // ##Function: shrike.divide
+  //
+  // Divides an arbitrarily large 1 or 2d array by a scalar.
+  //
+  // **Parameters:**
+  //
+  //   - **A** - the source array.
+  //   - **scalar** - scalar that each element in the array will be be divided by.
+  //
+  // **Returns:**
+  //
+  // float the result array.
+  //
   
   shrike.divide = function(A, scalar) {
     return shrike.scalarIterator(shrike.toFloat(A), function(a) {
@@ -1081,9 +1094,20 @@ define(['underscore', 'mjs'], function(_, mjs) {
     });
   };
   
-  // identity matrix
-  // returns an m x n identity matrix
-  // if you leave out n, it will be an m x m matrix
+  //
+  // ##Function: shrike.eye
+  //
+  // Makes an identity matrix.
+  //
+  // **Parameters:**
+  //
+  //   - **m** - number of columns.
+  //   - **n** - (optional) number of rows. If left unspecified, result will be an m x m matrix
+  //
+  // **Returns:**
+  //
+  // An m x n identity matrix.
+  //
   
   shrike.eye = function(m, n) {
     n = n || m;
@@ -1103,6 +1127,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return ret;
   };
   
+  //
+  // ##Function: shrike.magnitude
+  //
+  // Matrix or vector norm.
+  //
+  // **Parameters:**
+  //
+  //   - **a** - source.
+  //
+  // **Returns:**
+  //
+  // float
+  //
   
   shrike.magnitude = function(a) {
     if (shrike.isFloatArray(a)) {
@@ -1115,6 +1152,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
   shrike.norm = shrike.magnitude;
   
+  //
+  // ##Function: shrike.normalize
+  //
+  // Matrix or vector normalization.
+  //
+  // **Parameters:**
+  //
+  //   - **a** - source.
+  //
+  // **Returns:**
+  //
+  // float normalized array or matrix
+  //
   
   shrike.normalize = function(array) {
     var length = shrike.magnitude(array);
@@ -1123,6 +1173,20 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return shrike.divide(array, length);
   };
   
+  //
+  // ##Function: shrike.matrixMult
+  //
+  // Unfancy 2d matrix multiplication.
+  //
+  // **Parameters:**
+  //
+  //   - **_A** - first array operand.
+  //   - **_B** - second array operand.
+  //
+  // **Returns:**
+  //
+  // float result of A * B
+  //
   
   shrike.matrixMult = function(_A, _B) {
     var A = shrike.toFloat(_A);
@@ -1145,7 +1209,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return result;
   };
   
-  // functions to augment mjs's V3 vector
+  //
+  // ##Function: shrike.V3.objectToArray
+  //
+  // Converts an object with xyz attributes into a V3.
+  //
+  // **Parameters:**
+  //
+  //   - **o** - the source object.
+  //
+  // **Returns:**
+  //
+  // float the result V3.
+  //
   
   shrike.V3.objectToArray = function(o) {
   
@@ -1155,6 +1231,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
     });
   };
   
+  //
+  // ##Function: shrike.V3.arrayToObject
+  //
+  // Converts a V3 into an object with xyz attributes.
+  //
+  // **Parameters:**
+  //
+  //   - **_v** - the source V3.
+  //
+  // **Returns:**
+  //
+  // float the result object.
+  //
   
   shrike.V3.arrayToObject = function(_v) {
   
@@ -1163,7 +1252,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return _.object(['x', 'y', 'z'], v);
   };
   
-  // functions to augment mjs's 4x4 matrix
+  //
+  // ##Function: shrike.M4.matrixFromQuat
+  //
+  // Convert an M4 from quaternion.
+  //
+  // **Parameters:**
+  //
+  //   - **quatRaw** - the quaternion being converted.
+  //
+  // **Returns:**
+  //
+  // float the converted M4.
+  //
   
   shrike.M4.matrixFromQuat = function(quatRaw) {
   
@@ -1198,6 +1299,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return r;
   };
   
+  //
+  // ##Function: shrike.M4.quatFromMatrix
+  //
+  // Convert a quaternion from an M4.
+  //
+  // **Parameters:**
+  //
+  //   - **_m** - the M4 being converted.
+  //
+  // **Returns:**
+  //
+  // float the converted quaternion.
+  //
   
   shrike.M4.quatFromMatrix = function(_m) {
   
@@ -1206,19 +1320,12 @@ define(['underscore', 'mjs'], function(_, mjs) {
     var m11 = m[0];
     var m21 = m[1];
     var m31 = m[2];
-    // var m41 = m[3];
     var m12 = m[4];
     var m22 = m[5];
     var m32 = m[6];
-    // var m42 = m[7];
     var m13 = m[8];
     var m23 = m[9];
     var m33 = m[10];
-    // var m43 = m[11];
-    // var m14 = m[12];
-    // var m24 = m[13];
-    // var m34 = m[14];
-    // var m44 = m[15];
   
     var tr = m11 + m22 + m33;
     var r = [0.0, 0.0, 0.0, 0.0];
@@ -1262,6 +1369,19 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return shrike.divide(r, shrike.magnitude(r));
   };
   
+  //
+  // ##Function: shrike.M4.transFromMatrix
+  //
+  // Get a translation vector out of an M4.
+  //
+  // **Parameters:**
+  //
+  //   - **m** - the source M4.
+  //
+  // **Returns:**
+  //
+  // float the result translation.
+  //
   
   shrike.M4.transFromMatrix = function(m) {
     // var r = new shrike.FLOAT_ARRAY_TYPE(3);
@@ -1274,7 +1394,20 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return r;
   };
   
-  // composes an instance from a quaternion and translation V3
+  //
+  // ##Function: shrike.M4.composeFromQuatTrans
+  //
+  // Composes an M4 from a quaternion and translation V3
+  //
+  // **Parameters:**
+  //
+  //   - **quatRaw** - the source quaternion.
+  //   - **transRaw** - the source translation.
+  //
+  // **Returns:**
+  //
+  // float the result M4.
+  //
   
   shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
     var r = shrike.M4.matrixFromQuat(quatRaw);
@@ -1289,16 +1422,61 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return r;
   };
   
+  //
+  // ##Function: shrike.M4toTransformArray
+  //
+  // Converts an M4 into a 2d transform array.
+  //
+  // **Parameters:**
+  //
+  //   - **m** - the source M4.
+  //
+  // **Returns:**
+  //
+  // float the result transform array.
+  //
+  
   shrike.M4toTransformArray = function(m) {
     return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
   };
   
+  //
+  // ##Function: shrike.transformArrayToM4
+  //
+  // Converts a 2d transform array into an M4.
+  //
+  // **Parameters:**
+  //
+  //   - **m** - the source transform array.
+  //
+  // **Returns:**
+  //
+  // float the result M4.
+  //
   
   shrike.transformArrayToM4 = function(m) {
     return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
   };
   
-  // requires t0, t1 to be distinct
+  //
+  // ##Function: shrike.linearlyInterpolate
+  //
+  // Linearly interpolate between t0, x0 and t1, x1 at time t.
+  // Requires t0, t1 to be distinct
+  //
+  // **Parameters:**
+  //
+  //   - **t0** - time 0.
+  //   - **x0** - position 0.
+  //   - **t1** - time 1.
+  //   - **x1** - position 1.
+  //   - **t** - time.
+  //
+  // **Returns:**
+  //
+  // float the result object.
+  //
+  
   shrike.linearlyInterpolate = function(t0, x0, t1, x1, t) {
     return (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
   };
