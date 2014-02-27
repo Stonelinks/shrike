@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#108;&#117;&#99;&#97;&#115;&#46;&#x70;&#46;&#100;&#111;&#121;&#108;&#x65;&#x40;&#x67;&#109;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;">&#108;&#117;&#99;&#97;&#115;&#46;&#x70;&#46;&#100;&#111;&#121;&#108;&#x65;&#x40;&#x67;&#109;&#97;&#105;&#108;&#46;&#x63;&#x6f;&#109;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#x6c;&#x75;&#x63;&#97;&#115;&#46;&#x70;&#x2e;&#100;&#111;&#x79;&#x6c;&#101;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#x63;&#111;&#109;">&#x6c;&#x75;&#x63;&#97;&#115;&#46;&#x70;&#x2e;&#100;&#111;&#x79;&#x6c;&#101;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#x63;&#111;&#109;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -100,12 +100,12 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="constant-shrike_float_array_type">Constant: SHRIKE_FLOAT_ARRAY_TYPE</h2>
+              <h2 id="constant-float_array_type">Constant: FLOAT_ARRAY_TYPE</h2>
 <p>The base float array type, borrowed it from mjs.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> SHRIKE_FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
   
   shrike.throwError = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(msg)</span> {</span>
     msg = msg || <span class="hljs-string">'undefined error'</span>;
@@ -139,7 +139,6 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.prettyPrint = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
-  
     console.log(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
       <span class="hljs-keyword">if</span> (shrike.isArray(x)) {
   
@@ -475,11 +474,11 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (shrike.is2DArray(thing)) {
         <span class="hljs-keyword">return</span> _.map(thing, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(row)</span> {</span>
-          <span class="hljs-keyword">return</span> _.map(row, _convert);
+          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(_.map(row, _convert));
         });
       }
       <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">return</span> _.map(thing, _convert);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(_.map(thing, _convert));
       }
     }
     <span class="hljs-keyword">else</span> {
@@ -660,7 +659,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     }
     <span class="hljs-keyword">return</span> {
       axis: shrike.toFloat(_axis),
-      angle: shrike.toFloat(_angle)
+      angle: <span class="hljs-built_in">parseFloat</span>(_angle)
     };
   };</pre></div></div>
             
@@ -693,7 +692,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
   
     <span class="hljs-keyword">var</span> axisLength = shrike.sum(_.map(axis, shrike.square));
     <span class="hljs-keyword">if</span> (axisLength &lt;= <span class="hljs-number">1e-10</span>) {
-      <span class="hljs-keyword">return</span> [<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>];
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>]);
     }
     <span class="hljs-keyword">var</span> halfangle = angle / <span class="hljs-number">2.0</span>;
     <span class="hljs-keyword">var</span> sinangle = <span class="hljs-built_in">Math</span>.sin(halfangle) / <span class="hljs-built_in">Math</span>.sqrt(axisLength);</pre></div></div>
@@ -711,7 +710,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">Math</span>.cos(halfangle), axis[<span class="hljs-number">0</span>] * sinangle, axis[<span class="hljs-number">1</span>] * sinangle, axis[<span class="hljs-number">2</span>] * sinangle];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-built_in">Math</span>.cos(halfangle), axis[<span class="hljs-number">0</span>] * sinangle, axis[<span class="hljs-number">1</span>] * sinangle, axis[<span class="hljs-number">2</span>] * sinangle]);
   };</pre></div></div>
             
         </li>
@@ -739,12 +738,12 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">var</span> T = shrike.toFloat(Traw);
   
     <span class="hljs-keyword">var</span> tr = T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>];
-    <span class="hljs-keyword">var</span> rot = [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>];
+    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>]);
     <span class="hljs-keyword">if</span> (tr &gt;= <span class="hljs-number">0.0</span>) {
-      rot[<span class="hljs-number">0</span>] = tr + <span class="hljs-number">1.0</span>;
-      rot[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] - T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]);
-      rot[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] - T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>]);
-      rot[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+      r[<span class="hljs-number">0</span>] = tr + <span class="hljs-number">1.0</span>;
+      r[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] - T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]);
+      r[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] - T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>]);
+      r[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
     }
     <span class="hljs-keyword">else</span> {</pre></div></div>
             
@@ -763,33 +762,33 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &gt; T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]) {
         <span class="hljs-keyword">if</span> (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] &gt; T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]) {
-          rot[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] - (T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])) + <span class="hljs-number">1.0</span>;
-          rot[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]);
-          rot[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]);
-          rot[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+          r[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] - (T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])) + <span class="hljs-number">1.0</span>;
+          r[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]);
+          r[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]);
+          r[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
         }
         <span class="hljs-keyword">else</span> {
-          rot[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>])) + <span class="hljs-number">1.0</span>;
-          rot[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]);
-          rot[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]);
-          rot[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] - T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>]);
+          r[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] - (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>])) + <span class="hljs-number">1.0</span>;
+          r[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]);
+          r[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]);
+          r[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] - T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>]);
         }
       }
       <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] &gt; T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]) {
-        rot[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] - (T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])) + <span class="hljs-number">1.0</span>;
-        rot[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]);
-        rot[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]);
-        rot[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+        r[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] - (T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>])) + <span class="hljs-number">1.0</span>;
+        r[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]);
+        r[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>]);
+        r[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
       }
       <span class="hljs-keyword">else</span> {
-        rot[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] - (T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>])) + <span class="hljs-number">1.0</span>;
-        rot[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]);
-        rot[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]);
-        rot[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] - T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]);
+        r[<span class="hljs-number">1</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] - (T[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>])) + <span class="hljs-number">1.0</span>;
+        r[<span class="hljs-number">2</span>] = (T[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + T[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]);
+        r[<span class="hljs-number">3</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>] + T[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]);
+        r[<span class="hljs-number">0</span>] = (T[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] - T[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]);
       }
     }
   
-    <span class="hljs-keyword">return</span> shrike.divide(rot, shrike.magnitude(rot));
+    <span class="hljs-keyword">return</span> shrike.divide(r, shrike.magnitude(r));
   };</pre></div></div>
             
         </li>
@@ -880,7 +879,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">var</span> sinang = shrike.sum(_.map(quat.slice(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>), shrike.square));
   
     <span class="hljs-keyword">var</span> identity = {
-      axis: [<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>],
+      axis: <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>]),
       angle: <span class="hljs-number">0.0</span>
     };
     <span class="hljs-keyword">if</span> (sinang === <span class="hljs-number">0.0</span>) {
@@ -891,7 +890,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     }
     <span class="hljs-keyword">var</span> _quat;
     <span class="hljs-keyword">if</span> (quat[<span class="hljs-number">0</span>] &lt; <span class="hljs-number">0.0</span>) {
-      _quat = [-quat[<span class="hljs-number">0</span>], -quat[<span class="hljs-number">1</span>], -quat[<span class="hljs-number">2</span>], -quat[<span class="hljs-number">3</span>]];
+      _quat = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([-quat[<span class="hljs-number">0</span>], -quat[<span class="hljs-number">1</span>], -quat[<span class="hljs-number">2</span>], -quat[<span class="hljs-number">3</span>]]);
     }
     <span class="hljs-keyword">else</span> {
       _quat = quat;
@@ -901,7 +900,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
   
     <span class="hljs-keyword">var</span> angle = <span class="hljs-number">2.0</span> * <span class="hljs-built_in">Math</span>.atan2(sinang, _quat[<span class="hljs-number">0</span>]);
     <span class="hljs-keyword">return</span> {
-      axis: [_quat[<span class="hljs-number">1</span>] * f, _quat[<span class="hljs-number">2</span>] * f, _quat[<span class="hljs-number">3</span>] * f],
+      axis: <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([_quat[<span class="hljs-number">1</span>] * f, _quat[<span class="hljs-number">2</span>] * f, _quat[<span class="hljs-number">3</span>] * f]),
       angle: angle
     };
   };</pre></div></div>
@@ -1066,19 +1065,21 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">var</span> y = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZXY[<span class="hljs-number">1</span>]));
     <span class="hljs-keyword">var</span> z = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZXY[<span class="hljs-number">2</span>]));
     <span class="hljs-keyword">return</span> [
-    [
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([
       -<span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.sin(z) + <span class="hljs-built_in">Math</span>.cos(y) * <span class="hljs-built_in">Math</span>.cos(z),
       -<span class="hljs-built_in">Math</span>.sin(z) * <span class="hljs-built_in">Math</span>.cos(x),
       <span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.sin(z) * <span class="hljs-built_in">Math</span>.cos(y) + <span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.cos(z)
-    ], [
+    ]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([
       <span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.cos(z) + <span class="hljs-built_in">Math</span>.sin(z) * <span class="hljs-built_in">Math</span>.cos(y),
       <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(z),
       -<span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.cos(y) * <span class="hljs-built_in">Math</span>.cos(z) + <span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.sin(z)
-    ], [
+    ]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([
       -<span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.cos(x),
       <span class="hljs-built_in">Math</span>.sin(x),
       <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(y)
-    ]
+    ])
       ];
   };</pre></div></div>
             
@@ -1107,19 +1108,21 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">var</span> y = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZYX[<span class="hljs-number">1</span>]));
     <span class="hljs-keyword">var</span> z = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZYX[<span class="hljs-number">2</span>]));
     <span class="hljs-keyword">return</span> [
-    [
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([
       <span class="hljs-built_in">Math</span>.cos(y) * <span class="hljs-built_in">Math</span>.cos(z),
       -<span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.sin(z) + <span class="hljs-built_in">Math</span>.cos(z) * <span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.sin(y),
       <span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.sin(z) + <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(z) * <span class="hljs-built_in">Math</span>.sin(y)
-    ], [
+    ]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([
       <span class="hljs-built_in">Math</span>.cos(y) * <span class="hljs-built_in">Math</span>.sin(z),
       <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(z) + <span class="hljs-built_in">Math</span>.sin(x) * <span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.sin(z),
       -<span class="hljs-built_in">Math</span>.cos(z) * <span class="hljs-built_in">Math</span>.sin(x) + <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.sin(y) * <span class="hljs-built_in">Math</span>.sin(z)
-    ], [
+    ]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([
       -<span class="hljs-built_in">Math</span>.sin(y),
       <span class="hljs-built_in">Math</span>.cos(y) * <span class="hljs-built_in">Math</span>.sin(x),
       <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(y)
-    ]
+    ])
       ];
   };</pre></div></div>
             
@@ -1240,7 +1243,11 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.matrix4to3 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(M)</span> {</span>
-    <span class="hljs-keyword">return</span> [[M[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]], [M[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]], [M[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>]]];
+    <span class="hljs-keyword">return</span> [
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([M[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([M[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([M[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>]])
+      ];
   };</pre></div></div>
             
         </li>
@@ -1265,7 +1272,12 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.composeTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(rot, trans)</span> {</span>
-    <span class="hljs-keyword">return</span> [[rot[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">0</span>]], [rot[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">1</span>]], [rot[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">2</span>]], [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>]];
+    <span class="hljs-keyword">return</span> [
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([rot[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">0</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([rot[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">1</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([rot[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">2</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>])
+      ];
   };</pre></div></div>
             
         </li>
@@ -1295,8 +1307,12 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             <div class="content"><div class='highlight'><pre>  
   shrike.decomposeTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(T)</span> {</span>
     <span class="hljs-keyword">return</span> {
-      rotationMatrix: [T[<span class="hljs-number">0</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>), T[<span class="hljs-number">1</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>), T[<span class="hljs-number">2</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>)],
-      translation: [T[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], T[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], T[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>]]
+      rotationMatrix: [
+        <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(T[<span class="hljs-number">0</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>)),
+        <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(T[<span class="hljs-number">1</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>)),
+        <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(T[<span class="hljs-number">2</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>))
+      ],
+      translation: <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([T[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], T[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], T[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>]])
     };
   };</pre></div></div>
             
@@ -1325,20 +1341,15 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     _function = _function || pass;
     <span class="hljs-keyword">if</span> (shrike.is2DArray(A)) {
       <span class="hljs-keyword">return</span> _.map(A, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(element)</span> {</span>
-        <span class="hljs-keyword">return</span> _.map(element, _function);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(_.map(element, _function));
       });
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isArray(A)) {
-      <span class="hljs-keyword">if</span> (shrike.isFloatArray(A)) {
-        <span class="hljs-keyword">var</span> ret = <span class="hljs-keyword">new</span> shrike.FLOAT_ARRAY_TYPE(A.length);
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; A.length; i++) {
-          ret[i] = _function(A[i]);
-        }
-        <span class="hljs-keyword">return</span> ret;
+      <span class="hljs-keyword">var</span> ret = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(A.length);
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; A.length; i++) {
+        ret[i] = _function(A[i]);
       }
-      <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">return</span> _.map(A, _function);
-      }
+      <span class="hljs-keyword">return</span> ret;
     }
     <span class="hljs-keyword">else</span> {
       <span class="hljs-keyword">return</span> _function(A);
@@ -1653,9 +1664,7 @@ TODO: make a V3.normalize</p>
             <div class="content"><div class='highlight'><pre>  shrike.V3.fromObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(o)</span> {</span>
   
     shrike.assert(_.isObject(o), <span class="hljs-string">'not an object'</span>);
-    <span class="hljs-keyword">return</span> [<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, <span class="hljs-string">'z'</span>].map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span>
-      <span class="hljs-keyword">return</span> o[p];
-    });
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([o.x, o.y, o.z]);
   };</pre></div></div>
             
         </li>
@@ -1785,7 +1794,7 @@ TODO: make a V3.normalize</p>
     <span class="hljs-keyword">var</span> m33 = m[<span class="hljs-number">10</span>];
   
     <span class="hljs-keyword">var</span> tr = m11 + m22 + m33;
-    <span class="hljs-keyword">var</span> r = [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>];
+    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>]);
     <span class="hljs-keyword">if</span> (tr &gt;= <span class="hljs-number">0.0</span>) {
       r[<span class="hljs-number">0</span>] = tr + <span class="hljs-number">1.0</span>;
       r[<span class="hljs-number">1</span>] = (m32 - m23);
@@ -1858,35 +1867,8 @@ TODO: make a V3.normalize</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.M4.transFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-60">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
-              </div>
-              <p>var r = new shrike.FLOAT_ARRAY_TYPE(3);</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-61">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
-              </div>
-              <p>TODO use native array type here…</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-number">3</span>);
+            <div class="content"><div class='highlight'><pre>  shrike.M4.transFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(<span class="hljs-number">3</span>);
     r[<span class="hljs-number">0</span>] = m[<span class="hljs-number">12</span>];
     r[<span class="hljs-number">1</span>] = m[<span class="hljs-number">13</span>];
     r[<span class="hljs-number">2</span>] = m[<span class="hljs-number">14</span>];
@@ -1896,11 +1878,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-composefromquattrans">Function: shrike.M4.composeFromQuatTrans</h2>
 <p>Composes an M4 from a quaternion and translation V3</p>
@@ -1930,11 +1912,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-totransformarray">Function: shrike.M4.toTransformArray</h2>
 <p>Converts an M4 into a 2d transform array.</p>
@@ -1948,17 +1930,22 @@ TODO: make a V3.normalize</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.M4.toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
-    <span class="hljs-keyword">return</span> [[m[<span class="hljs-number">0</span>], m[<span class="hljs-number">4</span>], m[<span class="hljs-number">8</span>], m[<span class="hljs-number">12</span>]], [m[<span class="hljs-number">1</span>], m[<span class="hljs-number">5</span>], m[<span class="hljs-number">9</span>], m[<span class="hljs-number">13</span>]], [m[<span class="hljs-number">2</span>], m[<span class="hljs-number">6</span>], m[<span class="hljs-number">10</span>], m[<span class="hljs-number">14</span>]], [m[<span class="hljs-number">3</span>], m[<span class="hljs-number">7</span>], m[<span class="hljs-number">11</span>], m[<span class="hljs-number">15</span>]]];
+    <span class="hljs-keyword">return</span> [
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([m[<span class="hljs-number">0</span>], m[<span class="hljs-number">4</span>], m[<span class="hljs-number">8</span>], m[<span class="hljs-number">12</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([m[<span class="hljs-number">1</span>], m[<span class="hljs-number">5</span>], m[<span class="hljs-number">9</span>], m[<span class="hljs-number">13</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([m[<span class="hljs-number">2</span>], m[<span class="hljs-number">6</span>], m[<span class="hljs-number">10</span>], m[<span class="hljs-number">14</span>]]),
+      <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([m[<span class="hljs-number">3</span>], m[<span class="hljs-number">7</span>], m[<span class="hljs-number">11</span>], m[<span class="hljs-number">15</span>]])
+      ];
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-64">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-fromtransformarray">Function: shrike.M4.fromTransformArray</h2>
 <p>Converts a 2d transform array into an M4.</p>
@@ -1972,17 +1959,17 @@ TODO: make a V3.normalize</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.M4.fromTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
-    <span class="hljs-keyword">return</span> [m[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]];
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([m[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]]);
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-65">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <h2 id="function-shrike-linearlyinterpolate">Function: shrike.linearlyInterpolate</h2>
 <p>Linearly interpolate between t0, x0 and t1, x1 at time t.
@@ -2007,11 +1994,11 @@ Requires t0, t1 to be distinct</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>for debugging / console convenience</p>
 

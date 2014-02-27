@@ -35,11 +35,11 @@ shrike.toFloat = function(thing) {
     // its a 2d array
     if (shrike.is2DArray(thing)) {
       return _.map(thing, function(row) {
-        return _.map(row, _convert);
+        return new FLOAT_ARRAY_TYPE(_.map(row, _convert));
       });
     }
     else {
-      return _.map(thing, _convert);
+      return new FLOAT_ARRAY_TYPE(_.map(thing, _convert));
     }
   }
   else {
@@ -202,7 +202,7 @@ shrike.parseAxisAngle = function(axis, angle) {
   }
   return {
     axis: shrike.toFloat(_axis),
-    angle: shrike.toFloat(_angle)
+    angle: parseFloat(_angle)
   };
 };
 
@@ -228,13 +228,13 @@ shrike.quatFromAxisAngle = function(_axis, _angle) {
 
   var axisLength = shrike.sum(_.map(axis, shrike.square));
   if (axisLength <= 1e-10) {
-    return [1.0, 0.0, 0.0, 0.0];
+    return new FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0, 0.0]);
   }
   var halfangle = angle / 2.0;
   var sinangle = Math.sin(halfangle) / Math.sqrt(axisLength);
 
   // TODO: return a float array
-  return [Math.cos(halfangle), axis[0] * sinangle, axis[1] * sinangle, axis[2] * sinangle];
+  return new FLOAT_ARRAY_TYPE([Math.cos(halfangle), axis[0] * sinangle, axis[1] * sinangle, axis[2] * sinangle]);
 };
 
 //
@@ -255,45 +255,45 @@ shrike.quatFromMatrix = function(Traw) {
   var T = shrike.toFloat(Traw);
 
   var tr = T[0][0] + T[1][1] + T[2][2];
-  var rot = [0.0, 0.0, 0.0, 0.0];
+  var r = new FLOAT_ARRAY_TYPE([0.0, 0.0, 0.0, 0.0]);
   if (tr >= 0.0) {
-    rot[0] = tr + 1.0;
-    rot[1] = (T[2][1] - T[1][2]);
-    rot[2] = (T[0][2] - T[2][0]);
-    rot[3] = (T[1][0] - T[0][1]);
+    r[0] = tr + 1.0;
+    r[1] = (T[2][1] - T[1][2]);
+    r[2] = (T[0][2] - T[2][0]);
+    r[3] = (T[1][0] - T[0][1]);
   }
   else {
 
     // find the largest diagonal element and jump to the appropriate case
     if (T[1][1] > T[0][0]) {
       if (T[2][2] > T[1][1]) {
-        rot[3] = (T[2][2] - (T[0][0] + T[1][1])) + 1.0;
-        rot[1] = (T[2][0] + T[0][2]);
-        rot[2] = (T[1][2] + T[2][1]);
-        rot[0] = (T[1][0] - T[0][1]);
+        r[3] = (T[2][2] - (T[0][0] + T[1][1])) + 1.0;
+        r[1] = (T[2][0] + T[0][2]);
+        r[2] = (T[1][2] + T[2][1]);
+        r[0] = (T[1][0] - T[0][1]);
       }
       else {
-        rot[2] = (T[1][1] - (T[2][2] + T[0][0])) + 1.0;
-        rot[3] = (T[1][2] + T[2][1]);
-        rot[1] = (T[0][1] + T[1][0]);
-        rot[0] = (T[0][2] - T[2][0]);
+        r[2] = (T[1][1] - (T[2][2] + T[0][0])) + 1.0;
+        r[3] = (T[1][2] + T[2][1]);
+        r[1] = (T[0][1] + T[1][0]);
+        r[0] = (T[0][2] - T[2][0]);
       }
     }
     else if (T[2][2] > T[0][0]) {
-      rot[3] = (T[2][2] - (T[0][0] + T[1][1])) + 1.0;
-      rot[1] = (T[2][0] + T[0][2]);
-      rot[2] = (T[1][2] + T[2][1]);
-      rot[0] = (T[1][0] - T[0][1]);
+      r[3] = (T[2][2] - (T[0][0] + T[1][1])) + 1.0;
+      r[1] = (T[2][0] + T[0][2]);
+      r[2] = (T[1][2] + T[2][1]);
+      r[0] = (T[1][0] - T[0][1]);
     }
     else {
-      rot[1] = (T[0][0] - (T[1][1] + T[2][2])) + 1.0;
-      rot[2] = (T[0][1] + T[1][0]);
-      rot[3] = (T[2][0] + T[0][2]);
-      rot[0] = (T[2][1] - T[1][2]);
+      r[1] = (T[0][0] - (T[1][1] + T[2][2])) + 1.0;
+      r[2] = (T[0][1] + T[1][0]);
+      r[3] = (T[2][0] + T[0][2]);
+      r[0] = (T[2][1] - T[1][2]);
     }
   }
 
-  return shrike.divide(rot, shrike.magnitude(rot));
+  return shrike.divide(r, shrike.magnitude(r));
 };
 
 //
@@ -358,7 +358,7 @@ shrike.axisAngleFromQuat = function(quatraw) {
   var sinang = shrike.sum(_.map(quat.slice(1, 4), shrike.square));
 
   var identity = {
-    axis: [1.0, 0.0, 0.0],
+    axis: new FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0]),
     angle: 0.0
   };
   if (sinang === 0.0) {
@@ -369,7 +369,7 @@ shrike.axisAngleFromQuat = function(quatraw) {
   }
   var _quat;
   if (quat[0] < 0.0) {
-    _quat = [-quat[0], -quat[1], -quat[2], -quat[3]];
+    _quat = new FLOAT_ARRAY_TYPE([-quat[0], -quat[1], -quat[2], -quat[3]]);
   }
   else {
     _quat = quat;
@@ -379,7 +379,7 @@ shrike.axisAngleFromQuat = function(quatraw) {
 
   var angle = 2.0 * Math.atan2(sinang, _quat[0]);
   return {
-    axis: [_quat[1] * f, _quat[2] * f, _quat[3] * f],
+    axis: new FLOAT_ARRAY_TYPE([_quat[1] * f, _quat[2] * f, _quat[3] * f]),
     angle: angle
   };
 };
@@ -516,19 +516,21 @@ shrike.matrixFromZXY = function(ZXY) {
   var y = shrike.toRadians(parseFloat(ZXY[1]));
   var z = shrike.toRadians(parseFloat(ZXY[2]));
   return [
-  [
+    new FLOAT_ARRAY_TYPE([
     -Math.sin(x) * Math.sin(y) * Math.sin(z) + Math.cos(y) * Math.cos(z),
     -Math.sin(z) * Math.cos(x),
     Math.sin(x) * Math.sin(z) * Math.cos(y) + Math.sin(y) * Math.cos(z)
-  ], [
+  ]),
+    new FLOAT_ARRAY_TYPE([
     Math.sin(x) * Math.sin(y) * Math.cos(z) + Math.sin(z) * Math.cos(y),
     Math.cos(x) * Math.cos(z),
     -Math.sin(x) * Math.cos(y) * Math.cos(z) + Math.sin(y) * Math.sin(z)
-  ], [
+  ]),
+    new FLOAT_ARRAY_TYPE([
     -Math.sin(y) * Math.cos(x),
     Math.sin(x),
     Math.cos(x) * Math.cos(y)
-  ]
+  ])
     ];
 };
 
@@ -550,19 +552,21 @@ shrike.matrixFromZYX = function(ZYX) {
   var y = shrike.toRadians(parseFloat(ZYX[1]));
   var z = shrike.toRadians(parseFloat(ZYX[2]));
   return [
-  [
+    new FLOAT_ARRAY_TYPE([
     Math.cos(y) * Math.cos(z),
     -Math.cos(x) * Math.sin(z) + Math.cos(z) * Math.sin(x) * Math.sin(y),
     Math.sin(x) * Math.sin(z) + Math.cos(x) * Math.cos(z) * Math.sin(y)
-  ], [
+  ]),
+    new FLOAT_ARRAY_TYPE([
     Math.cos(y) * Math.sin(z),
     Math.cos(x) * Math.cos(z) + Math.sin(x) * Math.sin(y) * Math.sin(z),
     -Math.cos(z) * Math.sin(x) + Math.cos(x) * Math.sin(y) * Math.sin(z)
-  ], [
+  ]),
+    new FLOAT_ARRAY_TYPE([
     -Math.sin(y),
     Math.cos(y) * Math.sin(x),
     Math.cos(x) * Math.cos(y)
-  ]
+  ])
     ];
 };
 
@@ -648,7 +652,11 @@ shrike.quatFromZYX = function(zyx) {
 // float 3x3 rotation matrix.
 //
 shrike.matrix4to3 = function(M) {
-  return [[M[0][0], M[0][1], M[0][2]], [M[1][0], M[1][1], M[1][2]], [M[2][0], M[2][1], M[2][2]]];
+  return [
+    new FLOAT_ARRAY_TYPE([M[0][0], M[0][1], M[0][2]]),
+    new FLOAT_ARRAY_TYPE([M[1][0], M[1][1], M[1][2]]),
+    new FLOAT_ARRAY_TYPE([M[2][0], M[2][1], M[2][2]])
+    ];
 };
 
 //
@@ -666,7 +674,12 @@ shrike.matrix4to3 = function(M) {
 // float the 4x4 result matrix.
 //
 shrike.composeTransformArray = function(rot, trans) {
-  return [[rot[0][0], rot[0][1], rot[0][2], trans[0]], [rot[1][0], rot[1][1], rot[1][2], trans[1]], [rot[2][0], rot[2][1], rot[2][2], trans[2]], [0.0, 0.0, 0.0, 1.0]];
+  return [
+    new FLOAT_ARRAY_TYPE([rot[0][0], rot[0][1], rot[0][2], trans[0]]),
+    new FLOAT_ARRAY_TYPE([rot[1][0], rot[1][1], rot[1][2], trans[1]]),
+    new FLOAT_ARRAY_TYPE([rot[2][0], rot[2][1], rot[2][2], trans[2]]),
+    new FLOAT_ARRAY_TYPE([0.0, 0.0, 0.0, 1.0])
+    ];
 };
 
 //
@@ -689,7 +702,11 @@ shrike.composeTransformArray = function(rot, trans) {
 
 shrike.decomposeTransformArray = function(T) {
   return {
-    rotationMatrix: [T[0].slice(0, 3), T[1].slice(0, 3), T[2].slice(0, 3)],
-    translation: [T[0][3], T[1][3], T[2][3]]
+    rotationMatrix: [
+      new FLOAT_ARRAY_TYPE(T[0].slice(0, 3)),
+      new FLOAT_ARRAY_TYPE(T[1].slice(0, 3)),
+      new FLOAT_ARRAY_TYPE(T[2].slice(0, 3))
+    ],
+    translation: new FLOAT_ARRAY_TYPE([T[0][3], T[1][3], T[2][3]])
   };
 };

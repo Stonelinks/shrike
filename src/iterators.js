@@ -16,20 +16,15 @@ shrike.scalarIterator = function(A, _function) {
   _function = _function || pass;
   if (shrike.is2DArray(A)) {
     return _.map(A, function(element) {
-      return _.map(element, _function);
+      return new FLOAT_ARRAY_TYPE(_.map(element, _function));
     });
   }
   else if (shrike.isArray(A)) {
-    if (shrike.isFloatArray(A)) {
-      var ret = new shrike.FLOAT_ARRAY_TYPE(A.length);
-      for (var i = 0; i < A.length; i++) {
-        ret[i] = _function(A[i]);
-      }
-      return ret;
+    var ret = new FLOAT_ARRAY_TYPE(A.length);
+    for (var i = 0; i < A.length; i++) {
+      ret[i] = _function(A[i]);
     }
-    else {
-      return _.map(A, _function);
-    }
+    return ret;
   }
   else {
     return _function(A);

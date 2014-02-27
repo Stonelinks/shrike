@@ -75,7 +75,7 @@ shrike.M4.quatFromMatrix = function(_m) {
   var m33 = m[10];
 
   var tr = m11 + m22 + m33;
-  var r = [0.0, 0.0, 0.0, 0.0];
+  var r = new FLOAT_ARRAY_TYPE([0.0, 0.0, 0.0, 0.0]);
   if (tr >= 0.0) {
     r[0] = tr + 1.0;
     r[1] = (m32 - m23);
@@ -130,10 +130,7 @@ shrike.M4.quatFromMatrix = function(_m) {
 // float the result translation.
 //
 shrike.M4.transFromMatrix = function(m) {
-  // var r = new shrike.FLOAT_ARRAY_TYPE(3);
-
-  // TODO use native array type here...
-  var r = new Array(3);
+  var r = new FLOAT_ARRAY_TYPE(3);
   r[0] = m[12];
   r[1] = m[13];
   r[2] = m[14];
@@ -184,7 +181,12 @@ shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
 // float the result transform array.
 //
 shrike.M4.toTransformArray = function(m) {
-  return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
+  return [
+    new FLOAT_ARRAY_TYPE([m[0], m[4], m[8], m[12]]),
+    new FLOAT_ARRAY_TYPE([m[1], m[5], m[9], m[13]]),
+    new FLOAT_ARRAY_TYPE([m[2], m[6], m[10], m[14]]),
+    new FLOAT_ARRAY_TYPE([m[3], m[7], m[11], m[15]])
+    ];
 };
 
 //
@@ -201,5 +203,5 @@ shrike.M4.toTransformArray = function(m) {
 // float the result M4.
 //
 shrike.M4.fromTransformArray = function(m) {
-  return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
+  return new FLOAT_ARRAY_TYPE([m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]]);
 };

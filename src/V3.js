@@ -17,9 +17,7 @@ shrike.V3.fromObject = function(o) {
   shrike.assert(_.isObject(o), 'not an object');
   // @endif
 
-  return ['x', 'y', 'z'].map(function(p) {
-    return o[p];
-  });
+  return new FLOAT_ARRAY_TYPE([o.x, o.y, o.z]);
 };
 
 //

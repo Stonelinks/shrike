@@ -12,11 +12,11 @@ Object.getOwnPropertyNames(mjs).forEach(function(prop) {
 shrike.M4 = shrike.M4x4;
 
 //
-// ##Constant: SHRIKE_FLOAT_ARRAY_TYPE
+// ##Constant: FLOAT_ARRAY_TYPE
 //
 // The base float array type, borrowed it from mjs.
 //
-var SHRIKE_FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
+var FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
 
 shrike.throwError = function(msg) {
   msg = msg || 'undefined error';
@@ -45,7 +45,6 @@ shrike.assert = function(cond, msg) {
 // nothing
 //
 shrike.prettyPrint = function(x) {
-
   console.log(function() {
     if (shrike.isArray(x)) {
 
