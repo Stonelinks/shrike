@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6c;&#117;&#x63;&#x61;&#x73;&#46;&#x70;&#x2e;&#x64;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#x6c;&#117;&#x63;&#x61;&#x73;&#46;&#x70;&#x2e;&#x64;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#108;&#117;&#99;&#x61;&#x73;&#x2e;&#112;&#46;&#x64;&#x6f;&#121;&#108;&#x65;&#x40;&#x67;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;">&#108;&#117;&#99;&#x61;&#x73;&#x2e;&#112;&#46;&#x64;&#x6f;&#121;&#108;&#x65;&#x40;&#x67;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -1674,7 +1674,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <h2 id="function-shrike-v3-objecttoarray">Function: shrike.V3.objectToArray</h2>
+              <h2 id="function-shrike-v3-fromobject">Function: shrike.V3.fromObject</h2>
 <p>Converts an object with xyz attributes into a V3.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -1686,7 +1686,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  
-  shrike.V3.objectToArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(o)</span> {</span>
+  shrike.V3.fromObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(o)</span> {</span>
   
     shrike.assert(_.isObject(o), <span class="hljs-string">'not an object'</span>);
     <span class="hljs-keyword">return</span> [<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, <span class="hljs-string">'z'</span>].map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span>
@@ -1703,7 +1703,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <h2 id="function-shrike-v3-arraytoobject">Function: shrike.V3.arrayToObject</h2>
+              <h2 id="function-shrike-v3-toobject">Function: shrike.V3.toObject</h2>
 <p>Converts a V3 into an object with xyz attributes.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -1715,7 +1715,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  
-  shrike.V3.arrayToObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_v)</span> {</span>
+  shrike.V3.toObject = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_v)</span> {</span>
   
     shrike.assert(shrike.isArray(_v), <span class="hljs-string">'not an array'</span>);
     <span class="hljs-keyword">var</span> v = shrike.toFloat(_v);

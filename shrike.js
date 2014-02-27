@@ -1210,7 +1210,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   //
-  // ##Function: shrike.V3.objectToArray
+  // ##Function: shrike.V3.fromObject
   //
   // Converts an object with xyz attributes into a V3.
   //
@@ -1223,7 +1223,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // float the result V3.
   //
   
-  shrike.V3.objectToArray = function(o) {
+  shrike.V3.fromObject = function(o) {
   
     shrike.assert(_.isObject(o), 'not an object');
     return ['x', 'y', 'z'].map(function(p) {
@@ -1232,7 +1232,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   //
-  // ##Function: shrike.V3.arrayToObject
+  // ##Function: shrike.V3.toObject
   //
   // Converts a V3 into an object with xyz attributes.
   //
@@ -1245,7 +1245,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // float the result object.
   //
   
-  shrike.V3.arrayToObject = function(_v) {
+  shrike.V3.toObject = function(_v) {
   
     shrike.assert(shrike.isArray(_v), 'not an array');
     var v = shrike.toFloat(_v);

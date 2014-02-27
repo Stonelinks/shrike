@@ -1,5 +1,5 @@
 //
-// ##Function: shrike.V3.objectToArray
+// ##Function: shrike.V3.fromObject
 //
 // Converts an object with xyz attributes into a V3.
 //
@@ -12,7 +12,7 @@
 // float the result V3.
 //
 
-shrike.V3.objectToArray = function(o) {
+shrike.V3.fromObject = function(o) {
 
   // @if SHRIKE_DO_ASSERT
   shrike.assert(_.isObject(o), 'not an object');
@@ -24,7 +24,7 @@ shrike.V3.objectToArray = function(o) {
 };
 
 //
-// ##Function: shrike.V3.arrayToObject
+// ##Function: shrike.V3.toObject
 //
 // Converts a V3 into an object with xyz attributes.
 //
@@ -37,7 +37,7 @@ shrike.V3.objectToArray = function(o) {
 // float the result object.
 //
 
-shrike.V3.arrayToObject = function(_v) {
+shrike.V3.toObject = function(_v) {
 
   // @if SHRIKE_DO_ASSERT
   shrike.assert(shrike.isArray(_v), 'not an array');
