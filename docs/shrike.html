@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#x6c;&#x75;&#99;&#97;&#x73;&#46;&#x70;&#x2e;&#x64;&#x6f;&#121;&#x6c;&#x65;&#64;&#103;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#x6f;&#109;">&#x6c;&#x75;&#99;&#97;&#x73;&#46;&#x70;&#x2e;&#x64;&#x6f;&#121;&#x6c;&#x65;&#64;&#103;&#109;&#97;&#x69;&#108;&#x2e;&#x63;&#x6f;&#109;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#x6c;&#117;&#99;&#x61;&#115;&#x2e;&#x70;&#46;&#x64;&#111;&#x79;&#x6c;&#x65;&#64;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;">&#x6c;&#117;&#99;&#x61;&#115;&#x2e;&#x70;&#46;&#x64;&#111;&#x79;&#x6c;&#x65;&#64;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -660,11 +660,30 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">else</span> {
       shrike.throwError(<span class="hljs-string">'toFloat: can not convert to float: '</span> + thing);
     }
-  };
-  
-  <span class="hljs-comment">/* return a scale so that X source * scale = Y target */</span>
-  <span class="hljs-comment">/* this function mirrors GetUnitConversionScale in mujin/dev/mujin/__init__.py */</span>
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h2 id="function-shrike-unitconversionscale">Function: shrike.unitConversionScale</h2>
+<p>Return a scale so that X source * scale = Y target.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>sourceUnit</strong> - the source unit.</li>
+<li><strong>targetUnit</strong> - the target unit.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.unitConversionScale = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sourceUnit, targetUnit)</span> {</span>
     <span class="hljs-keyword">var</span> unitDict = {
       m: <span class="hljs-number">1.0</span>,
@@ -680,9 +699,29 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
   
     shrike.assert(_.contains(units, targetUnit) &amp;&amp; _.contains(units, sourceUnit), <span class="hljs-string">'no conversion for either '</span> + sourceUnit + <span class="hljs-string">' or '</span> + targetUnit);
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(unitDict[targetUnit] / unitDict[sourceUnit]);
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h2 id="function-shrike-todegrees">Function: shrike.toDegrees</h2>
+<p>Converts a number, 1 or 2d array of angles in degrees to radians.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>x</strong> - the item being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>the converted value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.toDegrees = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> {</span>
   
@@ -701,9 +740,29 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
     <span class="hljs-keyword">else</span> {
       <span class="hljs-keyword">return</span> shrike.scalarIterator(x, _convert);
     }
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h2 id="function-shrike-toradians">Function: shrike.toRadians</h2>
+<p>Converts a number, 1 or 2d array of angles in radians to degrees.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>x</strong> - the item being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.toRadians = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span> {</span>
     <span class="hljs-keyword">var</span> _convert = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> {</span>
   
@@ -722,17 +781,27 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
         </li>
         
         
-        <li id="section-25">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>parses an axis and an angle from some arguments
-input can be an object with axis and angle properties
-or an array of 3 values for the axis and an angle as the second argument
-or an array of 4 values, first three being axis and the last one angle</p>
-
+              <h2 id="function-shrike-toradians">Function: shrike.toRadians</h2>
+<p>parses an axis and an angle into an object from some arguments</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>Can be an object with axis and angle properties</li>
+<li>or an array of 3 values for the axis and an angle as the second argument</li>
+<li>or an array of 4 values, first three being axis and the last one angle</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>an object that looks like this:</p>
+<pre><code>{
+  axis: [float x, float y, float z],
+  angle: float
+}
+</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>  
@@ -777,13 +846,22 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>convert a quaternion from axis angle (radians)</p>
+              <h2 id="function-shrike-quatfromaxisangle">Function: shrike.quatFromAxisAngle</h2>
+<p>Convert a quaternion from axis angle (radians).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li>Can be an object with axis and angle properties</li>
+<li>or an array of 3 values for the axis and an angle as the second argument</li>
+<li>or an array of 4 values, first three being axis and the last one angle</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted quaternion.</p>
 
             </div>
             
@@ -803,19 +881,40 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>TODO: return a float array</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">Math</span>.cos(halfangle), axis[<span class="hljs-number">0</span>] * sinangle, axis[<span class="hljs-number">1</span>] * sinangle, axis[<span class="hljs-number">2</span>] * sinangle];
-  };
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h2 id="function-shrike-quatfrommatrix">Function: shrike.quatFromMatrix</h2>
+<p>Convert a quaternion from matrix.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>Traw</strong> - the matrix being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted quaternion.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.quatFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Traw)</span> {</span>
   
     <span class="hljs-keyword">var</span> T = shrike.toFloat(Traw);
@@ -833,11 +932,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>find the largest diagonal element and jump to the appropriate case</p>
 
@@ -872,9 +971,29 @@ or an array of 4 values, first three being axis and the last one angle</p>
     }
   
     <span class="hljs-keyword">return</span> shrike.divide(rot, shrike.magnitude(rot));
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2 id="function-shrike-matrixfromquat">Function: shrike.matrixFromQuat</h2>
+<p>Convert a matrix from quaternion.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>quatRaw</strong> - the quaternion being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted matrix.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.matrixFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw)</span> {</span>
     <span class="hljs-keyword">var</span> quat = shrike.toFloat(quatRaw);
   
@@ -884,11 +1003,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>invalid quaternion, so return identity</p>
 
@@ -920,17 +1039,25 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>angle is returned in radians</p>
+              <h2 id="function-shrike-axisanglefromquat">Function: shrike.axisAngleFromQuat</h2>
+<p>Convert a quaternion into axis angle representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>quatRaw</strong> - the quaternion being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted axis angle object (angle is in radians).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.axisAngleFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatraw)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  
+  shrike.axisAngleFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatraw)</span> {</span>
   
     <span class="hljs-keyword">var</span> quat = shrike.toFloat(quatraw);
     <span class="hljs-keyword">var</span> sinang = shrike.sum(_.map(quat.slice(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>), shrike.square));
@@ -960,13 +1087,54 @@ or an array of 4 values, first three being axis and the last one angle</p>
       axis: [_quat[<span class="hljs-number">1</span>] * f, _quat[<span class="hljs-number">2</span>] * f, _quat[<span class="hljs-number">3</span>] * f],
       angle: angle
     };
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <h2 id="function-shrike-axisanglefrommatrix">Function: shrike.axisAngleFromMatrix</h2>
+<p>Convert a matrix into axis angle representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>m</strong> - the matrix being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted axis angle object (angle is in radians).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.axisAngleFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.axisAngleFromQuat(shrike.quatFromMatrix(m));
-  };
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h2 id="function-shrike-zxyfrommatrix">Function: shrike.zxyFromMatrix</h2>
+<p>Convert a matrix into zxy angle representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>Traw</strong> - the matrix being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted array of angles (angles are is in degrees).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.zxyFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Traw)</span> {</span>
   
     <span class="hljs-keyword">var</span> T = shrike.matrix4to3(shrike.toFloat(Traw));
@@ -999,9 +1167,29 @@ or an array of 4 values, first three being axis and the last one angle</p>
       z = <span class="hljs-built_in">Math</span>.atan2(Rzx[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], Rzx[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]);
     }
     <span class="hljs-keyword">return</span> shrike.toDegrees([x, y, z]);
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <h2 id="function-shrike-zyxfrommatrix">Function: shrike.zyxFromMatrix</h2>
+<p>Convert a matrix into zyx angle representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>Traw</strong> - the matrix being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted array of angles (angles are is in degrees).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.zyxFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(Traw)</span> {</span>
     <span class="hljs-keyword">var</span> T = shrike.toFloat(Traw);
     <span class="hljs-keyword">var</span> epsilon = <span class="hljs-number">1e-10</span>;
@@ -1036,9 +1224,29 @@ or an array of 4 values, first three being axis and the last one angle</p>
     }
   
     <span class="hljs-keyword">return</span> shrike.toDegrees([x, y, z]);
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h2 id="function-shrike-matrixfromzxy">Function: shrike.matrixFromZXY</h2>
+<p>Convert a zxy angle array into matrix representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>ZXY</strong> - the zxy angle array being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted matrix.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.matrixFromZXY = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ZXY)</span> {</span>
   
     <span class="hljs-keyword">var</span> x = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZXY[<span class="hljs-number">0</span>]));
@@ -1059,9 +1267,29 @@ or an array of 4 values, first three being axis and the last one angle</p>
       <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(y)
     ]
       ];
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <h2 id="function-shrike-matrixfromzyx">Function: shrike.matrixFromZYX</h2>
+<p>Convert a zyx angle array into matrix representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>Traw</strong> - the matrix being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted matrix.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.matrixFromZYX = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ZYX)</span> {</span>
     <span class="hljs-keyword">var</span> x = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZYX[<span class="hljs-number">0</span>]));
     <span class="hljs-keyword">var</span> y = shrike.toRadians(<span class="hljs-built_in">parseFloat</span>(ZYX[<span class="hljs-number">1</span>]));
@@ -1081,24 +1309,104 @@ or an array of 4 values, first three being axis and the last one angle</p>
       <span class="hljs-built_in">Math</span>.cos(x) * <span class="hljs-built_in">Math</span>.cos(y)
     ]
       ];
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <h2 id="function-shrike-zxyfromquat">Function: shrike.zxyFromQuat</h2>
+<p>Convert a quaternion into zxy representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>quat</strong> - the quaternion being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted array of angles (angles are is in degrees).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.zxyFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quat)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.zxyFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h2 id="function-shrike-quatfromzxy">Function: shrike.quatFromZXY</h2>
+<p>Convert a zxy angle array into quaternion.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>zxy</strong> - the angle array being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted quaternion.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.quatFromZXY = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(zxy)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.quatFromMatrix(shrike.matrixFromZXY(shrike.toFloat(zxy)));
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <h2 id="function-shrike-zyxfromquat">Function: shrike.zyxFromQuat</h2>
+<p>Convert a quaternion into zxy representation.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>quat</strong> - the quaternion being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted array of angles (angles are is in degrees).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.zyxFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quat)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.zyxFromMatrix(shrike.matrixFromQuat(shrike.toFloat(quat)));
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="function-shrike-quatfromzyx">Function: shrike.quatFromZYX</h2>
+<p>Convert a zyx angle array into quaternion.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>zyx</strong> - the angle array being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted quaternion.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.quatFromZYX = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(zyx)</span> {</span>
     <span class="hljs-keyword">return</span> shrike.quatFromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
   };</pre></div></div>
@@ -1106,27 +1414,79 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>carves out the 3x3 rotation matrix out of a 3x4 or 4x4 transform</p>
+              <h2 id="function-shrike-matrix4to3">Function: shrike.matrix4to3</h2>
+<p>Carves out the 3x3 rotation matrix out of a 3x4 or 4x4 transform.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>M</strong> - the source matrix.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float 3x3 rotation matrix.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  
   shrike.matrix4to3 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(M)</span> {</span>
     <span class="hljs-keyword">return</span> [[M[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]], [M[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]], [M[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], M[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>]]];
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <h2 id="function-shrike-composetransformarray">Function: shrike.composeTransformArray</h2>
+<p>Make a 4x4 transform from a 3x3 rotation matrix and a translation vector.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>rot</strong> - the rotation matrix.</li>
+<li><strong>trans</strong> - the translation vector.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the 4x4 result matrix.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.composeTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(rot, trans)</span> {</span>
     <span class="hljs-keyword">return</span> [[rot[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">0</span>]], [rot[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">1</span>]], [rot[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], rot[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], trans[<span class="hljs-number">2</span>]], [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>]];
-  };
-  
-  
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h2 id="function-shrike-decomposetransformarray">Function: shrike.decomposeTransformArray</h2>
+<p>Break a 4x4 transform down into a 3x3 rotation matrix and a translation vector.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>T</strong> - the source matrix.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>an object that looks like this</p>
+<pre><code>{
+  rotationMatrix: <span class="hljs-number">3</span>x3 rotation matrix,
+  translation: [float x, float y, float z],
+}
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
   shrike.decomposeTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(T)</span> {</span>
     <span class="hljs-keyword">return</span> {
       rotationMatrix: [T[<span class="hljs-number">0</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>), T[<span class="hljs-number">1</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>), T[<span class="hljs-number">2</span>].slice(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>)],
@@ -1137,34 +1497,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>TODO move into M4 namespace as toTransformArray and fromTransformArray</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  
-  shrike.M4toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
-    <span class="hljs-keyword">return</span> [[m[<span class="hljs-number">0</span>], m[<span class="hljs-number">4</span>], m[<span class="hljs-number">8</span>], m[<span class="hljs-number">12</span>]], [m[<span class="hljs-number">1</span>], m[<span class="hljs-number">5</span>], m[<span class="hljs-number">9</span>], m[<span class="hljs-number">13</span>]], [m[<span class="hljs-number">2</span>], m[<span class="hljs-number">6</span>], m[<span class="hljs-number">10</span>], m[<span class="hljs-number">14</span>]], [m[<span class="hljs-number">3</span>], m[<span class="hljs-number">7</span>], m[<span class="hljs-number">11</span>], m[<span class="hljs-number">15</span>]]];
-  };
-  
-  
-  shrike.transformArrayToM4 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
-    <span class="hljs-keyword">return</span> [m[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]];
-  };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>common matrix operations</p>
 
@@ -1180,11 +1517,11 @@ or an array of 4 values, first three being axis and the last one angle</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>identity matrix
 returns an m x n identity matrix
@@ -1256,11 +1593,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>functions to augment mjs’s V3 vector</p>
 
@@ -1286,11 +1623,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>functions to augment mjs’s 4x4 matrix</p>
 
@@ -1309,11 +1646,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>invalid quaternion, so return identity</p>
 
@@ -1354,11 +1691,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>var m41 = m[3];</p>
 
@@ -1371,11 +1708,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>var m42 = m[7];</p>
 
@@ -1388,11 +1725,11 @@ if you leave out n, it will be an m x m matrix</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>var m43 = m[11];
 var m14 = m[12];
@@ -1416,11 +1753,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>find mhe largesm diagonal elemenm and jump mo mhe appropriame case</p>
 
@@ -1463,11 +1800,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>var r = new shrike.FLOAT_ARRAY_TYPE(3);</p>
 
@@ -1476,11 +1813,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>TODO use native array type here…</p>
 
@@ -1496,11 +1833,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>composes an instance from a quaternion and translation V3</p>
 
@@ -1518,16 +1855,25 @@ var m44 = m[15];</p>
     r[<span class="hljs-number">14</span>] = trans[<span class="hljs-number">2</span>];
   
     <span class="hljs-keyword">return</span> r;
+  };
+  
+  shrike.M4toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+    <span class="hljs-keyword">return</span> [[m[<span class="hljs-number">0</span>], m[<span class="hljs-number">4</span>], m[<span class="hljs-number">8</span>], m[<span class="hljs-number">12</span>]], [m[<span class="hljs-number">1</span>], m[<span class="hljs-number">5</span>], m[<span class="hljs-number">9</span>], m[<span class="hljs-number">13</span>]], [m[<span class="hljs-number">2</span>], m[<span class="hljs-number">6</span>], m[<span class="hljs-number">10</span>], m[<span class="hljs-number">14</span>]], [m[<span class="hljs-number">3</span>], m[<span class="hljs-number">7</span>], m[<span class="hljs-number">11</span>], m[<span class="hljs-number">15</span>]]];
+  };
+  
+  
+  shrike.transformArrayToM4 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+    <span class="hljs-keyword">return</span> [m[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]];
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-45">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>requires t0, t1 to be distinct</p>
 
@@ -1540,11 +1886,11 @@ var m44 = m[15];</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>for debugging / console convenience</p>
 
