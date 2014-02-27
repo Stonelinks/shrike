@@ -104,50 +104,50 @@ describe('converters', function() {
       angle: 90
     };
 
-    expect(shrike.parseAxisAngle({
+    expect(shrike.axisAngle.$({
       axis: [1, 2, 3],
       angle: 90
     })).toEqual(res);
-    expect(shrike.parseAxisAngle([1, 2, 3, 90])).toEqual(res);
-    expect(shrike.parseAxisAngle([1, 2, 3, 90])).toEqual(res);
-    expect(shrike.parseAxisAngle(['1', '2', '3'], '90')).toEqual(res);
+    expect(shrike.axisAngle.$([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.axisAngle.$([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.axisAngle.$(['1', '2', '3'], '90')).toEqual(res);
 
-    expect(function() {shrike.parseAxisAngle('jkasdkjlsadlkjsdalkj')}).toThrow();
-    expect(function() {shrike.parseAxisAngle(undefined)}).toThrow();
-    expect(function() {shrike.parseAxisAngle('-7723fsdfsad100')}).toThrow();
-    expect(function() {shrike.parseAxisAngle(['i\m a string'])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([undefined])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([[undefined]])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([['boo']])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([['1.2boom']])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([[false]])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([[null]])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([[function() {}]])}).toThrow();
-    expect(function() {shrike.parseAxisAngle([[], [], undefined])}).toThrow();
+    expect(function() {shrike.axisAngle.$('jkasdkjlsadlkjsdalkj')}).toThrow();
+    expect(function() {shrike.axisAngle.$(undefined)}).toThrow();
+    expect(function() {shrike.axisAngle.$('-7723fsdfsad100')}).toThrow();
+    expect(function() {shrike.axisAngle.$(['i\m a string'])}).toThrow();
+    expect(function() {shrike.axisAngle.$([undefined])}).toThrow();
+    expect(function() {shrike.axisAngle.$([[undefined]])}).toThrow();
+    expect(function() {shrike.axisAngle.$([['boo']])}).toThrow();
+    expect(function() {shrike.axisAngle.$([['1.2boom']])}).toThrow();
+    expect(function() {shrike.axisAngle.$([[false]])}).toThrow();
+    expect(function() {shrike.axisAngle.$([[null]])}).toThrow();
+    expect(function() {shrike.axisAngle.$([[function() {}]])}).toThrow();
+    expect(function() {shrike.axisAngle.$([[], [], undefined])}).toThrow();
   });
 
   it('quaternion from axis and angle', function() {
     var res = new shrike.FLOAT_ARRAY_TYPE([0.5253219888177297, 0.22741353271464756, 0.45482706542929513, 0.6822405981439427]);
 
-    expect(shrike.quatFromAxisAngle({
+    expect(shrike.quat.fromAxisAngle({
       axis: new shrike.FLOAT_ARRAY_TYPE([1, 2, 3]),
       angle: 90.0
     })).toEqual(res);
-    expect(shrike.quatFromAxisAngle([1, 2, 3, 90])).toEqual(res);
-    expect(shrike.quatFromAxisAngle([1, 2, 3, 90])).toEqual(res);
-    expect(shrike.quatFromAxisAngle(['1', '2', '3'], '90')).toEqual(res);
+    expect(shrike.quat.fromAxisAngle([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.quat.fromAxisAngle([1, 2, 3, 90])).toEqual(res);
+    expect(shrike.quat.fromAxisAngle(['1', '2', '3'], '90')).toEqual(res);
 
-    expect(function() {shrike.quatFromAxisAngle('jkasdkjlsadlkjsdalkj')}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle(undefined)}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle('-7723fsdfsad100')}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle(['i\m a string'])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([undefined])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([[undefined]])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([['boo']])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([['1.2boom']])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([[false]])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([[null]])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([[function() {}]])}).toThrow();
-    expect(function() {shrike.quatFromAxisAngle([[], [], undefined])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle('jkasdkjlsadlkjsdalkj')}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle(undefined)}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle('-7723fsdfsad100')}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle(['i\m a string'])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([undefined])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([[undefined]])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([['boo']])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([['1.2boom']])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([[false]])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([[null]])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([[function() {}]])}).toThrow();
+    expect(function() {shrike.quat.fromAxisAngle([[], [], undefined])}).toThrow();
   });
 });

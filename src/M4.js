@@ -48,7 +48,7 @@ shrike.M4.matrixFromQuat = function(quatRaw) {
 };
 
 //
-// ##Function: shrike.M4.quatFromMatrix
+// ##Function: shrike.M4.quat.fromMatrix
 //
 // Convert a quaternion from an M4.
 //
@@ -60,7 +60,7 @@ shrike.M4.matrixFromQuat = function(quatRaw) {
 //
 // float the converted quaternion.
 //
-shrike.M4.quatFromMatrix = function(_m) {
+shrike.M4.quat.fromMatrix = function(_m) {
 
   var m = shrike.toFloat(_m);
 

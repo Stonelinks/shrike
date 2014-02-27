@@ -10,6 +10,8 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // @include iterators.js
   // @include common.js
   // @include matrix.js
+  // @include quaternion.js
+  // @include axisAngle.js
   // @include V3.js
   // @include M4.js
   // @include tween.js
