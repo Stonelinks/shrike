@@ -233,6 +233,56 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   //
+  // ##Function: shrike.toFloat
+  //
+  // Converts the argument to a float value.
+  //
+  // **Parameters:**
+  //
+  //   - **x, y, z** - the 3 elements of the new vector.
+  //
+  // **Returns:**
+  //
+  // A new vector containing with the given argument values.
+  //
+  
+  shrike.toFloat = function(thing) {
+  
+    // its a number
+    if (shrike.isNumber(thing)) {
+      return parseFloat(thing);
+    }
+  
+    // its already floating point
+    else if (shrike.isFloatArray(thing)) {
+      return thing;
+    }
+  
+    // its an array
+    else if (shrike.isArray(thing)) {
+  
+      var _convert = function(thing) {
+  
+        shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
+        return parseFloat(thing);
+      };
+  
+      // its a 2d array
+      if (shrike.is2DArray(thing)) {
+        return _.map(thing, function(row) {
+          return _.map(row, _convert);
+        });
+      }
+      else {
+        return _.map(thing, _convert);
+      }
+    }
+    else {
+      shrike.throwError('toFloat: can not convert to float: ' + thing);
+    }
+  };
+  
+  //
   // ##Function: shrike.unitConversionScale
   //
   // Return a scale so that X source * scale = Y target.
