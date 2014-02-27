@@ -233,7 +233,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // **Parameters:**
   //
-  //   - **x, y, z** - the 3 elements of the new vector.
+  //   - **thing** - thing you're trying to convert.
   //
   // **Returns:**
   //
@@ -272,6 +272,28 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
     else {
       shrike.throwError('toFloat: can not convert to float: ' + thing);
+    }
+  };
+  
+  //
+  // ##Function: shrike.toNormalArray
+  //
+  // Converts the argument to a normal array.
+  //
+  // **Parameters:**
+  //
+  //   - **thing** - thing you're trying to convert.
+  //
+  // **Returns:**
+  //
+  // A new plain converted array.
+  //
+  shrike.toNormalArray = function(a) {
+  
+    shrike.assert(shrike.isArray(a), 'toNormalArray: needs to be a float array or array like object: ' + a);
+  
+    if (shrike.isFloatArray(a)) {
+      return Array.apply([], a);
     }
   };
   
@@ -574,7 +596,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   shrike.axisAngleFromQuat = function(quatraw) {
   
     var quat = shrike.toFloat(quatraw);
-    var sinang = shrike.sum(_.map(new FLOAT_ARRAY_TYPE([quat[1], quat[2], quat[3]]), shrike.square));
+    var sinang = shrike.sum(_.map([quat[1], quat[2], quat[3]], shrike.square));
   
     var identity = {
       axis: new FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0]),
@@ -1089,8 +1111,16 @@ define(['underscore', 'mjs'], function(_, mjs) {
   shrike.magnitude = function(a) {
     if (shrike.isFloatArray(a)) {
   
-      shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
-      return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+      shrike.assert(a.length === 3 || a.length === 4, 'magnitude: native float array\'s need to be of length 3 or 4');
+      if (a.length === 3) {
+        return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+      }
+      else if (a.length === 4) {
+        return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3]);
+      }
+      else {
+        shrike.throwError('magnitude: incorrect native float array length');
+      }
     }
     return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
   };

@@ -5,7 +5,7 @@
 //
 // **Parameters:**
 //
-//   - **x, y, z** - the 3 elements of the new vector.
+//   - **thing** - thing you're trying to convert.
 //
 // **Returns:**
 //
@@ -44,6 +44,28 @@ shrike.toFloat = function(thing) {
   }
   else {
     shrike.throwError('toFloat: can not convert to float: ' + thing);
+  }
+};
+
+//
+// ##Function: shrike.toNormalArray
+//
+// Converts the argument to a normal array.
+//
+// **Parameters:**
+//
+//   - **thing** - thing you're trying to convert.
+//
+// **Returns:**
+//
+// A new plain converted array.
+//
+shrike.toNormalArray = function(a) {
+
+  shrike.assert(shrike.isArray(a), 'toNormalArray: needs to be a float array or array like object: ' + a);
+
+  if (shrike.isFloatArray(a)) {
+    return Array.apply([], a);
   }
 };
 
@@ -355,7 +377,7 @@ shrike.matrixFromQuat = function(quatRaw) {
 shrike.axisAngleFromQuat = function(quatraw) {
 
   var quat = shrike.toFloat(quatraw);
-  var sinang = shrike.sum(_.map(new FLOAT_ARRAY_TYPE([quat[1], quat[2], quat[3]]), shrike.square));
+  var sinang = shrike.sum(_.map([quat[1], quat[2], quat[3]], shrike.square));
 
   var identity = {
     axis: new FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0]),
