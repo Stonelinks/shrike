@@ -175,7 +175,7 @@ shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
 };
 
 //
-// ##Function: shrike.M4toTransformArray
+// ##Function: shrike.M4.toTransformArray
 //
 // Converts an M4 into a 2d transform array.
 //
@@ -188,12 +188,12 @@ shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
 // float the result transform array.
 //
 
-shrike.M4toTransformArray = function(m) {
+shrike.M4.toTransformArray = function(m) {
   return [[m[0], m[4], m[8], m[12]], [m[1], m[5], m[9], m[13]], [m[2], m[6], m[10], m[14]], [m[3], m[7], m[11], m[15]]];
 };
 
 //
-// ##Function: shrike.transformArrayToM4
+// ##Function: shrike.M4.fromTransformArray
 //
 // Converts a 2d transform array into an M4.
 //
@@ -206,6 +206,6 @@ shrike.M4toTransformArray = function(m) {
 // float the result M4.
 //
 
-shrike.transformArrayToM4 = function(m) {
+shrike.M4.fromTransformArray = function(m) {
   return [m[0][0], m[1][0], m[2][0], m[3][0], m[0][1], m[1][1], m[2][1], m[3][1], m[0][2], m[1][2], m[2][2], m[3][2], m[0][3], m[1][3], m[2][3], m[3][3]];
 };

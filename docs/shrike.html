@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#108;&#117;&#x63;&#97;&#115;&#x2e;&#112;&#x2e;&#100;&#111;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;">&#108;&#117;&#x63;&#97;&#115;&#x2e;&#112;&#x2e;&#100;&#111;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6c;&#117;&#x63;&#x61;&#x73;&#46;&#x70;&#x2e;&#x64;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#x6c;&#117;&#x63;&#x61;&#x73;&#46;&#x70;&#x2e;&#x64;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -1977,7 +1977,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
-              <h2 id="function-shrike-m4totransformarray">Function: shrike.M4toTransformArray</h2>
+              <h2 id="function-shrike-m4-totransformarray">Function: shrike.M4.toTransformArray</h2>
 <p>Converts an M4 into a 2d transform array.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -1989,7 +1989,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  
-  shrike.M4toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+  shrike.M4.toTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">return</span> [[m[<span class="hljs-number">0</span>], m[<span class="hljs-number">4</span>], m[<span class="hljs-number">8</span>], m[<span class="hljs-number">12</span>]], [m[<span class="hljs-number">1</span>], m[<span class="hljs-number">5</span>], m[<span class="hljs-number">9</span>], m[<span class="hljs-number">13</span>]], [m[<span class="hljs-number">2</span>], m[<span class="hljs-number">6</span>], m[<span class="hljs-number">10</span>], m[<span class="hljs-number">14</span>]], [m[<span class="hljs-number">3</span>], m[<span class="hljs-number">7</span>], m[<span class="hljs-number">11</span>], m[<span class="hljs-number">15</span>]]];
   };</pre></div></div>
             
@@ -2002,7 +2002,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <h2 id="function-shrike-transformarraytom4">Function: shrike.transformArrayToM4</h2>
+              <h2 id="function-shrike-m4-fromtransformarray">Function: shrike.M4.fromTransformArray</h2>
 <p>Converts a 2d transform array into an M4.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -2014,7 +2014,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  
-  shrike.transformArrayToM4 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+  shrike.M4.fromTransformArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">return</span> [m[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>], m[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>], m[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]];
   };</pre></div></div>
             
