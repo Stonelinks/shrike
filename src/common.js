@@ -134,10 +134,18 @@ shrike.magnitude = function(a) {
   if (shrike.isFloatArray(a)) {
 
     // @if SHRIKE_DO_ASSERT
-    shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
+    shrike.assert(a.length === 3 || a.length === 4, 'magnitude: native float array\'s need to be of length 3 or 4');
     // @endif
 
-    return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    if (a.length === 3) {
+      return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    }
+    else if (a.length === 4) {
+      return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3]);
+    }
+    else {
+      shrike.throwError('magnitude: incorrect native float array length');
+    }
   }
   return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
 };
