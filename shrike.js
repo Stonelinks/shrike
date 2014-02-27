@@ -15,12 +15,24 @@ define(['underscore', 'mjs'], function(_, mjs) {
 
   var shrike = {};
 
+  // Borrow all of window.Math's functions and constants... except round since shrike provides its own round function.
+  _.without(Object.getOwnPropertyNames(Math), 'round').forEach(function(prop) {
+    shrike[prop] = Math[prop];
+  });
+  
+  // Borrow mjs too.
+  Object.getOwnPropertyNames(mjs).forEach(function(prop) {
+    shrike[prop] = mjs[prop];
+  });
+  
+  // Alias M4x4 to M4 for convenience.
+  shrike.M4 = shrike.M4x4;
+  
   //
   // ##Constant: SHRIKE_FLOAT_ARRAY_TYPE
   //
   // The base float array type, borrowed it from mjs.
   //
-  
   var SHRIKE_FLOAT_ARRAY_TYPE = mjs.FLOAT_ARRAY_TYPE;
   
   shrike.throwError = function(msg) {
@@ -33,99 +45,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
       shrike.throwError(msg);
     }
   };
-  //
-  // ##Function: shrike.isArray
-  //
-  // A safer version of _.isArray that works with float32 array types.
-  //
-  // **Parameters:**
-  //
-  //   - **a** - the array / object / whatever operand.
-  //
-  // **Returns:**
-  //
-  // true or false
-  //
-  
-  shrike.isArray = function(a) {
-    if (_.isArray(a)) {
-      return true;
-    }
-  
-    return shrike.isFloatArray(a);
-  };
-  
-  //
-  // ##Function: shrike.isFloatArray
-  //
-  // Detects if something is a float array.
-  //
-  // **Parameters:**
-  //
-  //   - **a** - the array / object / whatever operand.
-  //
-  // **Returns:**
-  //
-  // true or false
-  //
-  
-  shrike.isFloatArray = function(a) {
-    try {
-      return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
-    }
-    catch (e) {
-      return false;
-    }
-  };
-  
-  //
-  // ##Function: shrike.is2DArray
-  //
-  // Detects if something is a 2d array.
-  //
-  // **Parameters:**
-  //
-  //   - **a** - the array / object / whatever operand.
-  //
-  // **Returns:**
-  //
-  // true or false
-  //
-  
-  shrike.is2DArray = function(a) {
-    if (!shrike.isArray(a)) {
-      return false;
-    }
-  
-    if (shrike.isFloatArray(a)) {
-      return false;
-    }
-  
-    if (a.length === 0) {
-      return false;
-    }
-  
-    return _.every(_.map(a, shrike.isArray));
-  };
-  
-  //
-  // ##Function: shrike.isNumber
-  //
-  // Detects if something is a number or numeric type, or can be converted into one.
-  //
-  // **Parameters:**
-  //
-  //   - **a** - the operand.
-  //
-  // **Returns:**
-  //
-  // true or false
-  //
-  
-  shrike.isNumber = function(a) {
-    return !isNaN(parseFloat(a)) && isFinite(a) && !shrike.isArray(a);
-  };
-  
   //
   // ##Function: shrike.prettyPrint
   //
@@ -221,199 +140,96 @@ define(['underscore', 'mjs'], function(_, mjs) {
   window.pp = shrike.prettyPrint;
   
   //
-  // ##Function: shrike.scalarIterator
+  // ##Function: shrike.isArray
   //
-  // Iterates through an array and applies a function to every element.
-  //
-  // **Parameters:**
-  //
-  //   - **A** - 1d or 2d array.
-  //   - **_function** - function to be called with each element supplied as its single argument.
-  //
-  // **Returns:**
-  //
-  // The modified array.
-  //
-  
-  shrike.scalarIterator = function(A, _function) {
-    _function = _function || pass;
-    if (shrike.is2DArray(A)) {
-      return _.map(A, function(element) {
-        return _.map(element, _function);
-      });
-    }
-    else if (shrike.isArray(A)) {
-      if (shrike.isFloatArray(A)) {
-        var ret = new shrike.FLOAT_ARRAY_TYPE(A.length);
-        for (var i = 0; i < A.length; i++) {
-          ret[i] = _function(A[i]);
-        }
-        return ret;
-      }
-      else {
-        return _.map(A, _function);
-      }
-    }
-    else {
-      return _function(A);
-    }
-  };
-  
-  // Borrow all of window.Math's functions and constants... except round since shrike provides its own round function.
-  _.without(Object.getOwnPropertyNames(Math), 'round').forEach(function(prop) {
-    shrike[prop] = Math[prop];
-  });
-  
-  // Borrow mjs too.
-  Object.getOwnPropertyNames(mjs).forEach(function(prop) {
-    shrike[prop] = mjs[prop];
-  });
-  
-  // Alias M4x4 to M4 for convenience.
-  shrike.M4 = shrike.M4x4;
-  
-  //
-  // ##Function: shrike.sum
-  //
-  // Sum up a 1d array.
+  // A safer version of _.isArray that works with float32 array types.
   //
   // **Parameters:**
   //
-  //   - **a** - the array operand.
+  //   - **a** - the array / object / whatever operand.
   //
   // **Returns:**
   //
-  // float sum.
+  // true or false
   //
   
-  shrike.sum = function(a) {
+  shrike.isArray = function(a) {
+    if (_.isArray(a)) {
+      return true;
+    }
   
-    shrike.assert(shrike.isArray(a), 'can\'t compute sum of non-array ' + a);
-    return _.reduce(shrike.toFloat(a), function(memo, num) {
-      if (!shrike.isNumber(num)) {
-        shrike.throwError('can\'t compute sum of array with non numeric element: ' + num);
-      }
-  
-      return memo + num;
-    }, 0.0);
+    return shrike.isFloatArray(a);
   };
   
   //
-  // ##Function: shrike.square
+  // ##Function: shrike.isFloatArray
   //
-  // Square a number.
+  // Detects if something is a float array.
   //
   // **Parameters:**
   //
-  //   - **x** - the numeric operand.
+  //   - **a** - the array / object / whatever operand.
   //
   // **Returns:**
   //
-  // float square.
+  // true or false
   //
   
-  shrike.square = function(x) {
-  
-    shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
-    return parseFloat(x) * parseFloat(x);
+  shrike.isFloatArray = function(a) {
+    try {
+      return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
+    }
+    catch (e) {
+      return false;
+    }
   };
   
   //
-  // ##Function: shrike.round
+  // ##Function: shrike.is2DArray
   //
-  // Round a number to a an arbitrary precision.
+  // Detects if something is a 2d array.
   //
   // **Parameters:**
   //
-  //   - **x** - numeric operand.
-  //   - **dec** - (optional) the number of decimal places, defaults to zero.
+  //   - **a** - the array / object / whatever operand.
   //
   // **Returns:**
   //
-  // float rounded number.
+  // true or false
   //
   
-  shrike.round = function(n, dec) {
-    if (dec === undefined) {
-      dec = 0;
+  shrike.is2DArray = function(a) {
+    if (!shrike.isArray(a)) {
+      return false;
     }
   
-    shrike.assert(shrike.isNumber(dec), 'round: ' + dec + ' is not valid number of decimal places');
-    shrike.assert(dec <= 20, 'round: can only round up to 20 decimal places');
-    shrike.assert(shrike.isNumber(n), 'round: ' + n + ' is not a numeric type');
-    return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
+    if (shrike.isFloatArray(a)) {
+      return false;
+    }
+  
+    if (a.length === 0) {
+      return false;
+    }
+  
+    return _.every(_.map(a, shrike.isArray));
   };
   
   //
-  // ##Function: shrike.roundArray
+  // ##Function: shrike.isNumber
   //
-  // Round each element in an array to a an arbitrary precision.
-  //
-  // **Parameters:**
-  //
-  //   - **A** - numeric array operand.
-  //   - **dec** - (optional) the number of decimal places, defaults to zero.
-  //
-  // **Returns:**
-  //
-  // float rounded array.
-  //
-  
-  shrike.roundArray = function(A, dec) {
-    shrike.throwError(shrike.isArray(A), 'roundArray: not an array');
-    return shrike.scalarIterator(A, function(a) {
-      return shrike.round(a, dec);
-    });
-  };
-  
-  //
-  // ##Function: shrike.toFloat
-  //
-  // Converts the argument to a float value.
+  // Detects if something is a number or numeric type, or can be converted into one.
   //
   // **Parameters:**
   //
-  //   - **x, y, z** - the 3 elements of the new vector.
+  //   - **a** - the operand.
   //
   // **Returns:**
   //
-  // A new vector containing with the given argument values.
+  // true or false
   //
   
-  shrike.toFloat = function(thing) {
-  
-    // its a number
-    if (shrike.isNumber(thing)) {
-      return parseFloat(thing);
-    }
-  
-    // its already floating point
-    else if (shrike.isFloatArray(thing)) {
-      return thing;
-    }
-  
-    // its an array
-    else if (shrike.isArray(thing)) {
-  
-      var _convert = function(thing) {
-  
-        shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
-        return parseFloat(thing);
-      };
-  
-      // its a 2d array
-      if (shrike.is2DArray(thing)) {
-        return _.map(thing, function(row) {
-          return _.map(row, _convert);
-        });
-      }
-      else {
-        return _.map(thing, _convert);
-      }
-    }
-    else {
-      shrike.throwError('toFloat: can not convert to float: ' + thing);
-    }
+  shrike.isNumber = function(a) {
+    return !isNaN(parseFloat(a)) && isFinite(a) && !shrike.isArray(a);
   };
   
   //
@@ -1074,6 +890,139 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   //
+  // ##Function: shrike.scalarIterator
+  //
+  // Iterates through an array and applies a function to every element.
+  //
+  // **Parameters:**
+  //
+  //   - **A** - 1d or 2d array.
+  //   - **_function** - function to be called with each element supplied as its single argument.
+  //
+  // **Returns:**
+  //
+  // The modified array.
+  //
+  
+  shrike.scalarIterator = function(A, _function) {
+    _function = _function || pass;
+    if (shrike.is2DArray(A)) {
+      return _.map(A, function(element) {
+        return _.map(element, _function);
+      });
+    }
+    else if (shrike.isArray(A)) {
+      if (shrike.isFloatArray(A)) {
+        var ret = new shrike.FLOAT_ARRAY_TYPE(A.length);
+        for (var i = 0; i < A.length; i++) {
+          ret[i] = _function(A[i]);
+        }
+        return ret;
+      }
+      else {
+        return _.map(A, _function);
+      }
+    }
+    else {
+      return _function(A);
+    }
+  };
+  
+  //
+  // ##Function: shrike.sum
+  //
+  // Sum up a 1d array.
+  //
+  // **Parameters:**
+  //
+  //   - **a** - the array operand.
+  //
+  // **Returns:**
+  //
+  // float sum.
+  //
+  
+  shrike.sum = function(a) {
+  
+    shrike.assert(shrike.isArray(a), 'can\'t compute sum of non-array ' + a);
+    return _.reduce(shrike.toFloat(a), function(memo, num) {
+      if (!shrike.isNumber(num)) {
+        shrike.throwError('can\'t compute sum of array with non numeric element: ' + num);
+      }
+  
+      return memo + num;
+    }, 0.0);
+  };
+  
+  //
+  // ##Function: shrike.square
+  //
+  // Square a number.
+  //
+  // **Parameters:**
+  //
+  //   - **x** - the numeric operand.
+  //
+  // **Returns:**
+  //
+  // float square.
+  //
+  
+  shrike.square = function(x) {
+  
+    shrike.assert(shrike.isNumber(x), 'can\'t square non numeric element: ' + x);
+    return parseFloat(x) * parseFloat(x);
+  };
+  
+  //
+  // ##Function: shrike.round
+  //
+  // Round a number to a an arbitrary precision.
+  //
+  // **Parameters:**
+  //
+  //   - **x** - numeric operand.
+  //   - **dec** - (optional) the number of decimal places, defaults to zero.
+  //
+  // **Returns:**
+  //
+  // float rounded number.
+  //
+  
+  shrike.round = function(n, dec) {
+    if (dec === undefined) {
+      dec = 0;
+    }
+  
+    shrike.assert(shrike.isNumber(dec), 'round: ' + dec + ' is not valid number of decimal places');
+    shrike.assert(dec <= 20, 'round: can only round up to 20 decimal places');
+    shrike.assert(shrike.isNumber(n), 'round: ' + n + ' is not a numeric type');
+    return parseFloat(new Number(n + '').toFixed(parseInt(dec)));
+  };
+  
+  //
+  // ##Function: shrike.roundArray
+  //
+  // Round each element in an array to a an arbitrary precision.
+  //
+  // **Parameters:**
+  //
+  //   - **A** - numeric array operand.
+  //   - **dec** - (optional) the number of decimal places, defaults to zero.
+  //
+  // **Returns:**
+  //
+  // float rounded array.
+  //
+  
+  shrike.roundArray = function(A, dec) {
+    shrike.throwError(shrike.isArray(A), 'roundArray: not an array');
+    return shrike.scalarIterator(A, function(a) {
+      return shrike.round(a, dec);
+    });
+  };
+  
+  //
   // ##Function: shrike.divide
   //
   // Divides an arbitrarily large 1 or 2d array by a scalar.
@@ -1092,6 +1041,53 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return shrike.scalarIterator(shrike.toFloat(A), function(a) {
       return a / parseFloat(scalar);
     });
+  };
+  
+  //
+  // ##Function: shrike.magnitude
+  //
+  // Matrix or vector norm.
+  //
+  // **Parameters:**
+  //
+  //   - **a** - source.
+  //
+  // **Returns:**
+  //
+  // float
+  //
+  
+  shrike.magnitude = function(a) {
+    if (shrike.isFloatArray(a)) {
+  
+      shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
+      return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    }
+    return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
+  };
+  
+  shrike.norm = shrike.magnitude;
+  
+  //
+  // ##Function: shrike.normalize
+  //
+  // Matrix or vector normalization.
+  // TODO: make a V3.normalize
+  //
+  // **Parameters:**
+  //
+  //   - **a** - source.
+  //
+  // **Returns:**
+  //
+  // float normalized array or matrix
+  //
+  
+  shrike.normalize = function(array) {
+    var length = shrike.magnitude(array);
+  
+    shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
+    return shrike.divide(array, length);
   };
   
   //
@@ -1125,52 +1121,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
       ret.push(row);
     }
     return ret;
-  };
-  
-  //
-  // ##Function: shrike.magnitude
-  //
-  // Matrix or vector norm.
-  //
-  // **Parameters:**
-  //
-  //   - **a** - source.
-  //
-  // **Returns:**
-  //
-  // float
-  //
-  
-  shrike.magnitude = function(a) {
-    if (shrike.isFloatArray(a)) {
-  
-      shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
-      return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-    }
-    return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
-  };
-  
-  shrike.norm = shrike.magnitude;
-  
-  //
-  // ##Function: shrike.normalize
-  //
-  // Matrix or vector normalization.
-  //
-  // **Parameters:**
-  //
-  //   - **a** - source.
-  //
-  // **Returns:**
-  //
-  // float normalized array or matrix
-  //
-  
-  shrike.normalize = function(array) {
-    var length = shrike.magnitude(array);
-  
-    shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
-    return shrike.divide(array, length);
   };
   
   //

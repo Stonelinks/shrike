@@ -4,11 +4,11 @@ define(['underscore', 'mjs'], function(_, mjs) {
 
   var shrike = {};
 
-  // @include utils.js
-  // @include iterators.js
   // @include base.js
-  // @include common.js
+  // @include detectors.js
   // @include converters.js
+  // @include iterators.js
+  // @include common.js
   // @include matrix.js
   // @include V3.js
   // @include M4.js

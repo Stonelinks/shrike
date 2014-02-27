@@ -100,3 +100,77 @@ shrike.roundArray = function(A, dec) {
     return shrike.round(a, dec);
   });
 };
+
+//
+// ##Function: shrike.divide
+//
+// Divides an arbitrarily large 1 or 2d array by a scalar.
+//
+// **Parameters:**
+//
+//   - **A** - the source array.
+//   - **scalar** - scalar that each element in the array will be be divided by.
+//
+// **Returns:**
+//
+// float the result array.
+//
+
+shrike.divide = function(A, scalar) {
+  return shrike.scalarIterator(shrike.toFloat(A), function(a) {
+    return a / parseFloat(scalar);
+  });
+};
+
+//
+// ##Function: shrike.magnitude
+//
+// Matrix or vector norm.
+//
+// **Parameters:**
+//
+//   - **a** - source.
+//
+// **Returns:**
+//
+// float
+//
+
+shrike.magnitude = function(a) {
+  if (shrike.isFloatArray(a)) {
+
+    // @if SHRIKE_DO_ASSERT
+    shrike.assert(a.length === 3, 'magnitude: native float array\'s need to be of length three');
+    // @endif
+
+    return shrike.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+  }
+  return shrike.sqrt(shrike.sum(_.map(shrike.toFloat(a), shrike.square)));
+};
+
+shrike.norm = shrike.magnitude;
+
+//
+// ##Function: shrike.normalize
+//
+// Matrix or vector normalization.
+// TODO: make a V3.normalize
+//
+// **Parameters:**
+//
+//   - **a** - source.
+//
+// **Returns:**
+//
+// float normalized array or matrix
+//
+
+shrike.normalize = function(array) {
+  var length = shrike.magnitude(array);
+
+  // @if SHRIKE_DO_ASSERT
+  shrike.assert(length !== 0, 'normalize: trying to normalize a zero array');
+  // @endif
+
+  return shrike.divide(array, length);
+};
