@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>yet another javascript math library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#58;&#x6c;&#117;&#x63;&#x61;&#x73;&#x2e;&#x70;&#x2e;&#x64;&#111;&#x79;&#108;&#x65;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#x6d;">&#x6c;&#117;&#x63;&#x61;&#x73;&#x2e;&#x70;&#x2e;&#x64;&#111;&#x79;&#108;&#x65;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#108;&#117;&#x63;&#x61;&#115;&#46;&#x70;&#46;&#x64;&#111;&#x79;&#108;&#x65;&#x40;&#x67;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;">&#108;&#117;&#x63;&#x61;&#115;&#46;&#x70;&#46;&#x64;&#111;&#x79;&#108;&#x65;&#x40;&#x67;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -1343,6 +1343,94 @@ TODO: make a V3.normalize</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
+              <h2 id="function-shrike-quat-fromm4">Function: shrike.quat.fromM4</h2>
+<p>Convert a quaternion from an M4.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>_m</strong> - the M4 being converted.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<p>float the converted quaternion.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.quat.fromM4 = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_m)</span> {</span>
+  
+    <span class="hljs-keyword">var</span> m = shrike.toFloat(_m);
+  
+    <span class="hljs-keyword">var</span> m11 = m[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">var</span> m21 = m[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">var</span> m31 = m[<span class="hljs-number">2</span>];
+    <span class="hljs-keyword">var</span> m12 = m[<span class="hljs-number">4</span>];
+    <span class="hljs-keyword">var</span> m22 = m[<span class="hljs-number">5</span>];
+    <span class="hljs-keyword">var</span> m32 = m[<span class="hljs-number">6</span>];
+    <span class="hljs-keyword">var</span> m13 = m[<span class="hljs-number">8</span>];
+    <span class="hljs-keyword">var</span> m23 = m[<span class="hljs-number">9</span>];
+    <span class="hljs-keyword">var</span> m33 = m[<span class="hljs-number">10</span>];
+  
+    <span class="hljs-keyword">var</span> tr = m11 + m22 + m33;
+    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>]);
+    <span class="hljs-keyword">if</span> (tr &gt;= <span class="hljs-number">0.0</span>) {
+      r[<span class="hljs-number">0</span>] = tr + <span class="hljs-number">1.0</span>;
+      r[<span class="hljs-number">1</span>] = (m32 - m23);
+      r[<span class="hljs-number">2</span>] = (m13 - m31);
+      r[<span class="hljs-number">3</span>] = (m21 - m12);
+    }
+    <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>find mhe largesm diagonal elemenm and jump mo mhe appropriame case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (m22 &gt; m11) {
+        <span class="hljs-keyword">if</span> (m33 &gt; m22) {
+          r[<span class="hljs-number">3</span>] = (m33 - (m11 + m22)) + <span class="hljs-number">1.0</span>;
+          r[<span class="hljs-number">1</span>] = (m31 + m13);
+          r[<span class="hljs-number">2</span>] = (m23 + m32);
+          r[<span class="hljs-number">0</span>] = (m21 - m12);
+        }
+        <span class="hljs-keyword">else</span> {
+          r[<span class="hljs-number">2</span>] = (m22 - (m33 + m11)) + <span class="hljs-number">1.0</span>;
+          r[<span class="hljs-number">3</span>] = (m23 + m32);
+          r[<span class="hljs-number">1</span>] = (m12 + m21);
+          r[<span class="hljs-number">0</span>] = (m13 - m31);
+        }
+      }
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (m33 &gt; m11) {
+        r[<span class="hljs-number">3</span>] = (m33 - (m11 + m22)) + <span class="hljs-number">1.0</span>;
+        r[<span class="hljs-number">1</span>] = (m31 + m13);
+        r[<span class="hljs-number">2</span>] = (m23 + m32);
+        r[<span class="hljs-number">0</span>] = (m21 - m12);
+      }
+      <span class="hljs-keyword">else</span> {
+        r[<span class="hljs-number">1</span>] = (m11 - (m22 + m33)) + <span class="hljs-number">1.0</span>;
+        r[<span class="hljs-number">2</span>] = (m12 + m21);
+        r[<span class="hljs-number">3</span>] = (m31 + m13);
+        r[<span class="hljs-number">0</span>] = (m32 - m23);
+      }
+    }
+  
+    <span class="hljs-keyword">return</span> shrike.divide(r, shrike.magnitude(r));
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
               <h2 id="function-shrike-quat-fromzxy">Function: shrike.quat.fromZXY</h2>
 <p>Convert a zxy angle array into quaternion.</p>
 <p><strong>Parameters:</strong></p>
@@ -1361,11 +1449,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <h2 id="function-shrike-quat-fromzyx">Function: shrike.quat.fromZYX</h2>
 <p>Convert a zyx angle array into quaternion.</p>
@@ -1387,11 +1475,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <h2 id="function-shrike-axisangle-">Function: shrike.axisAngle.$</h2>
 <p>parses an axis and an angle into an object from some arguments</p>
@@ -1451,11 +1539,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <h2 id="function-shrike-axisangle-fromquat">Function: shrike.axisAngle.fromQuat</h2>
 <p>Convert a quaternion into axis angle representation.</p>
@@ -1503,11 +1591,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <h2 id="function-shrike-axisangle-frommatrix">Function: shrike.axisAngle.fromMatrix</h2>
 <p>Convert a matrix into axis angle representation.</p>
@@ -1527,11 +1615,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-fromobject">Function: shrike.V3.fromObject</h2>
 <p>Converts an object with xyz attributes into a V3.</p>
@@ -1553,11 +1641,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-toobject">Function: shrike.V3.toObject</h2>
 <p>Converts a V3 into an object with xyz attributes.</p>
@@ -1583,11 +1671,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zxy-frommatrix">Function: shrike.V3.zxy.fromMatrix</h2>
 <p>Convert a matrix into zxy angle representation.</p>
@@ -1637,11 +1725,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zyx-frommatrix">Function: shrike.V3.zyx.fromMatrix</h2>
 <p>Convert a matrix into zyx angle representation.</p>
@@ -1693,11 +1781,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zxy-fromquat">Function: shrike.V3.zxy.fromQuat</h2>
 <p>Convert a quaternion into zxy representation.</p>
@@ -1717,11 +1805,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zyx-fromquat">Function: shrike.V3.zyx.fromQuat</h2>
 <p>Convert a quaternion into zxy representation.</p>
@@ -1741,13 +1829,13 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
-              <h2 id="function-shrike-m4-matrixfromquat">Function: shrike.M4.matrixFromQuat</h2>
+              <h2 id="function-shrike-m4-fromquat">Function: shrike.M4.fromQuat</h2>
 <p>Convert an M4 from quaternion.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -1758,9 +1846,9 @@ TODO: make a V3.normalize</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.M4.matrixFromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  shrike.M4.fromQuat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw)</span> {</span>
   
-    shrike.assert(quatRaw.length === <span class="hljs-number">4</span>, <span class="hljs-string">'M4.matrixFromQuat: quatRaw.length !== 4'</span>);
+    shrike.assert(quatRaw.length === <span class="hljs-number">4</span>, <span class="hljs-string">'M4.fromQuat: quatRaw.length !== 4'</span>);
     <span class="hljs-keyword">var</span> quat = shrike.toFloat(quatRaw);
     <span class="hljs-keyword">var</span> r = shrike.M4.clone(shrike.M4.I);
   
@@ -1770,11 +1858,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>invalid quaternion, so return identity</p>
 
@@ -1801,94 +1889,6 @@ TODO: make a V3.normalize</p>
     r[<span class="hljs-number">10</span>] = <span class="hljs-number">1.0</span> - qq1 - qq2;
   
     <span class="hljs-keyword">return</span> r;
-  };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-58">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
-              </div>
-              <h2 id="function-shrike-m4-quat-frommatrix">Function: shrike.M4.quat.fromMatrix</h2>
-<p>Convert a quaternion from an M4.</p>
-<p><strong>Parameters:</strong></p>
-<ul>
-<li><strong>_m</strong> - the M4 being converted.</li>
-</ul>
-<p><strong>Returns:</strong></p>
-<p>float the converted quaternion.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  shrike.M4.quat.fromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_m)</span> {</span>
-  
-    <span class="hljs-keyword">var</span> m = shrike.toFloat(_m);
-  
-    <span class="hljs-keyword">var</span> m11 = m[<span class="hljs-number">0</span>];
-    <span class="hljs-keyword">var</span> m21 = m[<span class="hljs-number">1</span>];
-    <span class="hljs-keyword">var</span> m31 = m[<span class="hljs-number">2</span>];
-    <span class="hljs-keyword">var</span> m12 = m[<span class="hljs-number">4</span>];
-    <span class="hljs-keyword">var</span> m22 = m[<span class="hljs-number">5</span>];
-    <span class="hljs-keyword">var</span> m32 = m[<span class="hljs-number">6</span>];
-    <span class="hljs-keyword">var</span> m13 = m[<span class="hljs-number">8</span>];
-    <span class="hljs-keyword">var</span> m23 = m[<span class="hljs-number">9</span>];
-    <span class="hljs-keyword">var</span> m33 = m[<span class="hljs-number">10</span>];
-  
-    <span class="hljs-keyword">var</span> tr = m11 + m22 + m33;
-    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>]);
-    <span class="hljs-keyword">if</span> (tr &gt;= <span class="hljs-number">0.0</span>) {
-      r[<span class="hljs-number">0</span>] = tr + <span class="hljs-number">1.0</span>;
-      r[<span class="hljs-number">1</span>] = (m32 - m23);
-      r[<span class="hljs-number">2</span>] = (m13 - m31);
-      r[<span class="hljs-number">3</span>] = (m21 - m12);
-    }
-    <span class="hljs-keyword">else</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-59">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
-              </div>
-              <p>find mhe largesm diagonal elemenm and jump mo mhe appropriame case</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (m22 &gt; m11) {
-        <span class="hljs-keyword">if</span> (m33 &gt; m22) {
-          r[<span class="hljs-number">3</span>] = (m33 - (m11 + m22)) + <span class="hljs-number">1.0</span>;
-          r[<span class="hljs-number">1</span>] = (m31 + m13);
-          r[<span class="hljs-number">2</span>] = (m23 + m32);
-          r[<span class="hljs-number">0</span>] = (m21 - m12);
-        }
-        <span class="hljs-keyword">else</span> {
-          r[<span class="hljs-number">2</span>] = (m22 - (m33 + m11)) + <span class="hljs-number">1.0</span>;
-          r[<span class="hljs-number">3</span>] = (m23 + m32);
-          r[<span class="hljs-number">1</span>] = (m12 + m21);
-          r[<span class="hljs-number">0</span>] = (m13 - m31);
-        }
-      }
-      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (m33 &gt; m11) {
-        r[<span class="hljs-number">3</span>] = (m33 - (m11 + m22)) + <span class="hljs-number">1.0</span>;
-        r[<span class="hljs-number">1</span>] = (m31 + m13);
-        r[<span class="hljs-number">2</span>] = (m23 + m32);
-        r[<span class="hljs-number">0</span>] = (m21 - m12);
-      }
-      <span class="hljs-keyword">else</span> {
-        r[<span class="hljs-number">1</span>] = (m11 - (m22 + m33)) + <span class="hljs-number">1.0</span>;
-        r[<span class="hljs-number">2</span>] = (m12 + m21);
-        r[<span class="hljs-number">3</span>] = (m31 + m13);
-        r[<span class="hljs-number">0</span>] = (m32 - m23);
-      }
-    }
-  
-    <span class="hljs-keyword">return</span> shrike.divide(r, shrike.magnitude(r));
   };</pre></div></div>
             
         </li>
@@ -1941,7 +1941,7 @@ TODO: make a V3.normalize</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.M4.composeFromQuatTrans = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(quatRaw, transRaw)</span> {</span>
-    <span class="hljs-keyword">var</span> r = shrike.M4.matrixFromQuat(quatRaw);
+    <span class="hljs-keyword">var</span> r = shrike.M4.fromQuat(quatRaw);
   
     <span class="hljs-keyword">var</span> trans = shrike.toFloat(transRaw);
   

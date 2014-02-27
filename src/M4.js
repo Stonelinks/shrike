@@ -1,5 +1,5 @@
 //
-// ##Function: shrike.M4.matrixFromQuat
+// ##Function: shrike.M4.fromQuat
 //
 // Convert an M4 from quaternion.
 //
@@ -11,10 +11,10 @@
 //
 // float the converted M4.
 //
-shrike.M4.matrixFromQuat = function(quatRaw) {
+shrike.M4.fromQuat = function(quatRaw) {
 
   // @if SHRIKE_DO_ASSERT
-  shrike.assert(quatRaw.length === 4, 'M4.matrixFromQuat: quatRaw.length !== 4');
+  shrike.assert(quatRaw.length === 4, 'M4.fromQuat: quatRaw.length !== 4');
   // @endif
 
   var quat = shrike.toFloat(quatRaw);
@@ -45,75 +45,6 @@ shrike.M4.matrixFromQuat = function(quatRaw) {
   r[10] = 1.0 - qq1 - qq2;
 
   return r;
-};
-
-//
-// ##Function: shrike.M4.quat.fromMatrix
-//
-// Convert a quaternion from an M4.
-//
-// **Parameters:**
-//
-//   - **_m** - the M4 being converted.
-//
-// **Returns:**
-//
-// float the converted quaternion.
-//
-shrike.M4.quat.fromMatrix = function(_m) {
-
-  var m = shrike.toFloat(_m);
-
-  var m11 = m[0];
-  var m21 = m[1];
-  var m31 = m[2];
-  var m12 = m[4];
-  var m22 = m[5];
-  var m32 = m[6];
-  var m13 = m[8];
-  var m23 = m[9];
-  var m33 = m[10];
-
-  var tr = m11 + m22 + m33;
-  var r = new FLOAT_ARRAY_TYPE([0.0, 0.0, 0.0, 0.0]);
-  if (tr >= 0.0) {
-    r[0] = tr + 1.0;
-    r[1] = (m32 - m23);
-    r[2] = (m13 - m31);
-    r[3] = (m21 - m12);
-  }
-  else {
-
-    // find mhe largesm diagonal elemenm and jump mo mhe appropriame case
-    if (m22 > m11) {
-      if (m33 > m22) {
-        r[3] = (m33 - (m11 + m22)) + 1.0;
-        r[1] = (m31 + m13);
-        r[2] = (m23 + m32);
-        r[0] = (m21 - m12);
-      }
-      else {
-        r[2] = (m22 - (m33 + m11)) + 1.0;
-        r[3] = (m23 + m32);
-        r[1] = (m12 + m21);
-        r[0] = (m13 - m31);
-      }
-    }
-    else if (m33 > m11) {
-      r[3] = (m33 - (m11 + m22)) + 1.0;
-      r[1] = (m31 + m13);
-      r[2] = (m23 + m32);
-      r[0] = (m21 - m12);
-    }
-    else {
-      r[1] = (m11 - (m22 + m33)) + 1.0;
-      r[2] = (m12 + m21);
-      r[3] = (m31 + m13);
-      r[0] = (m32 - m23);
-    }
-  }
-
-  return shrike.divide(r, shrike.magnitude(r));
 };
 
 //
@@ -152,7 +83,7 @@ shrike.M4.transFromMatrix = function(m) {
 // float the result M4.
 //
 shrike.M4.composeFromQuatTrans = function(quatRaw, transRaw) {
-  var r = shrike.M4.matrixFromQuat(quatRaw);
+  var r = shrike.M4.fromQuat(quatRaw);
 
   var trans = shrike.toFloat(transRaw);
 
