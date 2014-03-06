@@ -5,7 +5,7 @@
   "authors": [
     "Lucas Doyle <lucas.p.doyle@gmail.com>"
   ],
-  "description": "yet another javascript math library",
+  "description": "A fast and easy to use vector and matrix library",
   "main": "shrike.js",
   "keywords": [
     "math",

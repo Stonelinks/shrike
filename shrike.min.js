@@ -2,7 +2,7 @@
 //
 // https://github.com/Stonelinks/shrike
 //
-// yet another javascript math library
+// A fast and easy to use vector and matrix library
 //
 // Copyright (c)2014 - Lucas Doyle <lucas.p.doyle@gmail.com>
 //

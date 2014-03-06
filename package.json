@@ -1,7 +1,7 @@
 {
   "name": "shrike",
   "version": "0.0.1",
-  "description": "yet another javascript math library",
+  "description": "A fast and easy to use vector and matrix library",
   "main": "shrike.js",
   "directories": {
     "test": "test"
