@@ -1,9 +1,9 @@
 Shrike
 ======
 
-Yet another javascript math library ...but its a pretty good one
+A fast and easy to use vector and matrix library for JavaScript, based heavily off [mjs](https://github.com/Stonelinks/mjs).
 
-Shrike extends off [mjs](https://github.com/Stonelinks/mjs) and adds some additional functionality to the V3 and M4 classes, as well as provide some utilities for converting between quaternions and other axis / angle representations.
+Shrike extends off [mjs](https://github.com/Stonelinks/mjs) and adds some additional functionality to the V3 and M4 classes, as well as provide utilities for converting between quaternions and other array / axis / angle based representations.
 
 ##How to use it
 
