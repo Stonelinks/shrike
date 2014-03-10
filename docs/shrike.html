@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>A fast and easy to use vector and matrix library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#108;&#x75;&#x63;&#x61;&#115;&#x2e;&#x70;&#x2e;&#100;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;">&#108;&#x75;&#x63;&#x61;&#115;&#x2e;&#x70;&#x2e;&#100;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x6c;&#117;&#x63;&#x61;&#115;&#x2e;&#x70;&#46;&#x64;&#x6f;&#x79;&#x6c;&#101;&#x40;&#103;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#x6f;&#x6d;">&#x6c;&#117;&#x63;&#x61;&#115;&#x2e;&#x70;&#46;&#x64;&#x6f;&#x79;&#x6c;&#101;&#x40;&#103;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#x6f;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -495,8 +495,8 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="function-shrike-tonormalarray">Function: shrike.toNormalArray</h2>
-<p>Converts the argument to a normal array.</p>
+              <h2 id="function-shrike-tountypedarray">Function: shrike.toUntypedArray</h2>
+<p>Converts the argument to an untyped array.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><strong>thing</strong> - thing you’re trying to convert.</li>
@@ -506,9 +506,9 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.toNormalArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  shrike.toUntypedArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
   
-    shrike.assert(shrike.isArray(a), <span class="hljs-string">'toNormalArray: needs to be a float array or array like object: '</span> + a);
+    shrike.assert(shrike.isArray(a), <span class="hljs-string">'toUntypedArray: needs to be a float array or array like object: '</span> + a);
   
     <span class="hljs-keyword">if</span> (shrike.isTypedArray(a)) {
       <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.apply([], a);

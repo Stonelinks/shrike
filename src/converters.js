@@ -48,9 +48,9 @@ shrike.toFloat = function(thing) {
 };
 
 //
-// ##Function: shrike.toNormalArray
+// ##Function: shrike.toUntypedArray
 //
-// Converts the argument to a normal array.
+// Converts the argument to an untyped array.
 //
 // **Parameters:**
 //
@@ -60,9 +60,9 @@ shrike.toFloat = function(thing) {
 //
 // A new plain converted array.
 //
-shrike.toNormalArray = function(a) {
+shrike.toUntypedArray = function(a) {
 
-  shrike.assert(shrike.isArray(a), 'toNormalArray: needs to be a float array or array like object: ' + a);
+  shrike.assert(shrike.isArray(a), 'toUntypedArray: needs to be a float array or array like object: ' + a);
 
   if (shrike.isTypedArray(a)) {
     return Array.apply([], a);
