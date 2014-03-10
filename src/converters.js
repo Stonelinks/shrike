@@ -19,7 +19,7 @@ shrike.toFloat = function(thing) {
   }
 
   // its already floating point
-  else if (shrike.isFloatArray(thing)) {
+  else if (shrike.isTypedArray(thing)) {
     return thing;
   }
 
@@ -64,7 +64,7 @@ shrike.toNormalArray = function(a) {
 
   shrike.assert(shrike.isArray(a), 'toNormalArray: needs to be a float array or array like object: ' + a);
 
-  if (shrike.isFloatArray(a)) {
+  if (shrike.isTypedArray(a)) {
     return Array.apply([], a);
   }
 };

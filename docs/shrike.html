@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>A fast and easy to use vector and matrix library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#x6c;&#x75;&#x63;&#97;&#115;&#46;&#x70;&#46;&#x64;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#109;">&#x6c;&#x75;&#x63;&#97;&#115;&#46;&#x70;&#46;&#x64;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#109;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#108;&#x75;&#x63;&#x61;&#115;&#x2e;&#x70;&#x2e;&#100;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;">&#108;&#x75;&#x63;&#x61;&#115;&#x2e;&#x70;&#x2e;&#100;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -290,7 +290,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
       <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
   
-    <span class="hljs-keyword">return</span> shrike.isFloatArray(a);
+    <span class="hljs-keyword">return</span> shrike.isTypedArray(a);
   };</pre></div></div>
             
         </li>
@@ -302,7 +302,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="function-shrike-isfloatarray">Function: shrike.isFloatArray</h2>
+              <h2 id="function-shrike-istypedarray">Function: shrike.isTypedArray</h2>
 <p>Detects if something is a float array.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -313,7 +313,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.isFloatArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  shrike.isTypedArray = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
     <span class="hljs-keyword">try</span> {
       <span class="hljs-keyword">return</span> (_.isArray(a) !== <span class="hljs-literal">true</span>) &amp;&amp; <span class="hljs-built_in">Object</span>.prototype.toString.call(a).slice(-<span class="hljs-string">'Array]'</span>.length) == <span class="hljs-string">'Array]'</span>;
     }
@@ -347,7 +347,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
       <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
   
-    <span class="hljs-keyword">if</span> (shrike.isFloatArray(a)) {
+    <span class="hljs-keyword">if</span> (shrike.isTypedArray(a)) {
       <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
   
@@ -434,7 +434,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isFloatArray(thing)) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (shrike.isTypedArray(thing)) {
       <span class="hljs-keyword">return</span> thing;
     }</pre></div></div>
             
@@ -510,7 +510,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
   
     shrike.assert(shrike.isArray(a), <span class="hljs-string">'toNormalArray: needs to be a float array or array like object: '</span> + a);
   
-    <span class="hljs-keyword">if</span> (shrike.isFloatArray(a)) {
+    <span class="hljs-keyword">if</span> (shrike.isTypedArray(a)) {
       <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.apply([], a);
     }
   };</pre></div></div>
@@ -928,7 +928,7 @@ define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string"
             </div>
             
             <div class="content"><div class='highlight'><pre>  shrike.magnitude = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
-    <span class="hljs-keyword">if</span> (shrike.isFloatArray(a)) {
+    <span class="hljs-keyword">if</span> (shrike.isTypedArray(a)) {
   
       shrike.assert(a.length === <span class="hljs-number">3</span> || a.length === <span class="hljs-number">4</span>, <span class="hljs-string">'magnitude: native float array\'s need to be of length 3 or 4'</span>);
       <span class="hljs-keyword">if</span> (a.length === <span class="hljs-number">3</span>) {

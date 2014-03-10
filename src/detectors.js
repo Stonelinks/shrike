@@ -16,11 +16,11 @@ shrike.isArray = function(a) {
     return true;
   }
 
-  return shrike.isFloatArray(a);
+  return shrike.isTypedArray(a);
 };
 
 //
-// ##Function: shrike.isFloatArray
+// ##Function: shrike.isTypedArray
 //
 // Detects if something is a float array.
 //
@@ -32,7 +32,7 @@ shrike.isArray = function(a) {
 //
 // true or false
 //
-shrike.isFloatArray = function(a) {
+shrike.isTypedArray = function(a) {
   try {
     return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
   }
@@ -59,7 +59,7 @@ shrike.is2DArray = function(a) {
     return false;
   }
 
-  if (shrike.isFloatArray(a)) {
+  if (shrike.isTypedArray(a)) {
     return false;
   }
 

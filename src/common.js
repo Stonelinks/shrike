@@ -131,7 +131,7 @@ shrike.divide = function(A, scalar) {
 // float
 //
 shrike.magnitude = function(a) {
-  if (shrike.isFloatArray(a)) {
+  if (shrike.isTypedArray(a)) {
 
     // @if SHRIKE_DO_ASSERT
     shrike.assert(a.length === 3 || a.length === 4, 'magnitude: native float array\'s need to be of length 3 or 4');

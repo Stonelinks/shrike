@@ -155,11 +155,11 @@ define(['underscore', 'mjs'], function(_, mjs) {
       return true;
     }
   
-    return shrike.isFloatArray(a);
+    return shrike.isTypedArray(a);
   };
   
   //
-  // ##Function: shrike.isFloatArray
+  // ##Function: shrike.isTypedArray
   //
   // Detects if something is a float array.
   //
@@ -171,7 +171,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   //
   // true or false
   //
-  shrike.isFloatArray = function(a) {
+  shrike.isTypedArray = function(a) {
     try {
       return (_.isArray(a) !== true) && Object.prototype.toString.call(a).slice(-'Array]'.length) == 'Array]';
     }
@@ -198,7 +198,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
       return false;
     }
   
-    if (shrike.isFloatArray(a)) {
+    if (shrike.isTypedArray(a)) {
       return false;
     }
   
@@ -247,7 +247,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
   
     // its already floating point
-    else if (shrike.isFloatArray(thing)) {
+    else if (shrike.isTypedArray(thing)) {
       return thing;
     }
   
@@ -292,7 +292,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   
     shrike.assert(shrike.isArray(a), 'toNormalArray: needs to be a float array or array like object: ' + a);
   
-    if (shrike.isFloatArray(a)) {
+    if (shrike.isTypedArray(a)) {
       return Array.apply([], a);
     }
   };
@@ -619,7 +619,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // float
   //
   shrike.magnitude = function(a) {
-    if (shrike.isFloatArray(a)) {
+    if (shrike.isTypedArray(a)) {
   
       shrike.assert(a.length === 3 || a.length === 4, 'magnitude: native float array\'s need to be of length 3 or 4');
       if (a.length === 3) {
