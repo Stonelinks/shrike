@@ -30,7 +30,7 @@
               <p>shrike - v0.0.1</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>A fast and easy to use vector and matrix library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#x6c;&#x75;&#99;&#x61;&#115;&#46;&#112;&#46;&#100;&#x6f;&#121;&#x6c;&#101;&#64;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;">&#x6c;&#x75;&#99;&#x61;&#115;&#46;&#112;&#46;&#100;&#x6f;&#121;&#x6c;&#101;&#64;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#x6c;&#117;&#x63;&#97;&#x73;&#x2e;&#x70;&#46;&#100;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#103;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;">&#x6c;&#117;&#x63;&#97;&#x73;&#x2e;&#x70;&#46;&#100;&#x6f;&#x79;&#x6c;&#x65;&#x40;&#103;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -2029,7 +2029,7 @@ TODO: make a V3.normalize</p>
             
             <div class="content"><div class='highlight'><pre>  shrike.M4.inverse = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m, r)</span> {</span>
     <span class="hljs-keyword">if</span> (r == <span class="hljs-literal">undefined</span>) {
-      r = <span class="hljs-keyword">new</span> MJS_FLOAT_ARRAY_TYPE(<span class="hljs-number">16</span>);
+      r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(<span class="hljs-number">16</span>);
     }</pre></div></div>
             
         </li>
@@ -2137,7 +2137,50 @@ Requires t0, t1 to be distinct</p>
             
             <div class="content"><div class='highlight'><pre>  shrike.linearlyInterpolate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t0, x0, t1, x1, t)</span> {</span>
     <span class="hljs-keyword">return</span> (x0 * (t1 - t) + x1 * (t - t0)) / (t1 - t0);
-  };</pre></div></div>
+  };
+  
+  shrike.geom = {};
+  
+  shrike.geom.canvasToViewport = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(canvasX, canvasY, canvasWidth, canvasHeight, viewportAspectRatio)</span> {</span>
+    <span class="hljs-keyword">var</span> viewportX = ((canvasX / canvasWidth) - <span class="hljs-number">0.5</span>) * viewportAspectRatio;
+    <span class="hljs-keyword">var</span> viewportY = <span class="hljs-number">0.5</span> - (canvasY / canvasHeight);
+    <span class="hljs-keyword">return</span> [viewportX, viewportY];
+  };
+  
+  shrike.geom.scaleByDepth = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(depth, theta)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2.0</span> * depth * shrike.tan(<span class="hljs-number">0.5</span> * shrike.toRadians(theta));
+  };
+  
+  shrike.geom.getProjectionScale = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(depth, fovDegrees)</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2.0</span> * depth * <span class="hljs-built_in">Math</span>.tan(<span class="hljs-built_in">Math</span>.PI * fovDegrees / <span class="hljs-number">360.0</span>);
+  };
+  
+  shrike.geom.viewportToWorldVec = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(viewportX, viewportY, right, up, look, fovy)</span> {</span>
+    <span class="hljs-keyword">var</span> scale = shrike.geom.scaleByDepth(<span class="hljs-number">1.0</span>, fovy);
+    <span class="hljs-keyword">return</span> shrike.V3.add(shrike.V3.scale(right, viewportX * scale), shrike.V3.add(shrike.V3.scale(up, viewportY * scale), look));
+  };
+  
+  <span class="hljs-comment">/*
+   * given two lines, p + v*t, and q + w*s (parameterized by t and s respectively),
+   * find the respective points on the lines, the distance between which is minimized.
+   * return [t_min, s_min], where p + v*t_min and q + w*s_min are these two points.
+   *
+   * note that these formulas came out of mathematica, and are therefore pretty opaque.
+   *
+   * FIXME: this can be simplified if v and w are assumed to be unit vectors
+   * FIXME: add mathematica code
+   */</span>
+  shrike.geom.findShortestDistanceBetweenLines = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p, v, q, w)</span> {</span>
+    <span class="hljs-keyword">var</span> c = shrike.V3.sub(p, q);
+  
+    <span class="hljs-keyword">var</span> vDotW = shrike.V3.dot(v, w);
+  
+    <span class="hljs-keyword">var</span> tNumerator = <span class="hljs-number">4.0</span> * (shrike.V3.dot(c, v) * shrike.V3.dot(w, w) - shrike.V3.dot(c, w) * shrike.V3.dot(v, w));
+    <span class="hljs-keyword">var</span> tDenominator = <span class="hljs-number">4.0</span> * (vDotW * vDotW - shrike.V3.dot(v, v) * shrike.V3.dot(w, w));
+  
+    <span class="hljs-keyword">var</span> sNumerator = c[<span class="hljs-number">2</span>] * (-v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">0</span>] - v[<span class="hljs-number">1</span>] * v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">1</span>] + v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">0</span>] * w[<span class="hljs-number">2</span>] + v[<span class="hljs-number">1</span>] * v[<span class="hljs-number">1</span>] * w[<span class="hljs-number">2</span>]) + c[<span class="hljs-number">0</span>] * (v[<span class="hljs-number">1</span>] * v[<span class="hljs-number">1</span>] * w[<span class="hljs-number">0</span>] + v[<span class="hljs-number">2</span>] * v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">0</span>] - v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">1</span>] * w[<span class="hljs-number">1</span>] - v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">2</span>]) + c[<span class="hljs-number">1</span>] * (-v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">1</span>] * w[<span class="hljs-number">0</span>] + v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">0</span>] * w[<span class="hljs-number">1</span>] + v[<span class="hljs-number">2</span>] * (v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">1</span>] - v[<span class="hljs-number">1</span>] * w[<span class="hljs-number">2</span>]));
+  
+    <span class="hljs-keyword">var</span> sDenominator = v[<span class="hljs-number">2</span>] * v[<span class="hljs-number">2</span>] * (w[<span class="hljs-number">0</span>] * w[<span class="hljs-number">0</span>] + w[<span class="hljs-number">1</span>] * w[<span class="hljs-number">1</span>]) - <span class="hljs-number">2.0</span> * v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">0</span>] * w[<span class="hljs-number">2</span>] - <span class="hljs-number">2.0</span> * v[<span class="hljs-number">1</span>] * w[<span class="hljs-number">1</span>] * (v[<span class="hljs-number">0</span>] * w[<span class="hljs-number">0</span>] + v[<span class="hljs-number">2</span>] * w[<span class="hljs-number">2</span>]) + v[<span class="hljs-number">1</span>] * v[<span class="hljs-number">1</span>] * (w[<span class="hljs-number">0</span>] * w[<span class="hljs-number">0</span>] + w[<span class="hljs-number">2</span>] * w[<span class="hljs-number">2</span>]) + v[<span class="hljs-number">0</span>] * v[<span class="hljs-number">0</span>] * (w[<span class="hljs-number">1</span>] * w[<span class="hljs-number">1</span>] + w[<span class="hljs-number">2</span>] * w[<span class="hljs-number">2</span>]);</pre></div></div>
             
         </li>
         
@@ -2147,6 +2190,386 @@ Requires t0, t1 to be distinct</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>FIXME: this should be good enough, but i’m not sure yet what the best behavior here is</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Math</span>.abs(tDenominator) &lt; <span class="hljs-number">1e-10</span> || <span class="hljs-built_in">Math</span>.abs(sDenominator) &lt; <span class="hljs-number">1e-10</span>) {
+      <span class="hljs-keyword">return</span> {
+        t: <span class="hljs-number">0.0</span>,
+        s: <span class="hljs-number">0.0</span>
+      };
+    }
+  
+    <span class="hljs-keyword">return</span> {
+      t: tNumerator / tDenominator,
+      s: sNumerator / sDenominator
+    };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>is there a better way to do this? maybe. but this works.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.findPerpVector = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(v)</span> {</span>
+    <span class="hljs-keyword">var</span> vn = shrike.V3.normalize(v);
+    <span class="hljs-keyword">var</span> dotProds = [shrike.V3.dot(vn, shrike.V3.$(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)),
+                    shrike.V3.dot(vn, shrike.V3.$(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>)),
+                    shrike.V3.dot(vn, shrike.V3.$(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>))];
+    <span class="hljs-keyword">var</span> index = dotProds.indexOf(<span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-literal">undefined</span>, dotProds));
+    <span class="hljs-keyword">var</span> crossUnitVec;
+  
+    crossUnitVec = shrike.V3.$(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    crossUnitVec[index] = <span class="hljs-number">1.0</span>;
+  
+    <span class="hljs-keyword">return</span> shrike.V3.normalize(shrike.V3.cross(vn, crossUnitVec));
+  };
+  
+  shrike.geom.getCameraZoom = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(params)</span> {</span>
+    <span class="hljs-keyword">var</span> wheelDelta = params.wheelDelta;
+    <span class="hljs-keyword">var</span> eye = params.eye;
+    <span class="hljs-keyword">var</span> lookAtPoint = params.lookAtPoint;
+    <span class="hljs-keyword">var</span> zoomScale = params.zoomScale;
+  
+    <span class="hljs-keyword">var</span> forward = shrike.V3.sub(lookAtPoint, eye);
+    <span class="hljs-keyword">var</span> zoomedForward = shrike.V3.scale(forward, (wheelDelta &gt; <span class="hljs-number">0</span>) ? <span class="hljs-built_in">Math</span>.pow(zoomScale, wheelDelta) : <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> / zoomScale, -wheelDelta));
+    <span class="hljs-keyword">var</span> zoomedEye = shrike.V3.sub(lookAtPoint, zoomedForward);
+  
+    <span class="hljs-keyword">return</span> zoomedEye;
+  };
+  
+  shrike.geom.getRotationBetweenNormalizedVectors = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(u, v)</span> {</span>
+    <span class="hljs-keyword">var</span> crossProd = shrike.V3.cross(u, v);
+    <span class="hljs-keyword">var</span> absSinAngle = shrike.V3.length(crossProd);
+    <span class="hljs-keyword">var</span> cosAngle = shrike.V3.dot(u, v);
+    <span class="hljs-keyword">var</span> angle;
+  
+    <span class="hljs-keyword">if</span> (absSinAngle &lt; <span class="hljs-number">1e-16</span>) {
+      <span class="hljs-keyword">return</span> {
+        axis: shrike.V3.$(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
+        angle: <span class="hljs-number">0.0</span>
+      };
+    }
+  
+    <span class="hljs-keyword">if</span> (cosAngle &gt;= <span class="hljs-number">0.0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>Angle is in [-PI/2, +PI/2]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      angle = <span class="hljs-built_in">Math</span>.asin(absSinAngle);
+    }
+    <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>Angle is in [-PI, -PI/2) or (+PI/2, +PI]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      angle = <span class="hljs-built_in">Math</span>.PI - <span class="hljs-built_in">Math</span>.asin(absSinAngle);
+    }
+  
+    <span class="hljs-keyword">return</span> {
+      axis: shrike.V3.normalize(crossProd),
+      angle: angle
+    };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>FIXME: rename getCameraOrbitRotation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.getOrbitRotation = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(params)</span> {</span>
+    <span class="hljs-keyword">var</span> horizRot = params.horizRot;
+    <span class="hljs-keyword">var</span> vertRot = params.vertRot;
+    <span class="hljs-keyword">var</span> up = params.up;
+    <span class="hljs-keyword">var</span> eye = params.eye;
+    <span class="hljs-keyword">var</span> lookAtPoint = params.lookAtPoint;
+    <span class="hljs-keyword">var</span> rotationCenter = params.rotationCenter;
+    <span class="hljs-keyword">var</span> dragConstant = params.dragConstant;
+  
+    <span class="hljs-keyword">if</span> (horizRot == <span class="hljs-number">0</span> &amp;&amp; vertRot == <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> {
+        eye: eye,
+        lookAtPoint: lookAtPoint,
+        up: up
+      };
+    }
+  
+    <span class="hljs-keyword">var</span> forward = shrike.V3.sub(lookAtPoint, eye);
+    <span class="hljs-keyword">var</span> right = shrike.V3.normalize(shrike.V3.cross(forward, up));
+    <span class="hljs-keyword">var</span> fixedUp = shrike.V3.normalize(shrike.V3.cross(right, forward));
+  
+    <span class="hljs-keyword">var</span> rotVec = shrike.V3.add(shrike.V3.scale(fixedUp, -horizRot), shrike.V3.scale(right, -vertRot));
+    <span class="hljs-keyword">var</span> rotMat = shrike.M4.makeRotate(shrike.V3.length(rotVec) * dragConstant, rotVec);
+  
+    <span class="hljs-keyword">var</span> eyeFromCenter = shrike.V3.sub(eye, rotationCenter);
+    <span class="hljs-keyword">var</span> lookFromCenter = shrike.V3.sub(lookAtPoint, rotationCenter);
+  
+    <span class="hljs-keyword">var</span> newEyeFromCenter = shrike.V3.mul4x4(rotMat, eyeFromCenter);
+    <span class="hljs-keyword">var</span> newLookFromCenter = shrike.V3.mul4x4(rotMat, lookFromCenter);
+  
+    <span class="hljs-keyword">return</span> {
+      eye: shrike.V3.add(newEyeFromCenter, rotationCenter),
+      lookAtPoint: shrike.V3.add(newLookFromCenter, rotationCenter),
+      up: shrike.V3.mul4x4(rotMat, fixedUp)
+    };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>quick background: there are cases when, given a perspective camera and a depth
+                  (z value), and given an (x,y) point on the screen, we want
+                  to find the world-space point at that depth to which (x,y)
+                  maps. in other words we need to do the inverse perspective
+                  transform. that inverse perspective transform maps z in [-1,+1]
+                  to z in [-nearDepth, -farDepth]. so we need that z in [-1,+1]
+                  to apply the inverse perspective transform matrix.</p>
+<p>so what this does: given the true world-space depth, i.e. z in [-nearDepth, -farDepth],
+                   return the projected z value, i.e. z in [-1, +1], to which the
+                   perspective transform maps it.</p>
+<p>and so, FIXME:
+yes, this is a little silly/wasteful. we map z -&gt; z’ so that we can then
+map [x’, y’, z’] back to [x, y, z] with P^-1. an optimized method
+would just do the partial inverse application.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.getPerspectiveDepthForSceneDepth = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sceneDepth, nearDepth, farDepth)</span> {</span>
+    <span class="hljs-keyword">return</span> ((farDepth + nearDepth) / (farDepth - nearDepth)) + ((<span class="hljs-number">2</span> * farDepth * nearDepth) / ((farDepth - nearDepth) * sceneDepth));
+  };
+  
+  shrike.geom.getPointOnPlane = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(canvasX, canvasY, canvasWidth, canvasHeight, viewVecs, fovX, fovY, planeNormal, planeBias)</span> {</span>
+    <span class="hljs-keyword">var</span> viewportPos = shrike.geom.canvasToViewport(canvasX, canvasY, canvasWidth, canvasHeight, <span class="hljs-number">1.0</span>); <span class="hljs-comment">// FIXME: use correct aspect (may not be 1.0)</span>
+    <span class="hljs-keyword">var</span> worldVec = shrike.geom.viewportToWorldVec(viewportPos[<span class="hljs-number">0</span>], viewportPos[<span class="hljs-number">1</span>], viewVecs.right, viewVecs.up, viewVecs.look, fovX, fovY);
+  
+    <span class="hljs-keyword">var</span> t = (-planeBias - shrike.V3.dot(viewVecs.eye, planeNormal)) / shrike.V3.dot(worldVec, planeNormal);
+    <span class="hljs-keyword">var</span> p = shrike.V3.add(shrike.V3.scale(worldVec, t), viewVecs.eye);
+  
+    <span class="hljs-keyword">return</span> p;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>FIXME: rename getCameraStrafe</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.getStrafe = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(params)</span> {</span>
+    <span class="hljs-keyword">var</span> horizTrans = params.horizTrans;
+    <span class="hljs-keyword">var</span> vertTrans = params.vertTrans;
+    <span class="hljs-keyword">var</span> up = params.up;
+    <span class="hljs-keyword">var</span> eye = params.eye;
+    <span class="hljs-keyword">var</span> lookAtPoint = params.lookAtPoint;
+    <span class="hljs-keyword">var</span> dragConstant = params.dragConstant;
+  
+    <span class="hljs-keyword">var</span> forward = shrike.V3.sub(lookAtPoint, eye);
+    <span class="hljs-keyword">var</span> right = shrike.V3.normalize(shrike.V3.cross(forward, up));
+    <span class="hljs-keyword">var</span> fixedUp = shrike.V3.normalize(shrike.V3.cross(right, forward));
+  
+    <span class="hljs-keyword">var</span> trans = shrike.V3.add(shrike.V3.scale(fixedUp, vertTrans * dragConstant), shrike.V3.scale(right, -horizTrans * dragConstant));
+  
+    <span class="hljs-keyword">return</span> {
+      eye: shrike.V3.add(eye, trans),
+      lookAtPoint: shrike.V3.add(lookAtPoint, trans)
+    };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>FIXME: change this to take not camera, but raw eye, look, and up vecs.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.getViewVecs = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(camera)</span> {</span>
+    <span class="hljs-keyword">var</span> cameraEye = camera.get(<span class="hljs-string">'eye'</span>);
+    <span class="hljs-keyword">var</span> cameraLookPoint = camera.get(<span class="hljs-string">'look'</span>);
+    <span class="hljs-keyword">var</span> cameraUp = camera.get(<span class="hljs-string">'up'</span>);
+  
+    <span class="hljs-keyword">var</span> eye = shrike.V3.$(cameraEye.x, cameraEye.y, cameraEye.z);
+    <span class="hljs-keyword">var</span> lookPoint = shrike.V3.$(cameraLookPoint.x, cameraLookPoint.y, cameraLookPoint.z);
+    <span class="hljs-keyword">var</span> look = shrike.V3.sub(lookPoint, eye);
+    <span class="hljs-keyword">var</span> up = shrike.V3.$(cameraUp.x, cameraUp.y, cameraUp.z);
+  
+    <span class="hljs-keyword">var</span> right = shrike.V3.cross(look, up);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>the up vector, alone, is not guaranteed to be perpendicular
+to right and look; so we force it so, below.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+    <span class="hljs-keyword">return</span> {
+      eye: eye,
+      look: shrike.V3.normalize(look),
+      up: shrike.V3.normalize(shrike.V3.cross(right, look)),
+      right: shrike.V3.normalize(right)
+    };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p>params.x in [-1, +1]
+params.y in [-1, +1]
+params.fovY in degrees</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.projectScreenPointToWorldPointAtDepth = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(params)</span> {</span>
+    <span class="hljs-keyword">var</span> x = params.x;
+    <span class="hljs-keyword">var</span> y = params.y;
+    <span class="hljs-keyword">var</span> z = params.z;
+    <span class="hljs-keyword">var</span> fovY = params.fovY;
+    <span class="hljs-keyword">var</span> aspect = params.aspect;
+    <span class="hljs-keyword">var</span> zNear = params.zNear;
+    <span class="hljs-keyword">var</span> zFar = params.zFar;
+  
+    <span class="hljs-keyword">var</span> zProj = shrike.geom.getPerspectiveDepthForSceneDepth(z, zNear, zFar);
+    <span class="hljs-keyword">var</span> projMat = shrike.M4.makePerspective(fovY, aspect, zNear, zFar);
+    <span class="hljs-keyword">var</span> invProjMat = shrike.M4.inverse(projMat);
+  
+    <span class="hljs-keyword">return</span> shrike.V3.mul4x4(invProjMat, shrike.V3.$(x, y, zProj));
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p>assumes that the two cameras are the same</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.projectWorldPointToWorldPointAtDepth = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(params)</span> {</span>
+    <span class="hljs-keyword">var</span> x = params.x;
+    <span class="hljs-keyword">var</span> y = params.y;
+    <span class="hljs-keyword">var</span> z = params.z;
+    <span class="hljs-keyword">var</span> newDepth = params.newDepth;
+    <span class="hljs-keyword">var</span> fovY = params.fovY;
+    <span class="hljs-keyword">var</span> aspect = params.aspect;
+    <span class="hljs-keyword">var</span> zNear = params.zNear;
+    <span class="hljs-keyword">var</span> zFar = params.zFar;
+    <span class="hljs-keyword">var</span> eye = params.eye;
+    <span class="hljs-keyword">var</span> lookAtPoint = params.lookAtPoint;
+    <span class="hljs-keyword">var</span> up = params.up;
+  
+    <span class="hljs-keyword">var</span> projMat = shrike.M4.makePerspective(fovY, aspect, zNear, zFar);
+    <span class="hljs-keyword">var</span> invProjMat = shrike.M4.inverse(projMat);
+    <span class="hljs-keyword">var</span> lookAtMat = shrike.M4.makeLookAt(eye, lookAtPoint, up);
+    <span class="hljs-keyword">var</span> invLookAtMat = shrike.M4.inverse(lookAtMat);
+  
+    <span class="hljs-keyword">var</span> projPoint = shrike.V3.mul4x4(projMat, shrike.V3.mul4x4(lookAtMat, shrike.V3.$(x, y, z)));
+  
+    projPoint[<span class="hljs-number">2</span>] = shrike.geom.getPerspectiveDepthForSceneDepth(newDepth, zNear, zFar);
+  
+    <span class="hljs-keyword">return</span> shrike.V3.mul4x4(invLookAtMat, shrike.V3.mul4x4(invProjMat, projPoint));
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>FIXME: get rid of fovX</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.geom.viewportToWorldVec = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(viewportX, viewportY, right, up, look, fovX, fovY)</span> {</span>
+    <span class="hljs-keyword">var</span> scaleX = shrike.geom.getProjectionScale(<span class="hljs-number">1.0</span>, fovX);
+    <span class="hljs-keyword">var</span> scaleY = shrike.geom.getProjectionScale(<span class="hljs-number">1.0</span>, fovY);
+  
+    <span class="hljs-keyword">return</span> shrike.V3.add(shrike.V3.scale(right, viewportX * scaleX), shrike.V3.add(shrike.V3.scale(up, viewportY * scaleY), look));
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>for debugging / console convenience</p>
 

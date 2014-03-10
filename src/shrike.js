@@ -15,6 +15,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   // @include V3.js
   // @include M4.js
   // @include tween.js
+  // @include geometry.js
 
   // for debugging / console convenience
   if (window.makeGlobal !== undefined) {

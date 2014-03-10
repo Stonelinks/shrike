@@ -153,7 +153,7 @@ shrike.M4.fromTransformArray = function(m) {
 //
 shrike.M4.inverse = function(m, r) {
   if (r == undefined) {
-    r = new MJS_FLOAT_ARRAY_TYPE(16);
+    r = new FLOAT_ARRAY_TYPE(16);
   }
 
   // cache the matrix values (makes for huge speed increases!)

@@ -1,0 +1,281 @@
+shrike.geom = {};
+
+shrike.geom.canvasToViewport = function(canvasX, canvasY, canvasWidth, canvasHeight, viewportAspectRatio) {
+  var viewportX = ((canvasX / canvasWidth) - 0.5) * viewportAspectRatio;
+  var viewportY = 0.5 - (canvasY / canvasHeight);
+  return [viewportX, viewportY];
+};
+
+shrike.geom.scaleByDepth = function(depth, theta) {
+  return 2.0 * depth * shrike.tan(0.5 * shrike.toRadians(theta));
+};
+
+shrike.geom.getProjectionScale = function(depth, fovDegrees) {
+  return 2.0 * depth * Math.tan(Math.PI * fovDegrees / 360.0);
+};
+
+shrike.geom.viewportToWorldVec = function(viewportX, viewportY, right, up, look, fovy) {
+  var scale = shrike.geom.scaleByDepth(1.0, fovy);
+  return shrike.V3.add(shrike.V3.scale(right, viewportX * scale), shrike.V3.add(shrike.V3.scale(up, viewportY * scale), look));
+};
+
+/*
+ * given two lines, p + v*t, and q + w*s (parameterized by t and s respectively),
+ * find the respective points on the lines, the distance between which is minimized.
+ * return [t_min, s_min], where p + v*t_min and q + w*s_min are these two points.
+ *
+ * note that these formulas came out of mathematica, and are therefore pretty opaque.
+ *
+ * FIXME: this can be simplified if v and w are assumed to be unit vectors
+ * FIXME: add mathematica code
+ */
+shrike.geom.findShortestDistanceBetweenLines = function(p, v, q, w) {
+  var c = shrike.V3.sub(p, q);
+
+  var vDotW = shrike.V3.dot(v, w);
+
+  var tNumerator = 4.0 * (shrike.V3.dot(c, v) * shrike.V3.dot(w, w) - shrike.V3.dot(c, w) * shrike.V3.dot(v, w));
+  var tDenominator = 4.0 * (vDotW * vDotW - shrike.V3.dot(v, v) * shrike.V3.dot(w, w));
+
+  var sNumerator = c[2] * (-v[0] * v[2] * w[0] - v[1] * v[2] * w[1] + v[0] * v[0] * w[2] + v[1] * v[1] * w[2]) + c[0] * (v[1] * v[1] * w[0] + v[2] * v[2] * w[0] - v[0] * v[1] * w[1] - v[0] * v[2] * w[2]) + c[1] * (-v[0] * v[1] * w[0] + v[0] * v[0] * w[1] + v[2] * (v[2] * w[1] - v[1] * w[2]));
+
+  var sDenominator = v[2] * v[2] * (w[0] * w[0] + w[1] * w[1]) - 2.0 * v[0] * v[2] * w[0] * w[2] - 2.0 * v[1] * w[1] * (v[0] * w[0] + v[2] * w[2]) + v[1] * v[1] * (w[0] * w[0] + w[2] * w[2]) + v[0] * v[0] * (w[1] * w[1] + w[2] * w[2]);
+
+  // FIXME: this should be good enough, but i'm not sure yet what the best behavior here is
+  if (Math.abs(tDenominator) < 1e-10 || Math.abs(sDenominator) < 1e-10) {
+    return {
+      t: 0.0,
+      s: 0.0
+    };
+  }
+
+  return {
+    t: tNumerator / tDenominator,
+    s: sNumerator / sDenominator
+  };
+};
+
+// is there a better way to do this? maybe. but this works.
+shrike.geom.findPerpVector = function(v) {
+  var vn = shrike.V3.normalize(v);
+  var dotProds = [shrike.V3.dot(vn, shrike.V3.$(1, 0, 0)),
+                  shrike.V3.dot(vn, shrike.V3.$(0, 1, 0)),
+                  shrike.V3.dot(vn, shrike.V3.$(0, 0, 1))];
+  var index = dotProds.indexOf(Math.min.apply(undefined, dotProds));
+  var crossUnitVec;
+
+  crossUnitVec = shrike.V3.$(0, 0, 0);
+  crossUnitVec[index] = 1.0;
+
+  return shrike.V3.normalize(shrike.V3.cross(vn, crossUnitVec));
+};
+
+shrike.geom.getCameraZoom = function(params) {
+  var wheelDelta = params.wheelDelta;
+  var eye = params.eye;
+  var lookAtPoint = params.lookAtPoint;
+  var zoomScale = params.zoomScale;
+
+  var forward = shrike.V3.sub(lookAtPoint, eye);
+  var zoomedForward = shrike.V3.scale(forward, (wheelDelta > 0) ? Math.pow(zoomScale, wheelDelta) : Math.pow(1 / zoomScale, -wheelDelta));
+  var zoomedEye = shrike.V3.sub(lookAtPoint, zoomedForward);
+
+  return zoomedEye;
+};
+
+shrike.geom.getRotationBetweenNormalizedVectors = function(u, v) {
+  var crossProd = shrike.V3.cross(u, v);
+  var absSinAngle = shrike.V3.length(crossProd);
+  var cosAngle = shrike.V3.dot(u, v);
+  var angle;
+
+  if (absSinAngle < 1e-16) {
+    return {
+      axis: shrike.V3.$(0, 0, 0),
+      angle: 0.0
+    };
+  }
+
+  if (cosAngle >= 0.0) {
+
+    // Angle is in [-PI/2, +PI/2]
+    angle = Math.asin(absSinAngle);
+  }
+  else {
+
+    // Angle is in [-PI, -PI/2) or (+PI/2, +PI]
+    angle = Math.PI - Math.asin(absSinAngle);
+  }
+
+  return {
+    axis: shrike.V3.normalize(crossProd),
+    angle: angle
+  };
+};
+
+// FIXME: rename getCameraOrbitRotation
+shrike.geom.getOrbitRotation = function(params) {
+  var horizRot = params.horizRot;
+  var vertRot = params.vertRot;
+  var up = params.up;
+  var eye = params.eye;
+  var lookAtPoint = params.lookAtPoint;
+  var rotationCenter = params.rotationCenter;
+  var dragConstant = params.dragConstant;
+
+  if (horizRot == 0 && vertRot == 0) {
+    return {
+      eye: eye,
+      lookAtPoint: lookAtPoint,
+      up: up
+    };
+  }
+
+  var forward = shrike.V3.sub(lookAtPoint, eye);
+  var right = shrike.V3.normalize(shrike.V3.cross(forward, up));
+  var fixedUp = shrike.V3.normalize(shrike.V3.cross(right, forward));
+
+  var rotVec = shrike.V3.add(shrike.V3.scale(fixedUp, -horizRot), shrike.V3.scale(right, -vertRot));
+  var rotMat = shrike.M4.makeRotate(shrike.V3.length(rotVec) * dragConstant, rotVec);
+
+  var eyeFromCenter = shrike.V3.sub(eye, rotationCenter);
+  var lookFromCenter = shrike.V3.sub(lookAtPoint, rotationCenter);
+
+  var newEyeFromCenter = shrike.V3.mul4x4(rotMat, eyeFromCenter);
+  var newLookFromCenter = shrike.V3.mul4x4(rotMat, lookFromCenter);
+
+  return {
+    eye: shrike.V3.add(newEyeFromCenter, rotationCenter),
+    lookAtPoint: shrike.V3.add(newLookFromCenter, rotationCenter),
+    up: shrike.V3.mul4x4(rotMat, fixedUp)
+  };
+};
+
+// quick background: there are cases when, given a perspective camera and a depth
+//                   (z value), and given an (x,y) point on the screen, we want
+//                   to find the world-space point at that depth to which (x,y)
+//                   maps. in other words we need to do the inverse perspective
+//                   transform. that inverse perspective transform maps z in [-1,+1]
+//                   to z in [-nearDepth, -farDepth]. so we need that z in [-1,+1]
+//                   to apply the inverse perspective transform matrix.
+//
+// so what this does: given the true world-space depth, i.e. z in [-nearDepth, -farDepth],
+//                    return the projected z value, i.e. z in [-1, +1], to which the
+//                    perspective transform maps it.
+//
+// and so, FIXME:
+// yes, this is a little silly/wasteful. we map z -> z' so that we can then
+// map [x', y', z'] back to [x, y, z] with P^-1. an optimized method
+// would just do the partial inverse application.
+//
+shrike.geom.getPerspectiveDepthForSceneDepth = function(sceneDepth, nearDepth, farDepth) {
+  return ((farDepth + nearDepth) / (farDepth - nearDepth)) + ((2 * farDepth * nearDepth) / ((farDepth - nearDepth) * sceneDepth));
+};
+
+shrike.geom.getPointOnPlane = function(canvasX, canvasY, canvasWidth, canvasHeight, viewVecs, fovX, fovY, planeNormal, planeBias) {
+  var viewportPos = shrike.geom.canvasToViewport(canvasX, canvasY, canvasWidth, canvasHeight, 1.0); // FIXME: use correct aspect (may not be 1.0)
+  var worldVec = shrike.geom.viewportToWorldVec(viewportPos[0], viewportPos[1], viewVecs.right, viewVecs.up, viewVecs.look, fovX, fovY);
+
+  var t = (-planeBias - shrike.V3.dot(viewVecs.eye, planeNormal)) / shrike.V3.dot(worldVec, planeNormal);
+  var p = shrike.V3.add(shrike.V3.scale(worldVec, t), viewVecs.eye);
+
+  return p;
+};
+
+// FIXME: rename getCameraStrafe
+shrike.geom.getStrafe = function(params) {
+  var horizTrans = params.horizTrans;
+  var vertTrans = params.vertTrans;
+  var up = params.up;
+  var eye = params.eye;
+  var lookAtPoint = params.lookAtPoint;
+  var dragConstant = params.dragConstant;
+
+  var forward = shrike.V3.sub(lookAtPoint, eye);
+  var right = shrike.V3.normalize(shrike.V3.cross(forward, up));
+  var fixedUp = shrike.V3.normalize(shrike.V3.cross(right, forward));
+
+  var trans = shrike.V3.add(shrike.V3.scale(fixedUp, vertTrans * dragConstant), shrike.V3.scale(right, -horizTrans * dragConstant));
+
+  return {
+    eye: shrike.V3.add(eye, trans),
+    lookAtPoint: shrike.V3.add(lookAtPoint, trans)
+  };
+};
+
+// FIXME: change this to take not camera, but raw eye, look, and up vecs.
+shrike.geom.getViewVecs = function(camera) {
+  var cameraEye = camera.get('eye');
+  var cameraLookPoint = camera.get('look');
+  var cameraUp = camera.get('up');
+
+  var eye = shrike.V3.$(cameraEye.x, cameraEye.y, cameraEye.z);
+  var lookPoint = shrike.V3.$(cameraLookPoint.x, cameraLookPoint.y, cameraLookPoint.z);
+  var look = shrike.V3.sub(lookPoint, eye);
+  var up = shrike.V3.$(cameraUp.x, cameraUp.y, cameraUp.z);
+
+  var right = shrike.V3.cross(look, up);
+
+  // the up vector, alone, is not guaranteed to be perpendicular
+  // to right and look; so we force it so, below.
+
+  return {
+    eye: eye,
+    look: shrike.V3.normalize(look),
+    up: shrike.V3.normalize(shrike.V3.cross(right, look)),
+    right: shrike.V3.normalize(right)
+  };
+};
+
+// params.x in [-1, +1]
+// params.y in [-1, +1]
+// params.fovY in degrees
+shrike.geom.projectScreenPointToWorldPointAtDepth = function(params) {
+  var x = params.x;
+  var y = params.y;
+  var z = params.z;
+  var fovY = params.fovY;
+  var aspect = params.aspect;
+  var zNear = params.zNear;
+  var zFar = params.zFar;
+
+  var zProj = shrike.geom.getPerspectiveDepthForSceneDepth(z, zNear, zFar);
+  var projMat = shrike.M4.makePerspective(fovY, aspect, zNear, zFar);
+  var invProjMat = shrike.M4.inverse(projMat);
+
+  return shrike.V3.mul4x4(invProjMat, shrike.V3.$(x, y, zProj));
+};
+
+// assumes that the two cameras are the same
+shrike.geom.projectWorldPointToWorldPointAtDepth = function(params) {
+  var x = params.x;
+  var y = params.y;
+  var z = params.z;
+  var newDepth = params.newDepth;
+  var fovY = params.fovY;
+  var aspect = params.aspect;
+  var zNear = params.zNear;
+  var zFar = params.zFar;
+  var eye = params.eye;
+  var lookAtPoint = params.lookAtPoint;
+  var up = params.up;
+
+  var projMat = shrike.M4.makePerspective(fovY, aspect, zNear, zFar);
+  var invProjMat = shrike.M4.inverse(projMat);
+  var lookAtMat = shrike.M4.makeLookAt(eye, lookAtPoint, up);
+  var invLookAtMat = shrike.M4.inverse(lookAtMat);
+
+  var projPoint = shrike.V3.mul4x4(projMat, shrike.V3.mul4x4(lookAtMat, shrike.V3.$(x, y, z)));
+
+  projPoint[2] = shrike.geom.getPerspectiveDepthForSceneDepth(newDepth, zNear, zFar);
+
+  return shrike.V3.mul4x4(invLookAtMat, shrike.V3.mul4x4(invProjMat, projPoint));
+};
+
+// FIXME: get rid of fovX
+shrike.geom.viewportToWorldVec = function(viewportX, viewportY, right, up, look, fovX, fovY) {
+  var scaleX = shrike.geom.getProjectionScale(1.0, fovX);
+  var scaleY = shrike.geom.getProjectionScale(1.0, fovY);
+
+  return shrike.V3.add(shrike.V3.scale(right, viewportX * scaleX), shrike.V3.add(shrike.V3.scale(up, viewportY * scaleY), look));
+};
