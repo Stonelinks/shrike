@@ -7,7 +7,7 @@ shrike.geom.canvasToViewport = function(canvasX, canvasY, canvasWidth, canvasHei
 };
 
 shrike.geom.getProjectionScale = function(depth, fovDegrees) {
-  return 2.0 * depth * math.tan(0.5 * math.toRadians(theta));
+  return 2.0 * depth * math.tan(0.5 * math.toRadians(fovDegrees));
 };
 
 shrike.geom.viewportToWorldVec = function(viewportX, viewportY, right, up, look, fovy) {
@@ -193,8 +193,7 @@ shrike.geom.viewportToWorldVec = function(viewportX, viewportY, right, up, look,
   return shrike.V3.add(shrike.V3.scale(right, viewportX * scaleX), shrike.V3.add(shrike.V3.scale(up, viewportY * scaleY), look));
 };
 
-// FIXME: rename getCameraOrbitRotation
-shrike.geom.getOrbitRotation = function(params) {
+shrike.geom.getCameraOrbitRotation = function(params) {
   var horizRot = params.horizRot;
   var vertRot = params.vertRot;
   var up = params.up;
@@ -231,8 +230,7 @@ shrike.geom.getOrbitRotation = function(params) {
   };
 };
 
-// FIXME: rename getCameraStrafe
-shrike.geom.getStrafe = function(params) {
+shrike.geom.getCameraStrafe = function(params) {
   var horizTrans = params.horizTrans;
   var vertTrans = params.vertTrans;
   var up = params.up;
