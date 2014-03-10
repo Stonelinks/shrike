@@ -28,7 +28,9 @@ shrike.toFloat = function(thing) {
 
     var _convert = function(thing) {
 
+      // @if SHRIKE_DO_ASSERT
       shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
+      // @endif
       return parseFloat(thing);
     };
 
@@ -62,7 +64,9 @@ shrike.toFloat = function(thing) {
 //
 shrike.toUntypedArray = function(a) {
 
+  // @if SHRIKE_DO_ASSERT
   shrike.assert(shrike.isArray(a), 'toUntypedArray: needs to be a float array or array like object: ' + a);
+  // @endif
 
   if (shrike.isTypedArray(a)) {
     return Array.apply([], a);

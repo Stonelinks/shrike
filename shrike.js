@@ -291,7 +291,6 @@ define(['underscore', 'mjs'], function(_, mjs) {
   shrike.toUntypedArray = function(a) {
   
     shrike.assert(shrike.isArray(a), 'toUntypedArray: needs to be a float array or array like object: ' + a);
-  
     if (shrike.isTypedArray(a)) {
       return Array.apply([], a);
     }
