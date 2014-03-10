@@ -31,6 +31,7 @@ shrike.toFloat = function(thing) {
       // @if SHRIKE_DO_ASSERT
       shrike.assert(shrike.isNumber(thing), 'toFloat: array has something in it that is not a number: ' + thing);
       // @endif
+
       return parseFloat(thing);
     };
 
