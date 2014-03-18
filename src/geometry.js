@@ -66,11 +66,11 @@ shrike.geom.findPerpVector = function(v) {
   return shrike.V3.normalize(shrike.V3.cross(vn, crossUnitVec));
 };
 
-shrike.geom.getCameraZoom = function(params) {
-  var wheelDelta = params.wheelDelta;
-  var eye = params.eye;
-  var lookAtPoint = params.lookAtPoint;
-  var zoomScale = params.zoomScale;
+shrike.geom.getCameraZoom = function(options) {
+  var wheelDelta = options.wheelDelta;
+  var eye = options.eye;
+  var lookAtPoint = options.lookAtPoint;
+  var zoomScale = options.zoomScale;
 
   var forward = shrike.V3.sub(lookAtPoint, eye);
   var zoomedForward = shrike.V3.scale(forward, (wheelDelta > 0) ? Math.pow(zoomScale, wheelDelta) : Math.pow(1 / zoomScale, -wheelDelta));
@@ -140,17 +140,17 @@ shrike.geom.getPointOnPlane = function(canvasX, canvasY, canvasWidth, canvasHeig
   return p;
 };
 
-// params.x in [-1, +1]
-// params.y in [-1, +1]
-// params.fovY in degrees
-shrike.geom.projectScreenPointToWorldPointAtDepth = function(params) {
-  var x = params.x;
-  var y = params.y;
-  var z = params.z;
-  var fovY = params.fovY;
-  var aspect = params.aspect;
-  var zNear = params.zNear;
-  var zFar = params.zFar;
+// options.x in [-1, +1]
+// options.y in [-1, +1]
+// options.fovY in degrees
+shrike.geom.projectScreenPointToWorldPointAtDepth = function(options) {
+  var x = options.x;
+  var y = options.y;
+  var z = options.z;
+  var fovY = options.fovY;
+  var aspect = options.aspect;
+  var zNear = options.zNear;
+  var zFar = options.zFar;
 
   var zProj = shrike.geom.getPerspectiveDepthForSceneDepth(z, zNear, zFar);
   var projMat = shrike.M4.makePerspective(fovY, aspect, zNear, zFar);
@@ -160,18 +160,18 @@ shrike.geom.projectScreenPointToWorldPointAtDepth = function(params) {
 };
 
 // assumes that the two cameras are the same
-shrike.geom.projectWorldPointToWorldPointAtDepth = function(params) {
-  var x = params.x;
-  var y = params.y;
-  var z = params.z;
-  var newDepth = params.newDepth;
-  var fovY = params.fovY;
-  var aspect = params.aspect;
-  var zNear = params.zNear;
-  var zFar = params.zFar;
-  var eye = params.eye;
-  var lookAtPoint = params.lookAtPoint;
-  var up = params.up;
+shrike.geom.projectWorldPointToWorldPointAtDepth = function(options) {
+  var x = options.x;
+  var y = options.y;
+  var z = options.z;
+  var newDepth = options.newDepth;
+  var fovY = options.fovY;
+  var aspect = options.aspect;
+  var zNear = options.zNear;
+  var zFar = options.zFar;
+  var eye = options.eye;
+  var lookAtPoint = options.lookAtPoint;
+  var up = options.up;
 
   var projMat = shrike.M4.makePerspective(fovY, aspect, zNear, zFar);
   var invProjMat = shrike.M4.inverse(projMat);
@@ -193,14 +193,14 @@ shrike.geom.viewportToWorldVec = function(viewportX, viewportY, right, up, look,
   return shrike.V3.add(shrike.V3.scale(right, viewportX * scaleX), shrike.V3.add(shrike.V3.scale(up, viewportY * scaleY), look));
 };
 
-shrike.geom.getCameraOrbitRotation = function(params) {
-  var horizRot = params.horizRot;
-  var vertRot = params.vertRot;
-  var up = params.up;
-  var eye = params.eye;
-  var lookAtPoint = params.lookAtPoint;
-  var rotationCenter = params.rotationCenter;
-  var dragConstant = params.dragConstant;
+shrike.geom.getCameraOrbitRotation = function(options) {
+  var horizRot = options.horizRot;
+  var vertRot = options.vertRot;
+  var up = options.up;
+  var eye = options.eye;
+  var lookAtPoint = options.lookAtPoint;
+  var rotationCenter = options.rotationCenter;
+  var dragConstant = options.dragConstant;
 
   if (horizRot == 0 && vertRot == 0) {
     return {
@@ -230,13 +230,13 @@ shrike.geom.getCameraOrbitRotation = function(params) {
   };
 };
 
-shrike.geom.getCameraStrafe = function(params) {
-  var horizTrans = params.horizTrans;
-  var vertTrans = params.vertTrans;
-  var up = params.up;
-  var eye = params.eye;
-  var lookAtPoint = params.lookAtPoint;
-  var dragConstant = params.dragConstant;
+shrike.geom.getCameraStrafe = function(options) {
+  var horizTrans = options.horizTrans;
+  var vertTrans = options.vertTrans;
+  var up = options.up;
+  var eye = options.eye;
+  var lookAtPoint = options.lookAtPoint;
+  var dragConstant = options.dragConstant;
 
   var forward = shrike.V3.sub(lookAtPoint, eye);
   var right = shrike.V3.normalize(shrike.V3.cross(forward, up));
