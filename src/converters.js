@@ -72,6 +72,9 @@ shrike.toUntypedArray = function(a) {
   if (shrike.isTypedArray(a)) {
     return Array.apply([], a);
   }
+  else {
+    return a;
+  }
 };
 
 //

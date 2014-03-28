@@ -294,6 +294,9 @@ define(['underscore', 'mjs'], function(_, mjs) {
     if (shrike.isTypedArray(a)) {
       return Array.apply([], a);
     }
+    else {
+      return a;
+    }
   };
   
   //

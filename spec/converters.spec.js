@@ -69,6 +69,64 @@ describe('converters', function() {
     expect(shrike.toFloat([[13]])).toEqual([new shrike.FLOAT_ARRAY_TYPE([13.0])]);
   });
 
+  it('convert from typed arrays to normal ones', function() {
+
+    // floats
+    expect(function() {shrike.toUntypedArray(121.5)}).toThrow();
+
+    // strings
+    expect(function() {shrike.toUntypedArray('121.5')}).toThrow();
+
+    // int
+    expect(function() {shrike.toUntypedArray('121')}).toThrow();
+
+    // 1d
+    var arr = [0.0, 1.5, 2.3];
+
+    // floats
+    expect(shrike.toUntypedArray(new shrike.FLOAT_ARRAY_TYPE(arr))).toEqual(arr);
+
+    // strings
+    arr = ['0.0', '1.5', '2.3'];
+    expect(shrike.toUntypedArray(arr)).toEqual(arr);
+
+    // mixed int, string, float
+    arr = [0, '1.5', 2.3];
+    expect(shrike.toUntypedArray(arr)).toEqual(arr);
+
+    // empty
+    arr = [];
+    expect(shrike.toUntypedArray(new shrike.FLOAT_ARRAY_TYPE(arr))).toEqual(arr);
+
+    // one element
+    arr = ['1.3'];
+    expect(shrike.toUntypedArray(arr)).toEqual(arr);
+    arr = [1.3];
+    expect(shrike.toUntypedArray(arr)).toEqual(arr);
+
+    // TODO: 2d
+    // 2d
+    // var arr = [new shrike.FLOAT_ARRAY_TYPE([0.0, 1.5, 2.3]), new shrike.FLOAT_ARRAY_TYPE([1.4, 0, 112.34])];
+
+    // floats
+    // expect(shrike.toUntypedArray([[0.0, 1.5, 2.3], [1.4, 0, 112.34]])).toEqual(arr);
+
+    // strings
+    // expect(shrike.toUntypedArray([['0.0', '1.5', '2.3'], ['1.4', '0', '112.34']])).toEqual(arr);
+
+    // mixed int, string, float
+    // expect(shrike.toUntypedArray([[0, '1.5', 2.3], ['1.4', 0, 112.34]])).toEqual(arr);
+
+    // empty
+    // expect(shrike.toUntypedArray([[]])).toEqual([new shrike.FLOAT_ARRAY_TYPE([])]);
+    // expect(shrike.toUntypedArray([[], []])).toEqual([new shrike.FLOAT_ARRAY_TYPE([]), new shrike.FLOAT_ARRAY_TYPE([])]);
+
+    // one element
+    // expect(shrike.toUntypedArray([['1.3']])).toEqual([new shrike.FLOAT_ARRAY_TYPE([1.3])]);
+    // expect(shrike.toUntypedArray([['13']])).toEqual([new shrike.FLOAT_ARRAY_TYPE([13])]);
+    // expect(shrike.toUntypedArray([[13]])).toEqual([new shrike.FLOAT_ARRAY_TYPE([13.0])]);
+  });
+
   it('conversion scales for linear units', function() {
     expect(shrike.unitConversionScale('mm', 'm') * 1000).toEqual(1);
     expect(shrike.unitConversionScale('cm', 'm') * 100).toEqual(1);
