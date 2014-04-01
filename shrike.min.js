@@ -1,4 +1,4 @@
-// shrike - v0.0.3
+// shrike - v0.0.4
 //
 // https://github.com/Stonelinks/shrike
 //
