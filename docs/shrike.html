@@ -27,10 +27,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>shrike - v0.0.2</p>
+              <p>shrike - v0.0.3</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>A fast and easy to use vector and matrix library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#108;&#117;&#x63;&#97;&#115;&#46;&#x70;&#46;&#100;&#x6f;&#x79;&#x6c;&#x65;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;">&#108;&#117;&#x63;&#97;&#115;&#46;&#x70;&#46;&#100;&#x6f;&#x79;&#x6c;&#x65;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#108;&#117;&#x63;&#97;&#115;&#46;&#x70;&#x2e;&#x64;&#111;&#x79;&#x6c;&#101;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#99;&#111;&#x6d;">&#108;&#117;&#x63;&#97;&#115;&#46;&#x70;&#x2e;&#x64;&#111;&#x79;&#x6c;&#101;&#x40;&#103;&#109;&#97;&#x69;&#108;&#46;&#99;&#111;&#x6d;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -2150,7 +2150,7 @@ Requires t0, t1 to be distinct</p>
   };
   
   shrike.geom.getProjectionScale = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(depth, fovDegrees)</span> {</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-number">2.0</span> * depth * math.tan(<span class="hljs-number">0.5</span> * math.toRadians(fovDegrees));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2.0</span> * depth * <span class="hljs-built_in">Math</span>.tan(<span class="hljs-number">0.5</span> * shrike.toRadians(fovDegrees));
   };
   
   shrike.geom.viewportToWorldVec = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(viewportX, viewportY, right, up, look, fovy)</span> {</span>

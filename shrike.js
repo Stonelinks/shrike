@@ -1,4 +1,4 @@
-// shrike - v0.0.2
+// shrike - v0.0.3
 //
 // https://github.com/Stonelinks/shrike
 //
@@ -1569,7 +1569,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
   };
   
   shrike.geom.getProjectionScale = function(depth, fovDegrees) {
-    return 2.0 * depth * math.tan(0.5 * math.toRadians(fovDegrees));
+    return 2.0 * depth * Math.tan(0.5 * shrike.toRadians(fovDegrees));
   };
   
   shrike.geom.viewportToWorldVec = function(viewportX, viewportY, right, up, look, fovy) {
