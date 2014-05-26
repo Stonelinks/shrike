@@ -30,7 +30,7 @@
               <p>shrike - v0.0.4</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>A fast and easy to use vector and matrix library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#58;&#108;&#117;&#99;&#x61;&#115;&#x2e;&#112;&#46;&#x64;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#108;&#117;&#99;&#x61;&#115;&#x2e;&#112;&#46;&#x64;&#x6f;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x6c;&#117;&#99;&#x61;&#x73;&#46;&#112;&#x2e;&#100;&#111;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#109;">&#x6c;&#117;&#99;&#x61;&#x73;&#46;&#112;&#x2e;&#100;&#111;&#x79;&#108;&#x65;&#x40;&#103;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#109;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -1902,7 +1902,7 @@ TODO: make a V3.normalize</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
-              <h2 id="function-shrike-m4-transfrommatrix">Function: shrike.M4.transFromMatrix</h2>
+              <h2 id="function-shrike-m4-translation">Function: shrike.M4.translation</h2>
 <p>Get a translation vector out of an M4.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -1913,7 +1913,7 @@ TODO: make a V3.normalize</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  shrike.M4.transFromMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
+            <div class="content"><div class='highlight'><pre>  shrike.M4.translation = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(m)</span> {</span>
     <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> FLOAT_ARRAY_TYPE(<span class="hljs-number">3</span>);
     r[<span class="hljs-number">0</span>] = m[<span class="hljs-number">12</span>];
     r[<span class="hljs-number">1</span>] = m[<span class="hljs-number">13</span>];

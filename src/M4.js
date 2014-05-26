@@ -48,7 +48,7 @@ shrike.M4.fromQuat = function(quatRaw) {
 };
 
 //
-// ##Function: shrike.M4.transFromMatrix
+// ##Function: shrike.M4.translation
 //
 // Get a translation vector out of an M4.
 //
@@ -60,7 +60,7 @@ shrike.M4.fromQuat = function(quatRaw) {
 //
 // float the result translation.
 //
-shrike.M4.transFromMatrix = function(m) {
+shrike.M4.translation = function(m) {
   var r = new FLOAT_ARRAY_TYPE(3);
   r[0] = m[12];
   r[1] = m[13];
