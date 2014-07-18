@@ -1038,6 +1038,30 @@ define(['underscore', 'mjs'], function(_, mjs) {
     return shrike.quat.fromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
   };
   
+  //
+  // ##Function: shrike.quat.rotateDirection
+  //
+  // Return the minimal quaternion that orients source to target
+  //
+  shrike.quat.rotateDirection = function(source, target) {
+    var rottodirection = shrike.V3.cross(source, target);
+    var fsin = shrike.norm(rottodirection);
+    var fcos = shrike.V3.dot(source, target);
+    var torient;
+    if (fsin > 0.0) {
+      return shrike.quat.fromAxisAngle(shrike.V3.scale(rottodirection, (1.0 / fsin)), shrike.atan2(fsin, fcos));
+    }
+    if (fcos < 0.0) {
+      rottodirection = shrike.V3.sub([1.0, 0.0, 0.0], shrike.V3.scale(source, shrike.V3.dot(source, [1.0, 0.0, 0.0])));
+      if (shrike.square(shrike.norm(rottodirection)) < 1e-8) {
+        rottodirection = shrike.V3.sub([0.0, 0.0, 1.0], shrike.V3.scale(source, shrike.V3.dot(source, [0.0, 0.0, 1.0])));
+      }
+      shrike.normalize(rottodirection);
+      return shrike.quat.fromAxisAngle(rottodirection, shrike.atan2(fsin, fcos));
+    }
+    return [1.0, 0.0, 0.0, 0.0];
+  };
+  
   shrike.axisAngle = {};
   
   //

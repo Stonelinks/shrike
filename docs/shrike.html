@@ -30,7 +30,7 @@
               <p>shrike - v0.0.5</p>
 <p><a href="https://github.com/Stonelinks/shrike">https://github.com/Stonelinks/shrike</a></p>
 <p>A fast and easy to use vector and matrix library</p>
-<p>Copyright (c)2014 - Lucas Doyle <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#108;&#117;&#x63;&#97;&#115;&#x2e;&#112;&#x2e;&#100;&#x6f;&#121;&#x6c;&#x65;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;">&#108;&#117;&#x63;&#97;&#115;&#x2e;&#112;&#x2e;&#100;&#x6f;&#121;&#x6c;&#x65;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#99;&#111;&#109;</a></p>
+<p>Copyright (c)2014 - Lucas Doyle <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#x6c;&#117;&#x63;&#97;&#x73;&#46;&#112;&#46;&#x64;&#x6f;&#121;&#108;&#101;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;">&#x6c;&#117;&#x63;&#97;&#x73;&#46;&#112;&#46;&#x64;&#x6f;&#121;&#108;&#101;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;</a></p>
 <p>Distributed under MIT license</p>
 
             </div>
@@ -1470,9 +1470,7 @@ TODO: make a V3.normalize</p>
             
             <div class="content"><div class='highlight'><pre>  shrike.quat.fromZYX = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(zyx)</span> </span>{
     <span class="hljs-keyword">return</span> shrike.quat.fromMatrix(shrike.matrixFromZYX(shrike.toFloat(zyx)));
-  };
-  
-  shrike.axisAngle = {};</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -1482,6 +1480,41 @@ TODO: make a V3.normalize</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <h2 id="function-shrike-quat-rotatedirection">Function: shrike.quat.rotateDirection</h2>
+<p>Return the minimal quaternion that orients source to target</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  shrike.quat.rotateDirection = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(source, target)</span> </span>{
+    <span class="hljs-keyword">var</span> rottodirection = shrike.V3.cross(source, target);
+    <span class="hljs-keyword">var</span> fsin = shrike.norm(rottodirection);
+    <span class="hljs-keyword">var</span> fcos = shrike.V3.dot(source, target);
+    <span class="hljs-keyword">var</span> torient;
+    <span class="hljs-keyword">if</span> (fsin &gt; <span class="hljs-number">0.0</span>) {
+      <span class="hljs-keyword">return</span> shrike.quat.fromAxisAngle(shrike.V3.scale(rottodirection, (<span class="hljs-number">1.0</span> / fsin)), shrike.atan2(fsin, fcos));
+    }
+    <span class="hljs-keyword">if</span> (fcos &lt; <span class="hljs-number">0.0</span>) {
+      rottodirection = shrike.V3.sub([<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>], shrike.V3.scale(source, shrike.V3.dot(source, [<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>])));
+      <span class="hljs-keyword">if</span> (shrike.square(shrike.norm(rottodirection)) &lt; <span class="hljs-number">1e-8</span>) {
+        rottodirection = shrike.V3.sub([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>], shrike.V3.scale(source, shrike.V3.dot(source, [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>])));
+      }
+      shrike.normalize(rottodirection);
+      <span class="hljs-keyword">return</span> shrike.quat.fromAxisAngle(rottodirection, shrike.atan2(fsin, fcos));
+    }
+    <span class="hljs-keyword">return</span> [<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>];
+  };
+  
+  shrike.axisAngle = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <h2 id="function-shrike-axisangle-">Function: shrike.axisAngle.$</h2>
 <p>parses an axis and an angle into an object from some arguments</p>
@@ -1541,11 +1574,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <h2 id="function-shrike-axisangle-fromquat">Function: shrike.axisAngle.fromQuat</h2>
 <p>Convert a quaternion into axis angle representation.</p>
@@ -1593,11 +1626,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <h2 id="function-shrike-axisangle-frommatrix">Function: shrike.axisAngle.fromMatrix</h2>
 <p>Convert a matrix into axis angle representation.</p>
@@ -1617,11 +1650,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-fromobject">Function: shrike.V3.fromObject</h2>
 <p>Converts an object with xyz attributes into a V3.</p>
@@ -1643,11 +1676,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-toobject">Function: shrike.V3.toObject</h2>
 <p>Converts a V3 into an object with xyz attributes.</p>
@@ -1673,11 +1706,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zxy-frommatrix">Function: shrike.V3.zxy.fromMatrix</h2>
 <p>Convert a matrix into zxy angle representation.</p>
@@ -1727,11 +1760,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zyx-frommatrix">Function: shrike.V3.zyx.fromMatrix</h2>
 <p>Convert a matrix into zyx angle representation.</p>
@@ -1783,11 +1816,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zxy-fromquat">Function: shrike.V3.zxy.fromQuat</h2>
 <p>Convert a quaternion into zxy representation.</p>
@@ -1807,11 +1840,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <h2 id="function-shrike-v3-zyx-fromquat">Function: shrike.V3.zyx.fromQuat</h2>
 <p>Convert a quaternion into zxy representation.</p>
@@ -1831,11 +1864,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-fromquat">Function: shrike.M4.fromQuat</h2>
 <p>Convert an M4 from quaternion.</p>
@@ -1860,11 +1893,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>invalid quaternion, so return identity</p>
 
@@ -1896,11 +1929,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-translation">Function: shrike.M4.translation</h2>
 <p>Get a translation vector out of an M4.</p>
@@ -1924,11 +1957,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-composefromquattrans">Function: shrike.M4.composeFromQuatTrans</h2>
 <p>Composes an M4 from a quaternion and translation V3</p>
@@ -1958,11 +1991,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-totransformarray">Function: shrike.M4.toTransformArray</h2>
 <p>Converts an M4 into a 2d transform array.</p>
@@ -1987,11 +2020,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-fromtransformarray">Function: shrike.M4.fromTransformArray</h2>
 <p>Converts a 2d transform array into an M4.</p>
@@ -2011,11 +2044,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <h2 id="function-shrike-m4-inverse">Function: shrike.M4.inverse</h2>
 <p>Computes the inverse of an M4.</p>
@@ -2037,11 +2070,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>cache the matrix values (makes for huge speed increases!)</p>
 
@@ -2080,11 +2113,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>calculate the determinant (inlined to avoid double-caching)</p>
 
@@ -2115,11 +2148,11 @@ TODO: make a V3.normalize</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <h2 id="function-shrike-linearlyinterpolate">Function: shrike.linearlyInterpolate</h2>
 <p>Linearly interpolate between t0, x0 and t1, x1 at time t.
@@ -2183,11 +2216,11 @@ Requires t0, t1 to be distinct</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>FIXME: this should be good enough, but i’m not sure yet what the best behavior here is</p>
 
@@ -2209,11 +2242,11 @@ Requires t0, t1 to be distinct</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>is there a better way to do this? maybe. but this works.</p>
 
@@ -2264,11 +2297,11 @@ Requires t0, t1 to be distinct</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Angle is in [-PI/2, +PI/2]</p>
 
@@ -2281,11 +2314,11 @@ Requires t0, t1 to be distinct</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Angle is in [-PI, -PI/2) or (+PI/2, +PI]</p>
 
@@ -2303,11 +2336,11 @@ Requires t0, t1 to be distinct</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>quick background: there are cases when, given a perspective camera and a depth
                   (z value), and given an (x,y) point on the screen, we want
@@ -2343,11 +2376,11 @@ would just do the partial inverse application.</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>options.x in [-1, +1]
 options.y in [-1, +1]
@@ -2374,11 +2407,11 @@ options.fovY in degrees</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>assumes that the two cameras are the same</p>
 
@@ -2412,11 +2445,11 @@ options.fovY in degrees</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>FIXME: get rid of fovX</p>
 
@@ -2489,11 +2522,11 @@ options.fovY in degrees</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>for debugging / console convenience</p>
 
