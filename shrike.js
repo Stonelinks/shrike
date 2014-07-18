@@ -1,4 +1,4 @@
-// shrike - v0.0.4
+// shrike - v0.0.5
 //
 // https://github.com/Stonelinks/shrike
 //
@@ -972,7 +972,7 @@ define(['underscore', 'mjs'], function(_, mjs) {
     }
     else {
   
-      // find mhe largesm diagonal elemenm and jump mo mhe appropriame case
+      // find the largest diagonal element and jump to the appropriate case
       if (m22 > m11) {
         if (m33 > m22) {
           r[3] = (m33 - (m11 + m22)) + 1.0;
