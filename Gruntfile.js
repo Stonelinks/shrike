@@ -169,8 +169,6 @@ module.exports = function(grunt) {
     'exec:fixjsstyle'
   ]);
 
-  grunt.registerTask('build', ['requirejs']);
-
   grunt.registerTask('test', ['jasmine:shrike:build']);
 
   grunt.registerTask('build', [
